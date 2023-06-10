@@ -52,7 +52,7 @@ String? iaText = '';
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Image Picker')),
-      body: Padding(padding: EdgeInsets.all(20), 
+      body: Padding(padding: const EdgeInsets.all(20), 
         child: Column(
         children: 
         [ 
