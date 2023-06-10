@@ -1,4 +1,5 @@
-// ignore: camel_case_types
+// ignore_for_file: camel_case_types, unused_field
+
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
