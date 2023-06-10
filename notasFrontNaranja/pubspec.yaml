@@ -28,6 +28,8 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  image_picker: ^0.7.0
+  google_ml_kit: ^0.7.3
   flutter:
     sdk: flutter
 
@@ -37,8 +39,6 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
-  image_picker: ^0.7.0
-  google_ml_kit: ^0.7.3
   flutter_test:
     sdk: flutter
 
