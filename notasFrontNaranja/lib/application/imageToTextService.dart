@@ -11,7 +11,12 @@ class imageToTextService {
   imageToTextService(iaText i){ ia = i;}
 
   Future<Either<MyError,String>?> getConvertedText(File image) async {
-    return await ia?.getConvertedText(image);
+    Either<MyError, String>? text = await ia?.getConvertedText(image);
+      if (text!.isRight){
+        return Right(text.right);
+      }else{
+        return Left(text.left);
+      }
   }
   
 }
@@ -20,10 +25,13 @@ abstract class iaText {
   Future<Either<MyError,String>> getConvertedText(File image);
 }
 
+
 class iaTextImp implements iaText {
     
     @override
-      Future<Either<MyError, String>> getConvertedText(File image) async {    
+      Future<Either<MyError, String>> getConvertedText(File image) async {
+       try {
+
         final textDetector = GoogleMlKit.vision.textDetector();
         final recognisedText = await textDetector.processImage(InputImage.fromFile(image));
         String convertedText = '';
@@ -33,6 +41,9 @@ class iaTextImp implements iaText {
               convertedText = "$convertedText${line.text}\n";
           }
         }
-        return Right(convertedText);
+          return Right(convertedText);
+       } catch (e) {
+          return Left(MyError(key: AppError.NotFound,message: '$e'));
+       }     
     }
 }

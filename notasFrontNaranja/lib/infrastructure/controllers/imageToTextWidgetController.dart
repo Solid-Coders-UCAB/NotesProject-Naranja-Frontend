@@ -11,7 +11,6 @@ class imageToTextWidgetController{
   
   getImageFromCamaraService? camaraService;
   imageToTextService? imageToText;
- 
 
   imageToTextWidgetController(getImageFromCamaraService c, imageToTextService i){
     camaraService = c ; imageToText = i;
@@ -21,11 +20,11 @@ class imageToTextWidgetController{
       return await camaraService?.getImage();
    } 
 
-     Future<Either<MyError, String>?> getconvertedText(File image) async {
+  Future<Either<MyError, String>?> getconvertedText(File image) async {
       return await imageToText?.getConvertedText(image);
    }  
 
-    Future<Either<MyError, String>?> getconvertedTextC() async {
+  Future<Either<MyError, String>?> getconvertedTextC() async {
       Either<MyError,File>? image = await camaraService?.getImage(); 
       Either<MyError, String>? text = await imageToText?.getConvertedText(image!.right);
       return text;

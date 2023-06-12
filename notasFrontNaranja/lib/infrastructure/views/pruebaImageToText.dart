@@ -7,7 +7,7 @@ import 'package:firstapp/module.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'imageToTextWidgetController.dart';
+import '../controllers/imageToTextWidgetController.dart';
 
 
 class ImagePickerScreen extends StatefulWidget {
