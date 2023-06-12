@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'infrastructure/views/pruebaImageToText.dart';
+import 'infrastructure/views/drawing_room_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -107,13 +108,26 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'boton_ia',
-        onPressed: () { 
-          Navigator.push(context,MaterialPageRoute(builder: (context) => const ImagePickerScreen())); },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: 'boton_ia',
+            onPressed: () { Navigator.push(context,MaterialPageRoute(builder: (context) => const ImagePickerScreen())); },
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            heroTag: 'esbozar',
+            onPressed: () { Navigator.push(context,MaterialPageRoute(builder: (context) => const DrawingRoomScreen())); },
+            tooltip: 'Drawing',
+            child: const Icon(Icons.draw),
+          ),
+        ],
+      ),
+      
+       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
