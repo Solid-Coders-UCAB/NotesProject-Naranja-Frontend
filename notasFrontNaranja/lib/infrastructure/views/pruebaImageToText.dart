@@ -23,6 +23,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   imageToTextWidgetController controller = module.imageToTextWidController();
   File? imageFile ;
   String? iaText = '';
+  bool loading = false;
   
 
   Future pickImageFromCamara() async {
@@ -61,7 +62,13 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Image Picker')),
       body: Padding(padding: const EdgeInsets.all(20), 
-        child: Column(
+        child: loading == true ? const Center(child: SizedBox(
+          width: 30,
+          height: 30,
+          child: CircularProgressIndicator()
+        ))         
+        :
+        Column(
         children: 
         [ 
           if (imageFile != null) 
@@ -81,11 +88,12 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
 
    Future showImageAndTextFromCamara() async {
     setState(() {
-      iaText = 'loading......';
+      loading = true;
     });
      Either<MyError,String>? etext = await controller.getconvertedTextC();
      setState(() {
        iaText = etext!.right;
+       loading = false;
      });
   }
 
