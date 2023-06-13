@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import './infrastructure/views/inicio_sesion.dart';
 import 'infrastructure/views/pruebaImageToText.dart';
 import 'infrastructure/views/drawing_room_screen.dart';
 
@@ -123,6 +123,13 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () { Navigator.push(context,MaterialPageRoute(builder: (context) => const DrawingRoomScreen())); },
             tooltip: 'Drawing',
             child: const Icon(Icons.draw),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            heroTag: 'InicioSesiion',
+            onPressed: () { Navigator.push(context,MaterialPageRoute(builder: (context) => const Inicio())); },
+            tooltip: 'Login',
+            child: const Icon(Icons.login),
           ),
         ],
       ),
