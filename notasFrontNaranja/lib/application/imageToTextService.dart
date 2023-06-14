@@ -3,19 +3,20 @@
 import 'dart:io';
 import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/errores.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 
 class imageToTextService {
-  iaText? ia;
+  
+  iaText ia;
 
-  imageToTextService(iaText i){ ia = i;}
+  imageToTextService( { required this.ia} );
 
-  Future<Either<MyError,String>?> getConvertedText(File image) async {
-    Either<MyError, String>? text = await ia?.getConvertedText(image);
-      if (text!.isRight){
-        return Right(text.right);
+  Future<Either<MyError,String>> getConvertedText(File image) async {
+    Either<MyError, String> iaResponse = await ia.getConvertedText(image);
+      
+      if (iaResponse.isRight){
+        return Right(iaResponse.right);
       }else{
-        return Left(text.left);
+        return Left(iaResponse.left);
       }
   }
   
@@ -23,27 +24,4 @@ class imageToTextService {
 
 abstract class iaText {
   Future<Either<MyError,String>> getConvertedText(File image);
-}
-
-
-class iaTextImp implements iaText {
-    
-    @override
-      Future<Either<MyError, String>> getConvertedText(File image) async {
-       try {
-
-        final textDetector = GoogleMlKit.vision.textDetector();
-        final recognisedText = await textDetector.processImage(InputImage.fromFile(image));
-        String convertedText = '';
-        await textDetector.close();
-        for (TextBlock block in recognisedText.blocks) {
-            for (TextLine line in block.lines) {
-              convertedText = "$convertedText${line.text}\n";
-          }
-        }
-          return Right(convertedText);
-       } catch (e) {
-          return Left(MyError(key: AppError.NotFound,message: '$e'));
-       }     
-    }
 }

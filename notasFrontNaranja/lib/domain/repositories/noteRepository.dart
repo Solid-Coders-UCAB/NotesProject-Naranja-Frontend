@@ -6,7 +6,7 @@ import 'package:firstapp/domain/nota.dart';
 
 abstract class noteRepository {
     
-    Either<MyError,Nota> createNota(Nota note);
+    Future<Either<MyError,String>> createNota(Nota note);
 
 }
 

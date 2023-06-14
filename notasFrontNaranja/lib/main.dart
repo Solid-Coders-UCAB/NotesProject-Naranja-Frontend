@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import './infrastructure/views/inicio_sesion.dart';
 import 'infrastructure/views/pruebaImageToText.dart';
 import 'infrastructure/views/drawing_room_screen.dart';
@@ -57,6 +56,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String h = '';
+  createNoteInServerService httpService = controllerFactory.createNoInServerService();
 
   void _incrementCounter() {
     setState(() {
@@ -117,6 +117,14 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+            FloatingActionButton( //boton para probar backend
+            heroTag: 'boton_back',
+            onPressed: () {
+                  pruebaHttp();
+            },
+            tooltip: 'Increment',
+            child: const Icon(Icons.abc),
+          ),
           FloatingActionButton(
             heroTag: 'boton_ia',
             onPressed: () {
@@ -150,35 +158,41 @@ class _MyHomePageState extends State<MyHomePage> {
             tooltip: 'Login',
             child: const Icon(Icons.login),
           ),
+          const SizedBox(width: 16),
           FloatingActionButton(
-            heroTag: 'pruebaHTTP',
-            onPressed: () {  pruebaHttp(); },
-            tooltip: 'prueba',
-            child: const Icon(Icons.abc),
+            heroTag: 'Speech to text',
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SpeechScreen()));
+            },
+            tooltip: 'Login',
+            child: const Icon(Icons.mic),
           ),
+
         ],
       ),
+
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-Future pruebaHttp() async {
-   
-  final response = await get(Uri.parse('http://192.168.1.2:3000/Users'));
+  Future pruebaHttp() async{
+    var response = await httpService.execute(CreatenoteParams(contenido: 'nota de flutter',titulo: 'nota de flutter',longitud: 2,latitud: 3));
 
-  ///android emulator localhost: 10.0.2.2 , en pc es 127.0.0.1
-
-  if (response.statusCode == 200) {
-    String body = utf8.decode(response.bodyBytes);
-
-    setState(() {
-      h = body;
-    });    
-  }
-      
-
-       
-
+    if (response.isLeft){
+      setState(() {
+        h = response.left.message!;
+      });
     }
+
+    if (response.isRight){
+      setState(() {
+        h = response.right;
+      });
+    }
+  }
 
 
 }
