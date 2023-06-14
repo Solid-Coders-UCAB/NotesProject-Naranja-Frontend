@@ -4,7 +4,7 @@ import 'package:firstapp/infrastructure/controllers/imageToTextWidgetController.
 
 //fabrica de controladores
 
-class module {
+class controllerFactory {
   
   static imageToTextWidgetController imageToTextWidController(){ 
      imageToTextWidgetController imageToTextController = imageToTextWidgetController(

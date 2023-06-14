@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import './infrastructure/views/inicio_sesion.dart';
 import 'infrastructure/views/pruebaImageToText.dart';
 import 'infrastructure/views/drawing_room_screen.dart';
@@ -53,6 +56,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String h = '';
 
   void _incrementCounter() {
     setState(() {
@@ -99,8 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+             Text(
+              "You have pushed the button this many times: $h",
             ),
             Text(
               '$_counter',
@@ -146,79 +150,35 @@ class _MyHomePageState extends State<MyHomePage> {
             tooltip: 'Login',
             child: const Icon(Icons.login),
           ),
-          const SizedBox(width: 16),
           FloatingActionButton(
-            heroTag: 'Speech to text',
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SpeechScreen()));
-            },
-            tooltip: 'Login',
-            child: const Icon(Icons.mic),
+            heroTag: 'pruebaHTTP',
+            onPressed: () {  pruebaHttp(); },
+            tooltip: 'prueba',
+            child: const Icon(Icons.abc),
           ),
-
         ],
       ),
-
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-}
 
-// Widget que despliega un menu con las opciones adicionales que se pueden realizar en la nota (imagen a texto, esbozar y voz a texto)
-Widget opcionesNota(){
- return PopupMenuButton(
-  color: Colors.blue,
-  icon: const Icon(Icons.add),
+Future pruebaHttp() async {
+   
+  final response = await get(Uri.parse('http://192.168.1.2:3000/Users'));
 
-  itemBuilder: (BuildContext context) =><PopupMenuItem>[
-    PopupMenuItem(
-      child: Container(
-        child:  Wrap(
-          direction: Axis.horizontal,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                child: const Icon(Icons.camera_alt),
-                onTap: (){
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ImagePickerScreen()));
-                },
-                ),
-              ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                child: const Icon(Icons.draw),
-                onTap: (){
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const DrawingRoomScreen()));
-                },
-                )
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                child: const Icon(Icons.mic),
-                onTap: () {
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SpeechScreen()));
-                },
-                )
-            ),
-          ],
-        ),
-      )
-    )
-  ]
-  );
+  ///android emulator localhost: 10.0.2.2 , en pc es 127.0.0.1
+
+  if (response.statusCode == 200) {
+    String body = utf8.decode(response.bodyBytes);
+
+    setState(() {
+      h = body;
+    });    
+  }
+      
+
+       
+
+    }
+
+
 }

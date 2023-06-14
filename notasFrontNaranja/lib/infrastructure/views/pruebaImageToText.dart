@@ -3,10 +3,8 @@ import 'dart:io';
 
 import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/errores.dart';
-import 'package:firstapp/module.dart';
+import 'package:firstapp/controllerFactory.dart';
 import 'package:flutter/material.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:image_picker/image_picker.dart';
 import '../controllers/imageToTextWidgetController.dart';
 
 
@@ -20,42 +18,11 @@ class ImagePickerScreen extends StatefulWidget {
 
 //logica
 class _ImagePickerScreenState extends State<ImagePickerScreen> {
-  imageToTextWidgetController controller = module.imageToTextWidController();
+  imageToTextWidgetController controller = controllerFactory.imageToTextWidController();
   File? imageFile ;
   String? iaText = '';
   bool loading = false;
   
-
-  Future pickImageFromCamara() async {
-
-    String text = '';
-
-      PickedFile? pickedImage = await ImagePicker().getImage(
-      source: ImageSource.camera ,
-      imageQuality: 50);
-
-      if (pickedImage != null){
-        PickedFile picked = pickedImage;
-
-        File image = File(picked.path);
-
-        final textDetector = GoogleMlKit.vision.textDetector();
-
-        final recognisedText = await textDetector.processImage(InputImage.fromFile(image));
-        await textDetector.close();
-
-        for (TextBlock block in recognisedText.blocks) {
-           
-            for (TextLine line in block.lines) {
-              text = "$text${line.text}\n";
-          }
-        }
-
-        setState( () { imageFile = File(picked.path); iaText = text;} );
-      }
-
-}
-
   @override
   Widget build(BuildContext context) {
 
