@@ -1,3 +1,4 @@
+import 'package:either_dart/either.dart';
 import 'package:firstapp/application/createNoteInServerService.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/domain/parameterObjects/createNoteParams.dart';
@@ -118,6 +119,14 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+            FloatingActionButton( //boton para probar backend
+            heroTag: 'boton_back',
+            onPressed: () {
+                  pruebaHttp();
+            },
+            tooltip: 'Increment',
+            child: const Icon(Icons.abc),
+          ),
           FloatingActionButton(
             heroTag: 'boton_ia',
             onPressed: () {
@@ -170,6 +179,24 @@ class _MyHomePageState extends State<MyHomePage> {
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  Future pruebaHttp() async{
+    var response = await httpService.execute(CreatenoteParams(contenido: 'nota de flutter',titulo: 'nota de flutter',longitud: 2,latitud: 3));
+
+    if (response.isLeft){
+      setState(() {
+        h = response.left.message!;
+      });
+    }
+
+    if (response.isRight){
+      setState(() {
+        h = response.right;
+      });
+    }
+  }
+
+
 }
 
 // Widget que despliega un menu con las opciones adicionales que se pueden realizar en la nota (imagen a texto, esbozar y voz a texto)

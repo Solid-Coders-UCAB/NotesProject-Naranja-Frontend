@@ -29,13 +29,13 @@ class createNoteInServerService implements service<CreatenoteParams,String>{
       latitud: params.getLatitud
     );
 
-    if (note.isLeft){
+    if (note.isLeft){         //error al crear la nota
       return Left(note.left);
     }
 
     var response = await noteRepo.createNota(note.right); //guardamos nota
 
-      if (response.isLeft){
+      if (response.isLeft){  //error al guardar la nota
         return Left(response.left);
       }
 
