@@ -106,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            opcionesNota()  // Menu desplegable con opciones adicionales en la nota
           ],
         ),
       ),
@@ -157,10 +158,67 @@ class _MyHomePageState extends State<MyHomePage> {
             tooltip: 'Login',
             child: const Icon(Icons.mic),
           ),
+
         ],
       ),
 
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+// Widget que despliega un menu con las opciones adicionales que se pueden realizar en la nota (imagen a texto, esbozar y voz a texto)
+Widget opcionesNota(){
+ return PopupMenuButton(
+  color: Colors.blue,
+  icon: const Icon(Icons.add),
+
+  itemBuilder: (BuildContext context) =><PopupMenuItem>[
+    PopupMenuItem(
+      child: Container(
+        child:  Wrap(
+          direction: Axis.horizontal,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.camera_alt),
+                onTap: (){
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ImagePickerScreen()));
+                },
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.draw),
+                onTap: (){
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DrawingRoomScreen()));
+                },
+                )
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.mic),
+                onTap: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SpeechScreen()));
+                },
+                )
+            ),
+          ],
+        ),
+      )
+    )
+  ]
+  );
 }
