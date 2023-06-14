@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:firstapp/application/createNoteInServerService.dart';
+import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/domain/parameterObjects/createNoteParams.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import './infrastructure/views/inicio_sesion.dart';
@@ -56,6 +59,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String h = '';
+  createNoteInServerService httpService = controllerFactory.createNoInServerService();
 
   void _incrementCounter() {
     setState(() {
@@ -148,22 +152,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
 Future pruebaHttp() async {
    
-  final response = await get(Uri.parse('http://192.168.1.2:3000/Users'));
-
-  ///android emulator localhost: 10.0.2.2 , en pc es 127.0.0.1
-
-  if (response.statusCode == 200) {
-    String body = utf8.decode(response.bodyBytes);
+    var body = await httpService.execute(CreatenoteParams(contenido: 'hola',titulo: 'titulo nota',longitud: 2,latitud: 3)); 
 
     setState(() {
-      h = body;
+      h = body.right;
     });    
-  }
-      
 
-       
-
-    }
+}
 
 
 }

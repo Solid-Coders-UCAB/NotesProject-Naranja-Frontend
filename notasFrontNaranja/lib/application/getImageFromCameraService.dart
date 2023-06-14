@@ -3,48 +3,24 @@
 import 'dart:io';
 import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/errores.dart';
-import 'package:image_picker/image_picker.dart';
 
 abstract class imagePicker {
   Future<Either<MyError,File>> getImage();
 }
 
 class getImageFromCamaraService {
-  imagePicker? picker;
+  
+  imagePicker picker;
 
-    getImageFromCamaraService(imagePicker p){
-      picker = p;
-    }
+    getImageFromCamaraService({required this.picker});
 
-   Future<Either<MyError,File>?> getImage() async {    
-     Either<MyError, File>? image = await picker?.getImage();      
-        if (image!.isLeft){
-            return Left(image.left);
+   Future<Either<MyError,File>> getImage() async {    
+     Either<MyError, File> imagePickerResponse = await picker.getImage();      
+        if (imagePickerResponse.isLeft){
+            return Left(imagePickerResponse.left);
         }
-      return Right(image.right);  
+      return Right(imagePickerResponse.right);  
    }
   
 }
 
-class imagePickerImp implements imagePicker{
-  
-  imagePickerImp();
-
-  @override
-  Future<Either<MyError,File>> getImage() async {
-      
-      PickedFile? pickedImage = await ImagePicker().getImage(
-      source: ImageSource.camera ,
-      imageQuality: 50);
-
-      if (pickedImage != null){
-        PickedFile picked = pickedImage;
-        return Right(File(picked.path));
-      }
-
-     return const Left( MyError(
-            key: AppError.NotFound,
-            message: 'not selected image'));
-  }
-  
-}
