@@ -1,5 +1,6 @@
-import 'dart:convert';
-
+import 'package:firstapp/application/createNoteInServerService.dart';
+import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/domain/parameterObjects/createNoteParams.dart';
 import 'package:flutter/material.dart';
 import './infrastructure/views/inicio_sesion.dart';
 import 'infrastructure/views/pruebaImageToText.dart';
@@ -195,4 +196,60 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
+}
+
+// Widget que despliega un menu con las opciones adicionales que se pueden realizar en la nota (imagen a texto, esbozar y voz a texto)
+Widget opcionesNota(){
+ return PopupMenuButton(
+  color: Colors.blue,
+  icon: const Icon(Icons.add),
+
+  itemBuilder: (BuildContext context) =><PopupMenuItem>[
+    PopupMenuItem(
+      child: Container(
+        child:  Wrap(
+          direction: Axis.horizontal,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.camera_alt),
+                onTap: (){
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ImagePickerScreen()));
+                },
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.draw),
+                onTap: (){
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DrawingRoomScreen()));
+                },
+                )
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.mic),
+                onTap: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SpeechScreen()));
+                },
+                )
+            ),
+          ],
+        ),
+      )
+    )
+  ]
+  );
 }
