@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import './infrastructure/views/inicio_sesion.dart';
 import 'infrastructure/views/pruebaImageToText.dart';
 import 'infrastructure/views/drawing_room_screen.dart';
@@ -52,6 +55,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String h = '';
 
   void _incrementCounter() {
     setState(() {
@@ -98,8 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+             Text(
+              "You have pushed the button this many times: $h",
             ),
             Text(
               '$_counter',
@@ -131,10 +135,35 @@ class _MyHomePageState extends State<MyHomePage> {
             tooltip: 'Login',
             child: const Icon(Icons.login),
           ),
+          FloatingActionButton(
+            heroTag: 'pruebaHTTP',
+            onPressed: () {  pruebaHttp(); },
+            tooltip: 'prueba',
+            child: const Icon(Icons.abc),
+          ),
         ],
       ),
-      
-       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+Future pruebaHttp() async {
+   
+  final response = await get(Uri.parse('http://192.168.1.2:3000/Users'));
+
+  ///android emulator localhost: 10.0.2.2 , en pc es 127.0.0.1
+
+  if (response.statusCode == 200) {
+    String body = utf8.decode(response.bodyBytes);
+
+    setState(() {
+      h = body;
+    });    
+  }
+      
+
+       
+
+    }
+
+
 }
