@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './infrastructure/views/inicio_sesion.dart';
 import 'infrastructure/views/pruebaImageToText.dart';
 import 'infrastructure/views/drawing_room_screen.dart';
+import 'infrastructure/views/speech_to_text_prueba.dart';
 
 void main() {
   runApp(const MyApp());
@@ -113,28 +114,53 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           FloatingActionButton(
             heroTag: 'boton_ia',
-            onPressed: () { Navigator.push(context,MaterialPageRoute(builder: (context) => const ImagePickerScreen())); },
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ImagePickerScreen()));
+            },
             tooltip: 'Increment',
             child: const Icon(Icons.add),
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
             heroTag: 'esbozar',
-            onPressed: () { Navigator.push(context,MaterialPageRoute(builder: (context) => const DrawingRoomScreen())); },
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DrawingRoomScreen()));
+            },
             tooltip: 'Drawing',
             child: const Icon(Icons.draw),
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
             heroTag: 'InicioSesiion',
-            onPressed: () { Navigator.push(context,MaterialPageRoute(builder: (context) => const Inicio())); },
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Inicio()));
+            },
             tooltip: 'Login',
             child: const Icon(Icons.login),
           ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            heroTag: 'Speech to text',
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SpeechScreen()));
+            },
+            tooltip: 'Login',
+            child: const Icon(Icons.mic),
+          ),
         ],
       ),
-      
-       // This trailing comma makes auto-formatting nicer for build methods.
+
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
