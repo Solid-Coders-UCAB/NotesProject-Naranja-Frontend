@@ -34,6 +34,8 @@ dependencies:
   google_ml_kit: ^0.7.3
   screenshot: ^2.1.0
   path_provider: ^2.0.15
+  speech_to_text: ^6.1.1
+  avatar_glow: ^2.0.2
   flutter:
     sdk: flutter
 

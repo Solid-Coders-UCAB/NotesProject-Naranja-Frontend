@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import './infrastructure/views/inicio_sesion.dart';
 import 'infrastructure/views/pruebaImageToText.dart';
 import 'infrastructure/views/drawing_room_screen.dart';
+import 'infrastructure/views/speech_to_text_prueba.dart';
 
 void main() {
   runApp(const MyApp());
@@ -110,6 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            opcionesNota()  // Menu desplegable con opciones adicionales en la nota
           ],
         ),
       ),
@@ -118,44 +120,110 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           FloatingActionButton(
             heroTag: 'boton_ia',
-            onPressed: () { Navigator.push(context,MaterialPageRoute(builder: (context) => const ImagePickerScreen())); },
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ImagePickerScreen()));
+            },
             tooltip: 'Increment',
             child: const Icon(Icons.add),
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
             heroTag: 'esbozar',
-            onPressed: () { Navigator.push(context,MaterialPageRoute(builder: (context) => const DrawingRoomScreen())); },
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DrawingRoomScreen()));
+            },
             tooltip: 'Drawing',
             child: const Icon(Icons.draw),
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
             heroTag: 'InicioSesiion',
-            onPressed: () { Navigator.push(context,MaterialPageRoute(builder: (context) => const Inicio())); },
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Inicio()));
+            },
             tooltip: 'Login',
             child: const Icon(Icons.login),
           ),
+          const SizedBox(width: 16),
           FloatingActionButton(
-            heroTag: 'pruebaHTTP',
-            onPressed: () {  pruebaHttp(); },
-            tooltip: 'prueba',
-            child: const Icon(Icons.abc),
+            heroTag: 'Speech to text',
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SpeechScreen()));
+            },
+            tooltip: 'Login',
+            child: const Icon(Icons.mic),
           ),
+
         ],
       ),
+
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-
-Future pruebaHttp() async {
-   
-    var body = await httpService.execute(CreatenoteParams(contenido: 'hola',titulo: 'titulo nota',longitud: 2,latitud: 3)); 
-
-    setState(() {
-      h = body.right;
-    });    
-
 }
 
+// Widget que despliega un menu con las opciones adicionales que se pueden realizar en la nota (imagen a texto, esbozar y voz a texto)
+Widget opcionesNota(){
+ return PopupMenuButton(
+  color: Colors.blue,
+  icon: const Icon(Icons.add),
 
+  itemBuilder: (BuildContext context) =><PopupMenuItem>[
+    PopupMenuItem(
+      child: Container(
+        child:  Wrap(
+          direction: Axis.horizontal,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.camera_alt),
+                onTap: (){
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ImagePickerScreen()));
+                },
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.draw),
+                onTap: (){
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DrawingRoomScreen()));
+                },
+                )
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.mic),
+                onTap: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SpeechScreen()));
+                },
+                )
+            ),
+          ],
+        ),
+      )
+    )
+  ]
+  );
 }
