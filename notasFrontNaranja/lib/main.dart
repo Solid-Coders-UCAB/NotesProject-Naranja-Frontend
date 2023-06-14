@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:firstapp/application/createNoteInServerService.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/domain/parameterObjects/createNoteParams.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import './infrastructure/views/inicio_sesion.dart';
 import 'infrastructure/views/pruebaImageToText.dart';
 import 'infrastructure/views/drawing_room_screen.dart';

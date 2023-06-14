@@ -5,6 +5,7 @@ import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/errores.dart';
 
 class imageToTextService {
+  
   iaText ia;
 
   imageToTextService( { required this.ia} );
