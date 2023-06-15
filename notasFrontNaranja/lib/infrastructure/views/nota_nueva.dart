@@ -31,10 +31,13 @@ class NuevaNota extends StatefulWidget {
 }
 
 class _NuevaNotaState extends State<NuevaNota> {
-  //int id_client;
-  //_NuevaNotaState(this.id_client);
-  final TextEditingController _tituloC = TextEditingController(text: "");
+
+ String noteContent = '';
+ String noteTitle = '';
+  
+  final TextEditingController _tituloC = TextEditingController(text: "hola");
   final TextEditingController _contenidoC = TextEditingController(text: "");
+
 
   @override
   Widget build(BuildContext context) {
@@ -70,11 +73,12 @@ class _NuevaNotaState extends State<NuevaNota> {
                         borderRadius: BorderRadius.circular(25)),
                     backgroundColor: const Color.fromARGB(255, 99, 91, 250),
                   ),
-                  onPressed: () async {
+                  onPressed: () {
                     if (_tituloC.text != '') {
 
-                      //Navigator.push(context, MaterialPageRoute(builder: (context) => Home(id_client)));
-                      Navigator.pop(context);
+                      cambiarTituloC();
+
+
                       ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Nota agregada")));
                     } else {
@@ -94,7 +98,7 @@ class _NuevaNotaState extends State<NuevaNota> {
                         borderRadius: BorderRadius.circular(25)),
                   ),
                   onPressed: () {
-                    Navigator.pop(context, 'refresh');
+                 
                   },
                   child: const Text("Cancelar"))
             ],
@@ -104,12 +108,13 @@ class _NuevaNotaState extends State<NuevaNota> {
     );
   }
 
-  @override
-  void dispose() {
-    _contenidoC.dispose();
-    _tituloC.dispose();
-    super.dispose();
+   cambiarTituloC() {
+    setState(() {
+      print('paso');
+      _tituloC.text = "jijija";
+    });
   }
+
 }
 
 

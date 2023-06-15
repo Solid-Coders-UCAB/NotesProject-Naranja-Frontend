@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:firstapp/infrastructure/theme/app_color.dart';
+import 'package:firstapp/infrastructure/views/nota_nueva.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firstapp/infrastructure/implementations/drawingRoomImp/drawing_point.dart';
@@ -224,10 +225,10 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
       if (file.existsSync()) {
         final bytes = await file.readAsBytes();
    
-        // ignore: use_build_ntext_synchronously
+        // ignore: use_build_ntext_synchronously, use_build_context_synchronously
         Navigator.push(context,
                               MaterialPageRoute(
-                              builder: (context) => Pagina03(bytes)));
+                              builder: (context) => const NotaNueva()));
       }
 
     } catch (e) {
