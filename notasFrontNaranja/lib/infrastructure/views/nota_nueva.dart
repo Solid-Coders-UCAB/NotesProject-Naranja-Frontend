@@ -62,6 +62,11 @@ class _NuevaNotaState extends State<NuevaNota> {
           //initialValue: "contenido de la nota",  //Aqui se debe cargar el contenido de la nota de la base de datos
           // ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              opcionesNota()
+            ]),
+          Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
@@ -96,7 +101,7 @@ class _NuevaNotaState extends State<NuevaNota> {
                   onPressed: () {
                     Navigator.pop(context, 'refresh');
                   },
-                  child: const Text("Cancelar"))
+                  child: const Text("Cancelar")),              
             ],
           ),
         ],

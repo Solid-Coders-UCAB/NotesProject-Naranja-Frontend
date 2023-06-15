@@ -41,6 +41,10 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Esbozado"),
+        backgroundColor: Colors.blue,
+      ),
       body: Stack(
         
         children: [
@@ -157,7 +161,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
             },
             child: const Icon(Icons.undo),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 8),
           FloatingActionButton(
             heroTag: "Redo",
             onPressed: () {
@@ -171,7 +175,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
             },
             child: const Icon(Icons.redo),
           ),
-
+          const SizedBox(width: 8),
         // En este boton se guarda la nota esbozada
           FloatingActionButton(
             heroTag: "Save",
@@ -185,11 +189,9 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
               setState(() => this.bytes = bytes);
               _saveEsbozar(bytes);
 
-              _loadEsbozar();
-
-              
+              _loadEsbozar();    
             },
-            child: const Icon(Icons.camera_alt),
+            child: const Icon(Icons.check),
           ),
           
         ],

@@ -6,6 +6,7 @@ import './infrastructure/views/inicio_sesion.dart';
 import 'infrastructure/views/pruebaImageToText.dart';
 import 'infrastructure/views/drawing_room_screen.dart';
 import 'infrastructure/views/speech_to_text_prueba.dart';
+import 'infrastructure/views/widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -196,60 +197,4 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
-}
-
-// Widget que despliega un menu con las opciones adicionales que se pueden realizar en la nota (imagen a texto, esbozar y voz a texto)
-Widget opcionesNota(){
- return PopupMenuButton(
-  color: Colors.blue,
-  icon: const Icon(Icons.add),
-
-  itemBuilder: (BuildContext context) =><PopupMenuItem>[
-    PopupMenuItem(
-      child: Container(
-        child:  Wrap(
-          direction: Axis.horizontal,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                child: const Icon(Icons.camera_alt),
-                onTap: (){
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ImagePickerScreen()));
-                },
-                ),
-              ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                child: const Icon(Icons.draw),
-                onTap: (){
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const DrawingRoomScreen()));
-                },
-                )
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                child: const Icon(Icons.mic),
-                onTap: () {
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SpeechScreen()));
-                },
-                )
-            ),
-          ],
-        ),
-      )
-    )
-  ]
-  );
 }
