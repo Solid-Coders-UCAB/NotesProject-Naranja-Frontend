@@ -160,7 +160,7 @@ Future saveNota() async {
     }
   if (response.isRight){
           setState(() {
-          _contenidoC.text = "${_contenidoC.text}${response.right}";
+          _contenidoC.text = "${_contenidoC.text}\n${response.right}";
           loading = false;
         }); 
     }    
@@ -192,7 +192,7 @@ Future saveNota() async {
   
     void showAudioToText({required String contenido,required String titulo}){
       setState(() {
-         noteContent = contenido;
+         noteContent = '$contenido ';
          _contenidoC.text = contenido;
          _tituloC.text = titulo;
          loading = false;
