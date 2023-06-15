@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:firstapp/controllerFactory.dart';
 import 'package:flutter/material.dart';
@@ -31,14 +30,14 @@ class NuevaNota extends StatefulWidget {
   });
 
   @override
-  State<NuevaNota> createState() => _NuevaNotaState();
+  State<NuevaNota> createState() => NuevaNotaState();
 }
 
-class _NuevaNotaState extends State<NuevaNota> {
+class NuevaNotaState extends State<NuevaNota> {
 
  String noteContent = '';
  String noteTitle = '';
- bool isLoading = false;
+ bool loading = false;
  notaNuevaWidgetController controller = controllerFactory.notaNuevaWidController();
 
   final TextEditingController _tituloC = TextEditingController(text: "");
@@ -51,19 +50,25 @@ class _NuevaNotaState extends State<NuevaNota> {
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
       //height: 500.0,
       color: Colors.white,
-      child: SingleChildScrollView(
+          child: loading == true ? const Center(child: SizedBox(
+          width: 30,
+          height: 30,
+          child: CircularProgressIndicator()
+        ))         
+       :
+          SingleChildScrollView(
           // Se agrega esta linea para que se pueda ver todo el texto que se escribe en la nota
           child: Form(
               child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           genericTextFormField(_tituloC, "Título de la nota", false, 40),
-          genericTextFormField(
+          maxLinesTextFormField(
               _contenidoC, "Contenido de la nota", false, 2000),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              opcionesNota()
+            children: [ 
+              opcionesNota(this)
             ]),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -109,15 +114,51 @@ class _NuevaNotaState extends State<NuevaNota> {
     );
   }
 
-   Future saveNota() async {
-
-
-
+Future saveNota() async {
     setState(() {
-      print('paso');
-      _tituloC.text = "jijija";
+      loading = true;
     });
+    var response = await controller.saveNota(titulo: _tituloC.text,contenido: _contenidoC.text);
+    if (response.isLeft){
+          setState((){
+              loading = false;
+          });
+          String text ='';
+          text = response.left.message!;
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text(text)));
+      }
+     if (response.isRight){ 
+        setState(() {
+          _contenidoC.text = '';
+          _tituloC.text = '';
+          loading = false;
+        });
+      }
   }
+
+  Future getTextFromIa() async {
+    setState(() {
+      loading = true;
+    });
+    var response = await controller.showTextFromIA();
+    if(response.isLeft){
+        setState((){
+          loading = false;
+        });
+          String text ='';
+          text = response.left.message!;
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text(text)));          
+    }
+  if (response.isRight){
+          setState(() {
+          _contenidoC.text = "${_contenidoC.text}${response.right}";
+          loading = false;
+        }); 
+    }    
+  }
+
 
 }
 
