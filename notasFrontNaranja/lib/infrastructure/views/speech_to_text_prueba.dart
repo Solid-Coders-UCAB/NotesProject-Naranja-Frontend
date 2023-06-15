@@ -3,17 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechScreen extends StatefulWidget {
-  const SpeechScreen({super.key});
+
+  String text = 'Press the button and start speaking';
+
+  SpeechScreen({super.key,required this.text});
 
   @override
-  State<SpeechScreen> createState() => _SpeechScreenState();
+  // ignore: no_logic_in_create_state
+  State<SpeechScreen> createState() => SpeechScreenState(text: text);
+
+  get getText => text; 
 }
 
-class _SpeechScreenState extends State<SpeechScreen> {
+class SpeechScreenState extends State<SpeechScreen> {
   stt.SpeechToText _speech = stt.SpeechToText();
-  bool _isListening = false;
-  String _text = 'Press the button and start speaking';
-  double _confidence = 1.0;
+  bool isListening = false;
+  double confidence = 1.0;
+  String text;
+  
+  SpeechScreenState({required this.text});
 
   @override
   void initState() {
@@ -25,11 +33,11 @@ class _SpeechScreenState extends State<SpeechScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Confidence: ${(_confidence * 100.0).toStringAsFixed(1)}%'),
+        title: Text('Confidence: ${(confidence * 100.0).toStringAsFixed(1)}%'),        
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
-          animate: _isListening,
+          animate: isListening,
           glowColor: Theme.of(context).primaryColor,
           endRadius: 75.0,
           duration: const Duration(milliseconds: 2000),
@@ -37,36 +45,43 @@ class _SpeechScreenState extends State<SpeechScreen> {
           repeat: true,
           child: FloatingActionButton(
               onPressed: _listen,
-              child: Icon(_isListening ? Icons.mic : Icons.mic_none))),
-      body: SingleChildScrollView(
+              child: Icon(isListening ? Icons.mic : Icons.mic_none))),
+      body: Row(  
+           children: [
+      SingleChildScrollView(
         reverse: true,
         child: Container(
           padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
-          child: Text(_text),
+          child: Text(text),         
         ),
-      ),
-    );
+      ),FloatingActionButton(
+            heroTag: 'Speech to text',
+            onPressed: () {
+                Navigator.pop(context, text); // datos de vuelta a la primera pantalla},
+            },
+            child: const Icon(Icons.save))],
+    ));
   }
 
   void _listen() async {
-    if (!_isListening) {
+    if (!isListening) {
       bool available = await _speech.initialize(
-        onStatus: (val) => print('onStatus: $val'),
-        onError: (val) => print('onError: $val'),
+       // onStatus: (val) => print('onStatus: $val'),
+       // onError: (val) => print('onError: $val'),
       );
       if (available) {
-        setState(() => _isListening = true);
+        setState(() => isListening = true);
         _speech.listen(
           onResult: (val) => setState(() {
-            _text = val.recognizedWords;
+            text = val.recognizedWords;
             if (val.hasConfidenceRating && val.confidence > 0) {
-              _confidence = val.confidence;
+              confidence = val.confidence;
             }
           }),
         );
       }
     } else {
-      setState(() => _isListening = false);
+      setState(() => isListening = false);
       _speech.stop();
     }
   }

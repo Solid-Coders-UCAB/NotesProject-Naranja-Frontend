@@ -163,11 +163,12 @@ Widget opcionesNota( NuevaNotaState state){
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 child: const Icon(Icons.mic),
-                onTap: () {
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SpeechScreen()));
+                onTap: () async {            
+                    
+                   String audio = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  SpeechScreen(text: '')));                    
+                    state.showAudioToText(contenido: state.getContenido() + audio,titulo: state.getTitulo() );
                 },
                 )
             ),

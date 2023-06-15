@@ -2,8 +2,10 @@
 import 'package:firstapp/controllerFactory.dart';
 import 'package:flutter/material.dart';
 
+
 import '../controllers/notaNuevaWidgetController.dart';
 import './widgets.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class NotaNueva extends StatelessWidget {
 
@@ -39,6 +41,9 @@ class NuevaNotaState extends State<NuevaNota> {
  String noteTitle = '';
  bool loading = false;
  notaNuevaWidgetController controller = controllerFactory.notaNuevaWidController();
+//
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = false;
 
   final TextEditingController _tituloC = TextEditingController(text: "");
   final TextEditingController _contenidoC = TextEditingController(text: "");
@@ -161,6 +166,46 @@ Future saveNota() async {
     }    
   }
 
+    void listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+       // onStatus: (val) => print('onStatus: $val'),
+       // onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (val) => setState(() {
+            _contenidoC.text = _contenidoC.text + val.recognizedWords;
+            if (val.hasConfidenceRating && val.confidence > 0) {
+              //_confidence = val.confidence;
+            }
+          }),
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
+  }
+
+  
+    void showAudioToText({required String contenido,required String titulo}){
+      setState(() {
+         noteContent = contenido;
+         _contenidoC.text = contenido;
+         _tituloC.text = titulo;
+         loading = false;
+      });
+    }
+
+    String getTitulo(){
+      return _tituloC.text;
+    }
+
+    String getContenido(){
+      return _contenidoC.text;
+    }
 
 }
 
