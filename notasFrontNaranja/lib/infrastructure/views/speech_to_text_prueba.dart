@@ -19,7 +19,7 @@ class SpeechScreenState extends State<SpeechScreen> {
   stt.SpeechToText _speech = stt.SpeechToText();
   bool isListening = false;
   double confidence = 1.0;
-  String text;
+  String text = "";
   
   SpeechScreenState({required this.text});
 

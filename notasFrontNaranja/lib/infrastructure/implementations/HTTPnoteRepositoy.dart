@@ -23,7 +23,7 @@ class httpNoteRepository implements noteRepository{
     //"client": {"c_id": idclient}
    });
     //'http://192.168.0.102:3000/nota/create'
-    final response = await post(Uri.parse('http://192.168.1.2:3000/nota/create'), //aqui colocar la red de tu compu local
+    final response = await post(Uri.parse('http://192.168.0.102:3000/nota/create'), //aqui colocar la red de tu compu local
       body: body,
       headers: {
         "Accept": "application/json",
