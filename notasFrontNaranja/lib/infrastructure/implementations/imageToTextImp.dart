@@ -11,7 +11,7 @@ class iaTextImp implements iaText {
       Future<Either<MyError, String>> getConvertedText(File image) async {
        try {
 
-        final textDetector = GoogleMlKit.vision.textDetector();
+        final textDetector = GoogleMlKit.vision.textRecognizer();
         final recognisedText = await textDetector.processImage(InputImage.fromFile(image));
         String convertedText = '';
         await textDetector.close();
