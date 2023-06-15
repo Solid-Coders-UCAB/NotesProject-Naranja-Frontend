@@ -33,6 +33,11 @@ class SpeechScreenState extends State<SpeechScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+            onPressed: () {
+                Navigator.pop(context, ''); // datos de vuelta a la primera pantalla},
+            },
+          ) ,
         title: Text('Confidence: ${(confidence * 100.0).toStringAsFixed(1)}%'),        
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -46,7 +51,7 @@ class SpeechScreenState extends State<SpeechScreen> {
           child: FloatingActionButton(
               onPressed: _listen,
               child: Icon(isListening ? Icons.mic : Icons.mic_none))),
-      body: Row(  
+      body: Column(  
            children: [
       SingleChildScrollView(
         reverse: true,
@@ -54,13 +59,13 @@ class SpeechScreenState extends State<SpeechScreen> {
           padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
           child: Text(text),         
         ),
-      ),FloatingActionButton(
-            heroTag: 'Speech to text',
+      )],
+    ),persistentFooterButtons: [FloatingActionButton(
+            heroTag: 'salir',
             onPressed: () {
                 Navigator.pop(context, text); // datos de vuelta a la primera pantalla},
             },
-            child: const Icon(Icons.save))],
-    ));
+            child: const Icon(Icons.check))]);
   }
 
   void _listen() async {
