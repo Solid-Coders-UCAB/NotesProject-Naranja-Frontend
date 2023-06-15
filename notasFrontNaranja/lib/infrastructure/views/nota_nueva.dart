@@ -61,6 +61,11 @@ class _NuevaNotaState extends State<NuevaNota> {
           genericTextFormField(
               _contenidoC, "Contenido de la nota", false, 2000),
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              opcionesNota()
+            ]),
+          Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
@@ -96,7 +101,7 @@ class _NuevaNotaState extends State<NuevaNota> {
                   onPressed: () {
                  
                   },
-                  child: const Text("Cancelar"))
+                  child: const Text("Cancelar")),              
             ],
           ),
         ],

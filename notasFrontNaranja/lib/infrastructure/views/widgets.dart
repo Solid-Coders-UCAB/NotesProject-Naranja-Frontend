@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firstapp/infrastructure/views/drawing_room_screen.dart';
+import 'package:firstapp/infrastructure/views/pruebaImageToText.dart';
+import 'package:firstapp/infrastructure/views/speech_to_text_prueba.dart';
 
 Widget genericTextFormField(TextEditingController controllerData, String text, boolean,int maxLength) {
   return Container(
@@ -119,3 +122,61 @@ void alerta(BuildContext context, bool isGood,String title, String content) {
     },
   );
 }
+
+// Widget que despliega un menu con las opciones adicionales que se pueden realizar en la nota (imagen a texto, esbozar y voz a texto)
+Widget opcionesNota(){
+ return PopupMenuButton(
+  
+  color: Colors.blue,
+  icon: const Icon(Icons.add),
+
+  itemBuilder: (BuildContext context) =><PopupMenuItem>[
+    PopupMenuItem(
+      child: Container(
+        child:  Wrap(
+          direction: Axis.horizontal,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.camera_alt),
+                onTap: (){
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ImagePickerScreen()));
+                },
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.draw),
+                onTap: (){
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DrawingRoomScreen()));
+                },
+                )
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.mic),
+                onTap: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SpeechScreen()));
+                },
+                )
+            ),
+          ],
+        ),
+      )
+    )
+  ]
+  );
+}
+
