@@ -65,9 +65,12 @@ class NuevaNotaState extends State<NuevaNota> {
           genericTextFormField(_tituloC, "Título de la nota", false, 40),
           maxLinesTextFormField(
               _contenidoC, "Contenido de la nota", false, 2000),
+          loading == true ? const Row()
+          :    
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [ 
+            
+            children: [
               opcionesNota(this)
             ]),
           Row(
@@ -81,7 +84,6 @@ class NuevaNotaState extends State<NuevaNota> {
                   ),
                   onPressed: () {
                     if (_tituloC.text != '') {
-
                       saveNota();
 
 
