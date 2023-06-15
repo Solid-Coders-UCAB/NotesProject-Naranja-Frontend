@@ -1,11 +1,10 @@
-
 import 'package:firstapp/controllerFactory.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-
 import '../controllers/notaNuevaWidgetController.dart';
 import './widgets.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:firstapp/infrastructure/views/ver_imagen.dart';
 
 class NotaNueva extends StatelessWidget {
 
@@ -40,7 +39,9 @@ class NuevaNotaState extends State<NuevaNota> {
  String noteContent = '';
  String noteTitle = '';
  bool loading = false;
+ Uint8List? imagen;
  notaNuevaWidgetController controller = controllerFactory.notaNuevaWidController();
+ bool imagenVisible = false;
 //
   final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
@@ -68,6 +69,26 @@ class NuevaNotaState extends State<NuevaNota> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           genericTextFormField(_tituloC, "Título de la nota", false, 40),
+          imagenVisible == false ? const Row()
+          : 
+          Visibility(
+            visible: imagenVisible,
+            child: GestureDetector(
+              onTap: (){
+                Navigator.push(context,
+                              MaterialPageRoute(
+                              builder: (context) => VerImagen(imagen)));
+              },
+              child: SizedBox(
+                
+                width: 400,
+                height: 200,
+                child: Image.memory(
+                              imagen!,
+                        ),
+              ),
+            ),
+          ),
           maxLinesTextFormField(
               _contenidoC, "Contenido de la nota", false, 2000),
           loading == true ? const Row()
@@ -140,6 +161,7 @@ Future saveNota() async {
           _contenidoC.text = '';
           _tituloC.text = '';
           loading = false;
+          imagenVisible = false;
         });
       }
   }
@@ -206,6 +228,15 @@ Future saveNota() async {
     String getContenido(){
       return _contenidoC.text;
     }
+
+  void getEsbozado(Uint8List? bytes)  {
+    if (bytes != null) {
+      setState(() {
+        imagen = bytes;
+        imagenVisible = true;
+      });
+    }
+  }
 
 }
 

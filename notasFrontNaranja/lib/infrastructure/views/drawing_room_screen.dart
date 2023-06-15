@@ -43,6 +43,11 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+          onPressed: (){
+            Navigator.pop(context, bytes); 
+          },
+        ),
         title: const Text("Esbozado"),
         backgroundColor: Colors.blue,
       ),
@@ -188,9 +193,10 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
               );
 
               setState(() => this.bytes = bytes);
-              _saveEsbozar(bytes);
+              //_saveEsbozar(bytes);
 
-              _loadEsbozar();    
+              //_loadEsbozar();  
+              Navigator.pop(context, bytes);  
             },
             child: const Icon(Icons.check),
           ),
@@ -287,253 +293,4 @@ Widget pizarra(BuildContext context, List<DrawingPoint> drawingPoints){
             );
 }
 
-
-
-
-class Pagina03 extends StatelessWidget {
-  Uint8List? bytes;
-  Pagina03(this.bytes);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Nueva nota"),
-        backgroundColor: Colors.orange,
-      ),
-      body:  Center(
-        child: NuevaNota(bytes),
-      ),
-    );
-  }
-}
-
-class Pagina02 extends StatelessWidget {
-  Uint8List? bytes;
-  Pagina02(this.bytes);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Esbozado"),
-        backgroundColor: Colors.orange,
-      ),
-      body:  Center(
-        child: Imagen(bytes),
-      ),
-    );
-  }
-}
-
-class NuevaNota extends StatefulWidget {
-Uint8List? bytes;
-  NuevaNota(this.bytes);
-
-  @override
-  State<NuevaNota> createState() => _NuevaNotaState2(bytes);
-}
-
-class Imagen extends StatefulWidget {
-Uint8List? bytes;
-  Imagen(this.bytes);
-
-  @override
-  State<Imagen> createState() => _ImagenState(bytes);
-}
-
-class _ImagenState extends State<Imagen> {
-  Uint8List? bytes;
-
-
-  _ImagenState(this.bytes);
-  
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
-      //height: 500.0,
-      color: Colors.white,
-      child: ListView(children: [if(bytes != null) Image.memory(bytes!), ],)///////aaaaaaaaaaaaaaaaaaaa
-    );
-  }
-
-
-}
-
-
-
-class _NuevaNotaState2 extends State<NuevaNota> {
-  Uint8List? bytes;
-  _NuevaNotaState2(this.bytes);
-  final TextEditingController _tituloC = TextEditingController(text: "");
-  final TextEditingController _contenidoC = TextEditingController(text: "");
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
-      //height: 500.0,
-      color: Colors.white,
-      child: SingleChildScrollView(
-          // Se agrega esta linea para que se pueda ver todo el texto que se escribe en la nota
-          child: Form(
-              child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          genericTextFormField(_tituloC, "Título de la nota", false, 40),
-          GestureDetector(
-            onTap: (){
-              Navigator.push(context,
-                              MaterialPageRoute(
-                              builder: (context) => Pagina02(bytes)));
-            },
-            child: SizedBox(
-              
-              width: 400,
-              height: 200,
-              child: Image.memory(
-                            bytes!,
-                      ),
-            ),
-          ),
-          genericTextFormField(
-              _contenidoC, "Contenido de la nota", false, 2000),
-          //     2000, // Aqui se indica el maximo de caracteres que se pueden ingresar a la nota
-          // TextFormField(
-          // controller: _contenidoC,
-          // decoration: const InputDecoration(labelText: "Contenido"),
-          // maxLength:
-
-          /// Para determinar el maximo de lineas que puede tener el campo de texto del cuerpo de la nota
-          // maxLines: null,
-          //initialValue: "contenido de la nota",  //Aqui se debe cargar el contenido de la nota de la base de datos
-          // ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)),
-                    backgroundColor: const Color.fromARGB(255, 99, 91, 250),
-                  ),
-                  onPressed: () {
-                    if (_tituloC.text != '') {
-                      
-                      //Navigator.push(context, MaterialPageRoute(builder: (context) => Home(id_client)));
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Nota agregada")));
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text(
-                              "El título de la nota no debe estar vacía")));
-                     
-                    }
-                  },
-                  child: const Text("Aceptar")),
-              const SizedBox(
-                width: 15,
-              ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 99, 91, 250),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context, 'refresh');
-                  },
-                  child: const Text("Cancelar"))
-            ],
-          ),
-        ],
-      ))),
-    );
-  }
-
-  @override
-  void dispose() {
-    _contenidoC.dispose();
-    _tituloC.dispose();
-    super.dispose();
-  }
-}
-
-
-
-Widget genericTextFormField(TextEditingController controllerData, String text, boolean,int maxLength) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-    child: TextFormField(
-      controller: controllerData,
-      maxLength: maxLength,
-      style: const TextStyle(
-      color: Color.fromARGB(255, 154, 181, 255), 
-      ),
-      obscureText: boolean,
-      decoration: InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 154, 181, 255),
-            width: 2,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 154, 181, 255),
-            width: 2,
-          ),
-        ),
-        labelText: text,
-        labelStyle: const TextStyle(
-          color: Color.fromARGB(255, 154, 181, 255), 
-        ),
-      ),
-    ),
-  );
-}
-
-Widget maxLinesTextFormField(TextEditingController controllerData, String text, boolean,int maxLength) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-    child: TextFormField(
-      controller: controllerData,
-      maxLength: maxLength,
-      maxLines: null,
-      style: const TextStyle(
-      color: Color.fromARGB(255, 154, 181, 255), 
-      ),
-      obscureText: boolean,
-      decoration: InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 154, 181, 255),
-            width: 2,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 154, 181, 255),
-            width: 2,
-          ),
-        ),
-        labelText: text,
-        labelStyle: const TextStyle(
-          color: Color.fromARGB(255, 154, 181, 255), 
-        ),
-      ),
-    ),
-  );
-}
-
-////////////////////////////////////
-///
 

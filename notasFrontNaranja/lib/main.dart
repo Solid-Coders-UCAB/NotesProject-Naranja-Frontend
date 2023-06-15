@@ -6,7 +6,6 @@ import './infrastructure/views/inicio_sesion.dart';
 import 'infrastructure/views/pruebaImageToText.dart';
 import 'infrastructure/views/drawing_room_screen.dart';
 import 'infrastructure/views/speech_to_text_prueba.dart';
-import 'infrastructure/views/widgets.dart';
 
 void main() {
   runApp(const MyApp());
