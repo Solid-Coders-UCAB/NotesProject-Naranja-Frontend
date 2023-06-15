@@ -1,3 +1,4 @@
+import 'package:firstapp/infrastructure/views/nota_nueva.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/infrastructure/views/drawing_room_screen.dart';
 import 'package:firstapp/infrastructure/views/pruebaImageToText.dart';
@@ -124,7 +125,8 @@ void alerta(BuildContext context, bool isGood,String title, String content) {
 }
 
 // Widget que despliega un menu con las opciones adicionales que se pueden realizar en la nota (imagen a texto, esbozar y voz a texto)
-Widget opcionesNota(){
+Widget opcionesNota( NuevaNotaState state){
+  
  return PopupMenuButton(
   
   color: Colors.blue,
@@ -141,10 +143,7 @@ Widget opcionesNota(){
               child: InkWell(
                 child: const Icon(Icons.camera_alt),
                 onTap: (){
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ImagePickerScreen()));
+                    state.getTextFromIa();
                 },
                 ),
               ),

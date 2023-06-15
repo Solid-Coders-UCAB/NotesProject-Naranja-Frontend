@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            opcionesNota()  // Menu desplegable con opciones adicionales en la nota
+            //opcionesNota(new NuevaNota(bytes))  // Menu desplegable con opciones adicionales en la nota
           ],
         ),
       ),

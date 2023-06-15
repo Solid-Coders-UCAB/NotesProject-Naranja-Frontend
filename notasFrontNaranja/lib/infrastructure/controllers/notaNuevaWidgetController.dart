@@ -13,9 +13,11 @@ class notaNuevaWidgetController {
 
   notaNuevaWidgetController({required this.imageToText, required this.imageService, required this.createNotaService });
 
-  Future<Either<MyError,String>> saveNota( {required String titulo,required String contenido }) async {
-    
-    var serviceResponse = await createNotaService.execute(CreatenoteParams(titulo: titulo, contenido: contenido));
+  Future<Either<MyError,String>> saveNota( {required String titulo,required String contenido,int? longitud,int? latitud} ) async {
+    longitud??=0;
+    latitud??=0;
+
+    var serviceResponse = await createNotaService.execute(CreatenoteParams(titulo: titulo, contenido: contenido,longitud: longitud,latitud: latitud));
 
       if (serviceResponse.isLeft){
         return Left(serviceResponse.left);
@@ -23,7 +25,20 @@ class notaNuevaWidgetController {
 
       return Right(serviceResponse.right);
   }
-  
+   
+   Future<Either<MyError,String>> showTextFromIA () async {
 
+    var imageReponse = await imageService.getImage();
 
+      if (imageReponse.isLeft){
+          return Left(imageReponse.left);
+      }
+      
+    var iaResponse = await imageToText.getConvertedText(imageReponse.right);
+        if (iaResponse.isLeft){
+          return Left(iaResponse.left);
+        }
+    
+    return Right(iaResponse.right);
+   }
 }
