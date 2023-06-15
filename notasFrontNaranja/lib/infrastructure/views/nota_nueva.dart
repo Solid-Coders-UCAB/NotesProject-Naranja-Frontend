@@ -1,5 +1,9 @@
+import 'dart:ffi';
+
+import 'package:firstapp/controllerFactory.dart';
 import 'package:flutter/material.dart';
 
+import '../controllers/notaNuevaWidgetController.dart';
 import './widgets.dart';
 
 class NotaNueva extends StatelessWidget {
@@ -34,8 +38,10 @@ class _NuevaNotaState extends State<NuevaNota> {
 
  String noteContent = '';
  String noteTitle = '';
-  
-  final TextEditingController _tituloC = TextEditingController(text: "hola");
+ bool isLoading = false;
+ notaNuevaWidgetController controller = controllerFactory.notaNuevaWidController();
+
+  final TextEditingController _tituloC = TextEditingController(text: "");
   final TextEditingController _contenidoC = TextEditingController(text: "");
 
 
@@ -54,16 +60,6 @@ class _NuevaNotaState extends State<NuevaNota> {
           genericTextFormField(_tituloC, "Título de la nota", false, 40),
           genericTextFormField(
               _contenidoC, "Contenido de la nota", false, 2000),
-          //     2000, // Aqui se indica el maximo de caracteres que se pueden ingresar a la nota
-          // TextFormField(
-          // controller: _contenidoC,
-          // decoration: const InputDecoration(labelText: "Contenido"),
-          // maxLength:
-
-          /// Para determinar el maximo de lineas que puede tener el campo de texto del cuerpo de la nota
-          // maxLines: null,
-          //initialValue: "contenido de la nota",  //Aqui se debe cargar el contenido de la nota de la base de datos
-          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -76,7 +72,7 @@ class _NuevaNotaState extends State<NuevaNota> {
                   onPressed: () {
                     if (_tituloC.text != '') {
 
-                      cambiarTituloC();
+                      saveNota();
 
 
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -108,7 +104,10 @@ class _NuevaNotaState extends State<NuevaNota> {
     );
   }
 
-   cambiarTituloC() {
+   Future saveNota() async {
+
+
+
     setState(() {
       print('paso');
       _tituloC.text = "jijija";

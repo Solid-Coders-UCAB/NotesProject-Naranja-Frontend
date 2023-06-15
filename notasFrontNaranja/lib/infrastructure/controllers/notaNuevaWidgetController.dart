@@ -14,6 +14,7 @@ class notaNuevaWidgetController {
   notaNuevaWidgetController({required this.imageToText, required this.imageService, required this.createNotaService });
 
   Future<Either<MyError,String>> saveNota( {required String titulo,required String contenido }) async {
+    
     var serviceResponse = await createNotaService.execute(CreatenoteParams(titulo: titulo, contenido: contenido));
 
       if (serviceResponse.isLeft){
@@ -23,6 +24,6 @@ class notaNuevaWidgetController {
       return Right(serviceResponse.right);
   }
   
-  
+
 
 }
