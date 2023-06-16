@@ -20,9 +20,10 @@ class httpNoteRepository implements noteRepository{
     "estado": note.getEstado,
     "longitud": note.getLongitud,
     "latitud": note.getLatitud
-    //"client": {"c_id": idclient}
    });
-    //'http://192.168.0.102:3000/nota/create'
+
+  try{ 
+
     final response = await post(Uri.parse('http://192.168.1.2:3000/nota/create'), //aqui colocar la red de tu compu local
       body: body,
       headers: {
@@ -30,12 +31,13 @@ class httpNoteRepository implements noteRepository{
         "content-type": "application/json"
       });
 
-    if (response.statusCode != 201) {
-      return const Left(MyError(key: AppError.NotFound,
-                                message: 'error al procesar la solicitud al servidor'));
-    }
+     return Right(response.body);  
 
-    return Right(response.body);
+  }catch(e){
+    String error = 'error al procesar la solicitud al servidor: $e';
+         return Left(MyError(key: AppError.NotFound,
+                                  message: error));
+  }  
     
   }
     

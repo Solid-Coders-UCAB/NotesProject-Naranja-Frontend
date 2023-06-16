@@ -111,10 +111,6 @@ class NuevaNotaState extends State<NuevaNota> {
                   onPressed: () {
                     if (_tituloC.text != '') {
                       saveNota();
-
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Nota agregada")));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text(
@@ -142,6 +138,11 @@ class NuevaNotaState extends State<NuevaNota> {
     );
   }
 
+showSystemMessage(String message){
+   ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text(message)));
+}
+
+
 Future saveNota() async {
     setState(() {
       loading = true;
@@ -153,8 +154,7 @@ Future saveNota() async {
           });
           String text ='';
           text = response.left.message!;
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text(text)));
+          showSystemMessage(text);
       }
      if (response.isRight){ 
         setState(() {
@@ -162,6 +162,7 @@ Future saveNota() async {
           _tituloC.text = '';
           loading = false;
           imagenVisible = false;
+          showSystemMessage(response.right);
         });
       }
   }

@@ -1,5 +1,5 @@
 import 'package:either_dart/either.dart';
-import 'package:firstapp/application/createNoteInServerService.dart';
+import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/application/getImageFromCameraService.dart';
 import 'package:firstapp/application/imageToTextService.dart';
 import 'package:firstapp/domain/errores.dart';
@@ -9,7 +9,7 @@ class notaNuevaWidgetController {
 
   imageToTextService imageToText;
   getImageFromCamaraService imageService;
-  createNoteInServerService createNotaService;
+  service<CreatenoteParams,String> createNotaService;
 
   notaNuevaWidgetController({required this.imageToText, required this.imageService, required this.createNotaService });
 

@@ -60,20 +60,21 @@ class SpeechScreenState extends State<SpeechScreen> {
           child: Text(text),         
         ),
       )],
-    ),persistentFooterButtons: [FloatingActionButton(
+    ),persistentFooterButtons: [
+        FloatingActionButton(
             heroTag: 'salir',
             onPressed: () {
                 Navigator.pop(context, text); // datos de vuelta a la primera pantalla},
             },
-            child: const Icon(Icons.check))]);
+            child: const Icon(Icons.check)
+            )
+          ]
+    );
   }
 
   void _listen() async {
     if (!isListening) {
-      bool available = await _speech.initialize(
-       // onStatus: (val) => print('onStatus: $val'),
-       // onError: (val) => print('onError: $val'),
-      );
+      bool available = await _speech.initialize();
       if (available) {
         setState(() => isListening = true);
         _speech.listen(
