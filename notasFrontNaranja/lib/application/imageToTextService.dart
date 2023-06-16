@@ -2,9 +2,11 @@
 
 import 'dart:io';
 import 'package:either_dart/either.dart';
+import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/domain/errores.dart';
+import 'package:firstapp/domain/parameterObjects/imageToTextParams.dart';
 
-class imageToTextService {
+class imageToTextService implements service<imageToTextParams,String> {
   
   iaText ia;
 
@@ -13,6 +15,16 @@ class imageToTextService {
   Future<Either<MyError,String>> getConvertedText(File image) async {
     Either<MyError, String> iaResponse = await ia.getConvertedText(image);
       
+      if (iaResponse.isRight){
+        return Right(iaResponse.right);
+      }else{
+        return Left(iaResponse.left);
+      }
+  }
+  
+  @override
+  Future<Either<MyError, String>> execute(imageToTextParams params) async {
+    Either<MyError, String> iaResponse = await ia.getConvertedText(params.getImage);     
       if (iaResponse.isRight){
         return Right(iaResponse.right);
       }else{

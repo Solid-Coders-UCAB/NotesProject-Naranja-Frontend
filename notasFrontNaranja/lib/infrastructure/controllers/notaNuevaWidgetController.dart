@@ -1,14 +1,15 @@
+import 'dart:io';
+
 import 'package:either_dart/either.dart';
 import 'package:firstapp/application/Iservice.dart';
-import 'package:firstapp/application/getImageFromCameraService.dart';
-import 'package:firstapp/application/imageToTextService.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/parameterObjects/createNoteParams.dart';
+import 'package:firstapp/domain/parameterObjects/imageToTextParams.dart';
 
 class notaNuevaWidgetController {
 
-  imageToTextService imageToText;
-  getImageFromCamaraService imageService;
+  service<imageToTextParams,String> imageToText;
+  service<void,File> imageService;
   service<CreatenoteParams,String> createNotaService;
 
   notaNuevaWidgetController({required this.imageToText, required this.imageService, required this.createNotaService });
@@ -28,13 +29,14 @@ class notaNuevaWidgetController {
    
    Future<Either<MyError,String>> showTextFromIA () async {
 
-    var imageReponse = await imageService.getImage();
+    var imageReponse = await imageService.execute(null);
 
       if (imageReponse.isLeft){
           return Left(imageReponse.left);
       }
+
       
-    var iaResponse = await imageToText.getConvertedText(imageReponse.right);
+    var iaResponse = await imageToText.execute(imageToTextParams(image: imageReponse.right));
         if (iaResponse.isLeft){
           return Left(iaResponse.left);
         }

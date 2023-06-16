@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../controllers/notaNuevaWidgetController.dart';
 import './widgets.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:firstapp/infrastructure/views/ver_imagen.dart';
 
 class NotaNueva extends StatelessWidget {
@@ -43,8 +42,7 @@ class NuevaNotaState extends State<NuevaNota> {
  notaNuevaWidgetController controller = controllerFactory.notaNuevaWidController();
  bool imagenVisible = false;
 //
-  final stt.SpeechToText _speech = stt.SpeechToText();
-  bool _isListening = false;
+
 
   final TextEditingController _tituloC = TextEditingController(text: "");
   final TextEditingController _contenidoC = TextEditingController(text: "");
@@ -178,8 +176,7 @@ Future saveNota() async {
         });
           String text ='';
           text = response.left.message!;
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text(text)));          
+          showSystemMessage(text);      
     }
   if (response.isRight){
           setState(() {
@@ -188,30 +185,6 @@ Future saveNota() async {
         }); 
     }    
   }
-
-    void listen() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize(
-       // onStatus: (val) => print('onStatus: $val'),
-       // onError: (val) => print('onError: $val'),
-      );
-      if (available) {
-        setState(() => _isListening = true);
-        _speech.listen(
-          onResult: (val) => setState(() {
-            _contenidoC.text = _contenidoC.text + val.recognizedWords;
-            if (val.hasConfidenceRating && val.confidence > 0) {
-              //_confidence = val.confidence;
-            }
-          }),
-        );
-      }
-    } else {
-      setState(() => _isListening = false);
-      _speech.stop();
-    }
-  }
-
   
     void showAudioToText({required String contenido,required String titulo}){
       setState(() {

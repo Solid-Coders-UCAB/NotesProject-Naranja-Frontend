@@ -20,7 +20,7 @@ class connectionCheckerDecorator<params,result> extends serviceDecorator<params,
         return await super.execute(params);
       }
 
-        return const Left(MyError(key: AppError.NotFound,message: "error to get conection from this device"));
+        return const Left(MyError(key: AppError.NotFound,message: "error to get connection from this device"));
 
     }
 }
