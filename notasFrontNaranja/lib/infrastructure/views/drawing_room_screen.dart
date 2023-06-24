@@ -1,15 +1,13 @@
 // ignore_for_file: must_be_immutable
-
 import 'dart:io';
-import 'dart:typed_data';
+import 'package:firstapp/infrastructure/controllers/drawingRoomController.dart';
 import 'package:firstapp/infrastructure/theme/app_color.dart';
 import 'package:firstapp/infrastructure/views/nota_nueva.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firstapp/infrastructure/implementations/drawingRoomImp/drawing_point.dart';
 import 'package:flutter/services.dart';
-import 'package:screenshot/screenshot.dart';
-//import 'dart:ui' as ui;
+import 'package:firstapp/controllerFactory.dart';
 
 class DrawingRoomScreen extends StatefulWidget {
   const DrawingRoomScreen({super.key});
@@ -28,6 +26,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
     Colors.white,
   ];
 
+  DrawingRoomController Drawingcontroller = controllerFactory.createDrawingRoomController();
   final GlobalKey genKey = GlobalKey();
   Uint8List? bytes;
 
@@ -51,8 +50,8 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
         title: const Text("Esbozado"),
         backgroundColor: Colors.blue,
       ),
+      backgroundColor: Colors.white,
       body: Stack(
-        
         children: [
 
           /// Canvas (Lienzo)
@@ -121,7 +120,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
                       foregroundDecoration: BoxDecoration(
                         border: selectedColor == avaiableColor[index]
                             ? Border.all(color: AppColor.primaryColor, width: 4)
-                            : null,
+                            : Border.all(color: Colors.black, width: 2),
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -187,16 +186,10 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
             heroTag: "Save",
             
             onPressed: () async{
-              final controller = ScreenshotController();
-              final bytes = await controller.captureFromWidget(
-                Material(child: pizarra(context, drawingPoints))
-              );
 
-              setState(() => this.bytes = bytes);
-              //_saveEsbozar(bytes);
-
-              //_loadEsbozar();  
-              Navigator.pop(context, bytes);  
+              final bytes = await Drawingcontroller.getImageFromWidget(pizarra(context, drawingPoints));
+              // ignore: use_build_context_synchronously
+              Navigator.pop(context, bytes?.right);  
             },
             child: const Icon(Icons.check),
           ),
@@ -220,7 +213,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
       final file = File('$appStorage/image.png');
       file.writeAsBytes(bytes); 
     } catch (e) {
-      print("error guardando imagen ${e}");
+      //print("error guardando imagen ${e}");
     }
   }
 
@@ -231,7 +224,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
       final file = File('$appStorage/image.png');
 
       if (file.existsSync()) {
-        final bytes = await file.readAsBytes();
+        //final bytes = await file.readAsBytes();
    
         // ignore: use_build_ntext_synchronously, use_build_context_synchronously
         Navigator.push(context,
@@ -240,7 +233,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
       }
 
     } catch (e) {
-      print("error guardando imagen ${e}");
+      //
     }
   }
 
@@ -280,13 +273,13 @@ class DrawingPainter extends CustomPainter {
   }
 }
 
+// Lienzo sobre el cual se va a realizar el esbozado
 Widget pizarra(BuildContext context, List<DrawingPoint> drawingPoints){
  return CustomPaint(
               painter: DrawingPainter(
                 drawingPoints: drawingPoints,
               ),
               child: SizedBox(
-                
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
               ),

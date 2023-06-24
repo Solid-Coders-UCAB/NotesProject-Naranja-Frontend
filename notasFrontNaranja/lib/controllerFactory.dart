@@ -1,9 +1,12 @@
 import 'package:firstapp/application/createNoteInServerService.dart';
 import 'package:firstapp/application/getImageFromCameraService.dart';
 import 'package:firstapp/application/imageToTextService.dart';
+import 'package:firstapp/application/widgetToImageService.dart';
+import 'package:firstapp/infrastructure/controllers/drawingRoomController.dart';
 import 'package:firstapp/infrastructure/controllers/imageToTextWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/implementations/HTTPnoteRepositoy.dart';
+import 'package:firstapp/infrastructure/implementations/drawingRoomImp/screenshot_imp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imageToTextImp.dart';
 
@@ -26,6 +29,11 @@ class controllerFactory {
     return notaNuevaWidgetController(imageToText: imageToTextService(ia: iaTextImp()), 
                                      imageService: getImageFromCamaraService(picker: imagePickerImp()), 
                                      createNotaService: createNoteInServerService(noteRepo: httpNoteRepository()));      
+  }
+
+// Controlador para el widget de esbozado DrawingRoom
+    static DrawingRoomController createDrawingRoomController(){
+      return DrawingRoomController(imageService: WidgetToImageService(converter: ScreenshotImp()));
   }
 
 }                       
