@@ -41,7 +41,11 @@ class NuevaNotaState extends State<NuevaNota> {
  bool loading = false;
  Uint8List? imagen;
  notaNuevaWidgetController controller = controllerFactory.notaNuevaWidController();
- bool imagenVisible = false;
+ //bool imagenVisible = false;
+ Uint8List? selectedImage;
+ List<Uint8List> imagenes = []; 
+
+ 
 //
   final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
@@ -69,26 +73,42 @@ class NuevaNotaState extends State<NuevaNota> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           genericTextFormField(_tituloC, "Título de la nota", false, 40),
-          imagenVisible == false ? const Row()
+          imagenes.isEmpty ? const Row()
           : 
-          Visibility(
-            visible: imagenVisible,
-            child: GestureDetector(
-              onTap: (){
-                Navigator.push(context,
-                              MaterialPageRoute(
-                              builder: (context) => VerImagen(imagen)));
-              },
-              child: SizedBox(
-                
-                width: 400,
-                height: 200,
-                child: Image.memory(
-                              imagen!,
-                        ),
-              ),
-            ),
+
+          SizedBox(
+           height: 250,
+            child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: imagenes.length,
+                  separatorBuilder: (_, __) {
+                    return const SizedBox(width: 8);
+                  },
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () async{
+                        String indicador = await Navigator.push(context,
+                                MaterialPageRoute(
+                                builder: (context) => VerImagen(imagenes[index])));
+                        setState(() {
+                          
+                          selectedImage = imagenes[index];
+                          
+                                if(indicador == "true"){
+                                  imagenes.remove(selectedImage);
+                                }
+                        });
+                      },
+                      child: SizedBox(
+                        //width: 400,
+                        //height: 200,
+                        child: Image.memory(imagenes[index]),
+                ),
+                    );
+                  },
+                ),
           ),
+
           maxLinesTextFormField(
               _contenidoC, "Contenido de la nota", false, 2000),
           loading == true ? const Row()
@@ -161,7 +181,7 @@ Future saveNota() async {
           _contenidoC.text = '';
           _tituloC.text = '';
           loading = false;
-          imagenVisible = false;
+ //         imagenVisible = false;
         });
       }
   }
@@ -233,7 +253,9 @@ Future saveNota() async {
     if (bytes != null) {
       setState(() {
         imagen = bytes;
-        imagenVisible = true;
+       // imagenVisible = true;
+        imagenes.add(bytes); // nuevo
+        print(imagenes.length);
       });
     }
   }
@@ -242,3 +264,22 @@ Future saveNota() async {
 
 
 
+
+ //         Visibility(
+   //         visible: imagenVisible,
+     //       child: GestureDetector(
+       //       onTap: (){
+         //       Navigator.push(context,
+           //                   MaterialPageRoute(
+             //                 builder: (context) => VerImagen(imagen)));
+              //},
+     //         child: SizedBox(
+                
+       //         width: 400,
+         //       height: 200,
+           //     child: Image.memory(
+             //                 imagen!,
+               //         ),
+//              ),
+  //          ),
+    //      ),

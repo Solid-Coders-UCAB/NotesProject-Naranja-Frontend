@@ -12,19 +12,32 @@ class VerImagen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+          onPressed: (){
+            Navigator.pop(context, "false"); 
+          },
+        ),
         title: const Text(""),
         backgroundColor: Colors.blue,
       ),
       body:  Center(
         child: Imagen(bytes),
       ),
+      floatingActionButton: FloatingActionButton( //boton para probar backend
+            heroTag: 'delete_image',
+            onPressed: () {
+                  Navigator.pop(context, "true");
+            },
+            tooltip: 'Delete',
+            child: const Icon(Icons.delete),
+          ),
     );
   }
 }
 
 class Imagen extends StatefulWidget {
 Uint8List? bytes;
-  Imagen(this.bytes);
+  Imagen(this.bytes, {super.key});
 
   @override
   // ignore: no_logic_in_create_state

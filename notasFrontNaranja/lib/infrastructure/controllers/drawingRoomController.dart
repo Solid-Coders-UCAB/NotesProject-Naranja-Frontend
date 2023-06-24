@@ -6,15 +6,15 @@ import 'package:flutter/material.dart';
 
 class DrawingRoomController{
   
-  WidgetToImageService? imageService;
+  WidgetToImageService imageService;
 
-  DrawingRoomController({required WidgetToImageService this.imageService});
+  DrawingRoomController({required this.imageService});
 
-  Future<Either<MyError, Uint8List>?> getImageFromWidget(Widget drawing) async {
+  Future<Either<MyError, Uint8List>> getImageFromWidget(Widget drawing) async {
 
-    var imageReponse = await imageService?.getConvertedImage(drawing);
+    Either<MyError, Uint8List> imageReponse = await imageService.getConvertedImage(drawing);
 
-    if (imageReponse!.isLeft){
+    if (imageReponse.isLeft){
           return Left(imageReponse.left);
       }
     
