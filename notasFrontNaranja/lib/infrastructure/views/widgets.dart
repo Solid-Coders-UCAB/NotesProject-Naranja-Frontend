@@ -138,6 +138,8 @@ Widget opcionesNota( NuevaNotaState state){
         child:  Wrap(
           direction: Axis.horizontal,
           children: <Widget>[
+            
+            // Opcion de imagen a texto
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
@@ -147,6 +149,8 @@ Widget opcionesNota( NuevaNotaState state){
                 },
                 ),
               ),
+
+            // Opcion de esbozar una nota
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
@@ -161,6 +165,8 @@ Widget opcionesNota( NuevaNotaState state){
                 },
                 )
             ),
+
+            // Opcion de esbozar una nota
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
