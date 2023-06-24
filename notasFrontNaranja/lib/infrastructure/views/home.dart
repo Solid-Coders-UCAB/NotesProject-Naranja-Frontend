@@ -28,6 +28,8 @@ class Home extends StatefulWidget {
 
 class homeState extends State<Home> {
 
+    bool _showList = false;
+
   homeState();
 
   @override
@@ -38,115 +40,106 @@ class homeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
         title: const Text("Notas"),
-        //barra de busqueda
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {
-        //       showSearch(
-        //         context: context,
-        //         delegate: CustomSearchDelegate(),
-        //       );
-        //     },
-        //     icon: const Icon(Icons.search),
-        //     alignment: Alignment.center,
-        //   ),
-        // ],
       ),
+     
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 99, 91, 250),
           onPressed: () async {
-            //Abrir pagina de agregar nota
-
-            String? refresh01 = await Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const NotaNueva()));
-            if (refresh01 == 'refresh') {
-              //refresh(id_client);
-            }
+            createNote();
           },
           heroTag: 'addButton',
           child: const Icon(Icons.add),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
+      body: ListView.builder(
+        itemCount: 5,
+        itemBuilder: (context, index) {
+          return Container(
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(148, 168, 196, 255),
+              border: Border.all(color: const Color.fromARGB(90, 74, 65, 253),width: 2.5),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            margin: EdgeInsets.symmetric(vertical: 15,horizontal: 15),
+            padding: EdgeInsets.all(16),
+            child: notePreviewWidget()
+          );
+        },
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+      ),
       
     );
   }
 
 
+void createNote() async {
+            //Abrir pagina de agregar nota
+    String? refresh01 = await Navigator.push(context,MaterialPageRoute(builder: (context) => const NotaNueva()));
+    if (refresh01 == 'refresh') {
+              //refresh(id_client);
+    }
+}
 
- 
- 
+Widget notePreview(){
+  return(notePreviewWidget());
+}
 
-//Barra de busqueda
-// class CustomSearchDelegate extends SearchDelegate {
-//   List<String> searchTerms = [
-//     'Nota 1',
-//     'Campo 2',
-//     'Nota 3',
-//     'Contenido 4',
-//     'Nota 5',
-//     'Me quiero dormir 6',
-//     'Nota 7'
-//   ];
+}
 
-//   @override
-//   List<Widget> buildActions(BuildContext context) {
-//     return [
-//       IconButton(
-//           //Se limpia el query de la barra de busqueda
-//           onPressed: () {
-//             query = '';
-//           },
-//           icon: const Icon(Icons.clear))
-//     ];
-//   }
+class MyListWidget extends StatelessWidget {
+  final List<String> cosas = ['Cosas 1', 'Cosas 2', 'Cosas 3'];
 
-//   @override
-//   Widget buildLeading(BuildContext context) {
-//     return IconButton(
-//         onPressed: () {
-//           close(context, null);
-//         },
-//         icon: const Icon(Icons.arrow_back));
-//   }
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListView.builder(
+        itemCount: cosas.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            title: Text(cosas[index]),
+          );
+        },
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+      ),
+    );
+  }
+}
 
-//   @override
-//   Widget buildResults(BuildContext context) {
-//     List<String> matchQuery = [];
-//     for (var nota in searchTerms) {
-//       if (nota.toLowerCase().contains(query.toLowerCase())) {
-//         matchQuery.add(nota);
-//       }
-//     }
-//     return ListView.builder(
-//         itemCount: matchQuery.length,
-//         itemBuilder: (context, index) {
-//           var result = matchQuery[index];
-//           return ListTile(
-//             title: Text(result),
-//           );
-//         });
-//   }
+class notePreviewWidget extends StatefulWidget{
+    
+  @override
+  notePreviewState createState() => notePreviewState();
+    
+}
 
-//   @override
-//   Widget buildSuggestions(BuildContext context) {
-//     List<String> matchQuery = [];
-//     for (var nota in searchTerms) {
-//       if (nota.toLowerCase().contains(query.toLowerCase())) {
-//         matchQuery.add(nota);
-//       }
-//     }
-//     return ListView.builder(
-//       itemCount: matchQuery.length,
-//       itemBuilder: (context, index) {
-//         var result = matchQuery[index];
-//         return ListTile(
-//           title: Text(result),
-//         );
-//       },
-//     );
-//   }
-//  }
- }
+class notePreviewState extends State<notePreviewWidget> {
+
+  bool showList = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return(Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              showList = true;
+            });
+          },
+          child: Container(
+            alignment: Alignment.center,
+            child: const Text('carpeta'),
+          ),
+        ),
+        if (showList) MyListWidget(),
+      ],
+    ));    
+  }
+  
+}

@@ -22,23 +22,26 @@ class httpNoteRepository implements noteRepository{
     "latitud": note.getLatitud
    });
 
+    Response response;
+
   try{ 
 
-    final response = await post(Uri.parse('http://192.168.1.2:3000/nota/create'), //aqui colocar la red de tu compu local
+    response = await post(Uri.parse('http://192.168.1.2:3000/nota/create'), //aqui colocar la red de tu compu local
       body: body,
       headers: {
         "Accept": "application/json",
         "content-type": "application/json"
       });
 
-     return Right(response.body);  
+    // return Right(response.body);  
 
   }catch(e){
     String error = 'error al procesar la solicitud al servidor: $e';
          return Left(MyError(key: AppError.NotFound,
                                   message: error));
-  }  
-    
-  }
+  } 
+
+    return Right(response.body);
+ }
     
 }
