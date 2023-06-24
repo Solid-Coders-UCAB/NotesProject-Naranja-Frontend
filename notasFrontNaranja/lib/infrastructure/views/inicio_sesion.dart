@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './home.dart';
+import 'home/home.dart';
 import './widgets.dart';
 
 class Inicio extends StatefulWidget {

@@ -1,6 +1,8 @@
 
+import 'package:firstapp/domain/nota.dart';
 import 'package:flutter/material.dart';
-import './nota_nueva.dart';
+import '../nota_nueva.dart';
+import 'notePreview.dart';
 
 
 // En este código está toda la interfaz de la app de notas
@@ -27,8 +29,6 @@ class Home extends StatefulWidget {
 }
 
 class homeState extends State<Home> {
-
-    bool _showList = false;
 
   homeState();
 
@@ -58,16 +58,7 @@ class homeState extends State<Home> {
       body: ListView.builder(
         itemCount: 5,
         itemBuilder: (context, index) {
-          return Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(148, 168, 196, 255),
-              border: Border.all(color: const Color.fromARGB(90, 74, 65, 253),width: 2.5),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            margin: EdgeInsets.symmetric(vertical: 15,horizontal: 15),
-            padding: EdgeInsets.all(16),
-            child: notePreviewWidget()
-          );
+          return notePreview();
         },
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -86,7 +77,7 @@ void createNote() async {
 }
 
 Widget notePreview(){
-  return(notePreviewWidget());
+  return(notePreviewWidget(nota: Nota(contenido: 'hola',titulo: 'titulo nota')));
 }
 
 }
@@ -109,37 +100,9 @@ class MyListWidget extends StatelessWidget {
       ),
     );
   }
-}
 
-class notePreviewWidget extends StatefulWidget{
+  void reset(){
     
-  @override
-  notePreviewState createState() => notePreviewState();
-    
-}
-
-class notePreviewState extends State<notePreviewWidget> {
-
-  bool showList = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return(Column(
-      children: [
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              showList = true;
-            });
-          },
-          child: Container(
-            alignment: Alignment.center,
-            child: const Text('carpeta'),
-          ),
-        ),
-        if (showList) MyListWidget(),
-      ],
-    ));    
   }
-  
+
 }

@@ -11,7 +11,7 @@ class Nota {
   String? contenido;
   DateTime? n_date;
   DateTime? n_edit_date;
-  int? id;
+  String? id;
 
   Nota({
     this.n_edit_date,
@@ -32,7 +32,8 @@ class Nota {
     titulo,
     longitud,
     latitud,
-    estado
+    estado,
+    id
   }){
     return Right( Nota(
       n_date: n_date,
@@ -41,7 +42,8 @@ class Nota {
       titulo: titulo,
       longitud: longitud,
       latitud: latitud,
-      estado: estado
+      estado: estado,
+      id: id
     ) );
   }
 

@@ -6,6 +6,7 @@ import 'package:either_dart/src/either.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/domain/repositories/noteRepository.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 class httpNoteRepository implements noteRepository{
@@ -43,5 +44,31 @@ class httpNoteRepository implements noteRepository{
 
     return Right(response.body);
  }
+ 
+  @override
+  Future<Either<MyError, List<Nota>>> getALLnotes() async {
+    
+    var response = await get(Uri.parse('http://192.168.1.2:3000/nota/create)'));
+   
+    if (response.statusCode == 200){
+
+      var jsonData = json.decode(response.body);
+
+      for (var jsonNote in jsonData){
+
+        Nota.create( id: jsonNote['id']['UUID'],
+                     titulo: jsonNote['titulo']['titulo'],
+                     contenido: jsonNote['cuerpo']['cuerpo']
+                  
+        );
+      } 
+
+
+    }
+          
+    return Left(MyError(key: AppError.NotFound,
+                message: response.body ));
+                
+}
     
 }
