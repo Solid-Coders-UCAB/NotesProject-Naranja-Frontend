@@ -47,8 +47,9 @@ class httpNoteRepository implements noteRepository{
  
   @override
   Future<Either<MyError, List<Nota>>> getALLnotes() async {
-    
-    var response = await get(Uri.parse('http://192.168.1.2:3000/nota/create)'));
+
+    List<Nota> notas = [];
+    var response = await get(Uri.parse('http://192.168.1.13:3000/nota/findAll'));
    
     if (response.statusCode == 200){
 
@@ -56,14 +57,15 @@ class httpNoteRepository implements noteRepository{
 
       for (var jsonNote in jsonData){
 
-        Nota.create( id: jsonNote['id']['UUID'],
+       Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
                      titulo: jsonNote['titulo']['titulo'],
-                     contenido: jsonNote['cuerpo']['cuerpo']
-                  
-        );
+                     contenido: jsonNote['cuerpo']['cuerpo']                  
+               ).right;
+
+        notas.add(nota);
       } 
 
-
+      return Right(notas);
     }
           
     return Left(MyError(key: AppError.NotFound,

@@ -1,8 +1,12 @@
 
+import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/domain/nota.dart';
+import 'package:firstapp/infrastructure/controllers/homeController.dart';
 import 'package:flutter/material.dart';
 import '../nota_nueva.dart';
 import 'notePreview.dart';
+
+import 'package:either_dart/either.dart';
 
 
 // En este código está toda la interfaz de la app de notas
@@ -31,11 +35,20 @@ class Home extends StatefulWidget {
 class homeState extends State<Home> {
 
   homeState();
+  bool loading = false;
+  List<Nota> notas = <Nota>[];
+  homeController controller = controllerFactory.createHomeController();
+
+
+  @override
+  void initState() {
+    super.initState();
+    showNotes();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Future<List<Nota>> listOfNotes = notesRequest(id_client);
-
+   
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
@@ -55,17 +68,51 @@ class homeState extends State<Home> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
-      body: ListView.builder(
-        itemCount: 5,
+      body: 
+      
+      loading == true ? const Center(child: SizedBox(
+          width: 30,
+          height: 30,
+          child: CircularProgressIndicator()
+        ))         
+       :      
+      ListView.builder(
+        itemCount: notas.length,
         itemBuilder: (context, index) {
-          return notePreview();
+          return notePreview(notas[index]);
         },
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
       ),
       
     );
+
   }
+
+  void reset(){
+    setState((){
+      loading = true;
+    });
+  }
+
+  void setLoadingState(){
+    setState(() {
+      loading = true;
+    });
+  }
+
+  void showNotes() async{
+    loading = true;
+     var response = await controller.getAllNotesFromServer(this);
+    if (response.isRight){
+      setState(() {
+        notas = response.right;
+        loading = false;
+      });
+      print(notas);
+    }
+  }
+
 
 
 void createNote() async {
@@ -76,8 +123,8 @@ void createNote() async {
     }
 }
 
-Widget notePreview(){
-  return(notePreviewWidget(nota: Nota(contenido: 'hola',titulo: 'titulo nota')));
+Widget notePreview(Nota note){
+  return(notePreviewWidget(nota: Nota(contenido: note.getContenido,titulo: note.getTitulo)));
 }
 
 }
@@ -100,9 +147,4 @@ class MyListWidget extends StatelessWidget {
       ),
     );
   }
-
-  void reset(){
-    
-  }
-
 }
