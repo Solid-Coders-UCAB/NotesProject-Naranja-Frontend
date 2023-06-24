@@ -187,9 +187,10 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
             
             onPressed: () async{
 
-              final bytes = await Drawingcontroller.getImageFromWidget(pizarra(context, drawingPoints));
+              final resultado = await Drawingcontroller.getImageFromWidget(pizarra(context, drawingPoints));
               // ignore: use_build_context_synchronously
-              Navigator.pop(context, bytes?.right);  
+
+              Navigator.pop(context, resultado.right);  
             },
             child: const Icon(Icons.check),
           ),
