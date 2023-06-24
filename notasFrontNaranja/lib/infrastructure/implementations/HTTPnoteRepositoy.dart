@@ -59,7 +59,13 @@ class httpNoteRepository implements noteRepository{
 
        Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
                      titulo: jsonNote['titulo']['titulo'],
-                     contenido: jsonNote['cuerpo']['cuerpo']                  
+                     contenido: jsonNote['cuerpo']['cuerpo'],
+                     n_edit_date: jsonNote['fechaModificacion']['fecha'],
+                     n_date: jsonNote['fechaCreacion']['fecha'],
+                     estado: jsonNote['estado'],
+                     latitud: jsonNote['geolocalizacion']['latitud'],
+                     longitud: jsonNote['geolocalizacion']['longitud']
+                                       
                ).right;
 
         notas.add(nota);

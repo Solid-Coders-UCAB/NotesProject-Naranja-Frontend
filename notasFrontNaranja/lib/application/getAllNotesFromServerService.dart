@@ -7,7 +7,7 @@ import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/domain/repositories/noteRepository.dart';
 
-class getAllNotesFromServerService  implements service{
+class getAllNotesFromServerService  implements service<void,List<Nota>>{
   
   noteRepository noteRepo;
 
