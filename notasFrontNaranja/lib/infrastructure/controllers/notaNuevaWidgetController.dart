@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:either_dart/either.dart';
 import 'package:firstapp/application/Iservice.dart';
@@ -10,9 +11,10 @@ class notaNuevaWidgetController {
 
   service<imageToTextParams,String> imageToText;
   service<void,File> imageService;
+  service<void,File> galleryService;
   service<CreatenoteParams,String> createNotaService;
 
-  notaNuevaWidgetController({required this.imageToText, required this.imageService, required this.createNotaService });
+  notaNuevaWidgetController({required this.imageToText, required this.imageService, required this.galleryService, required this.createNotaService });
 
   Future<Either<MyError,String>> saveNota( {required String titulo,required String contenido,int? longitud,int? latitud} ) async {
     longitud??=0;
@@ -42,5 +44,18 @@ class notaNuevaWidgetController {
         }
     
     return Right(iaResponse.right);
+   }
+
+   Future<Either<MyError,Uint8List>> getImageGallery () async {
+
+    var imageReponse = await galleryService.execute(null);
+
+      if (imageReponse.isLeft){
+          return Left(imageReponse.left);
+      }
+
+      Uint8List imagen = imageReponse.right.readAsBytesSync();
+    
+    return Right(imagen);
    }
 }

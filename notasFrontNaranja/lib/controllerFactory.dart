@@ -1,6 +1,7 @@
 import 'package:firstapp/application/connectionCheckerDecorator.dart';
 import 'package:firstapp/application/createNoteInServerService.dart';
 import 'package:firstapp/application/getImageFromCameraService.dart';
+import 'package:firstapp/application/getImageFromGalleryService.dart';
 import 'package:firstapp/application/imageToTextService.dart';
 import 'package:firstapp/application/widgetToImageService.dart';
 import 'package:firstapp/infrastructure/controllers/drawingRoomController.dart';
@@ -12,6 +13,7 @@ import 'package:firstapp/infrastructure/implementations/drawingRoomImp/screensho
 import 'package:firstapp/infrastructure/implementations/connectionCheckerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imageToTextImp.dart';
+import 'package:firstapp/infrastructure/implementations/imagePickerGalleryImp.dart';
 
 import 'application/getAllNotesFromServerService.dart';
 
@@ -32,7 +34,8 @@ class controllerFactory {
 
   static notaNuevaWidgetController notaNuevaWidController(){
     return notaNuevaWidgetController(imageToText: imageToTextService(ia: iaTextImp()), 
-                                     imageService: getImageFromCamaraService(picker: imagePickerImp()), 
+                                     imageService: getImageFromCamaraService(picker: imagePickerImp()),
+                                     galleryService: getImageFromGalleryService(picker: imagePickerGalleryImp()), 
                                      createNotaService: connectionCheckerDecorator
                                                         (checker: connectionCheckerImp(), 
                                                         servicio: createNoteInServerService(noteRepo: httpNoteRepository())));    
