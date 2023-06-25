@@ -6,7 +6,6 @@ import './widgets.dart';
 import 'package:firstapp/infrastructure/views/ver_imagen.dart';
 
 class NotaNueva extends StatelessWidget {
-
   const NotaNueva({super.key});
 
   @override
@@ -24,8 +23,7 @@ class NotaNueva extends StatelessWidget {
 }
 
 class NuevaNota extends StatefulWidget {
-  const 
-  NuevaNota({
+  const NuevaNota({
     super.key,
   });
 
@@ -34,23 +32,20 @@ class NuevaNota extends StatefulWidget {
 }
 
 class NuevaNotaState extends State<NuevaNota> {
+  String noteContent = '';
+  String noteTitle = '';
+  bool loading = false;
+  Uint8List? imagen;
+  notaNuevaWidgetController controller =
+      controllerFactory.notaNuevaWidController();
+  //bool imagenVisible = false;
+  Uint8List? selectedImage;
+  List<Uint8List> imagenes = [];
 
- String noteContent = '';
- String noteTitle = '';
- bool loading = false;
- Uint8List? imagen;
- notaNuevaWidgetController controller = controllerFactory.notaNuevaWidController();
- //bool imagenVisible = false;
- Uint8List? selectedImage;
- List<Uint8List> imagenes = []; 
-
- 
 //
-
 
   final TextEditingController _tituloC = TextEditingController(text: "");
   final TextEditingController _contenidoC = TextEditingController(text: "");
-
 
   @override
   Widget build(BuildContext context) {
@@ -58,130 +53,125 @@ class NuevaNotaState extends State<NuevaNota> {
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
       //height: 500.0,
       color: Colors.white,
-          child: loading == true ? const Center(child: SizedBox(
-          width: 30,
-          height: 30,
-          child: CircularProgressIndicator()
-        ))         
-       :
-          SingleChildScrollView(
-          // Se agrega esta linea para que se pueda ver todo el texto que se escribe en la nota
-          child: Form(
-              child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          genericTextFormField(_tituloC, "Título de la nota", false, 40),
-          imagenes.isEmpty ? const Row()
-          : 
+      child: loading == true
+          ? const Center(
+              child: SizedBox(
+                  width: 30, height: 30, child: CircularProgressIndicator()))
+          : SingleChildScrollView(
+              // Se agrega esta linea para que se pueda ver todo el texto que se escribe en la nota
+              child: Form(
+                  child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                genericTextFormField(_tituloC, "Título de la nota", false, 40),
+                imagenes.isEmpty
+                    ? const Row()
+                    : SizedBox(
+                        height: 250,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: imagenes.length,
+                          separatorBuilder: (_, __) {
+                            return const SizedBox(width: 8);
+                          },
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () async {
+                                String indicador = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            VerImagen(imagenes[index])));
+                                setState(() {
+                                  selectedImage = imagenes[index];
 
-          SizedBox(
-           height: 250,
-            child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: imagenes.length,
-                  separatorBuilder: (_, __) {
-                    return const SizedBox(width: 8);
-                  },
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () async{
-                        String indicador = await Navigator.push(context,
-                                MaterialPageRoute(
-                                builder: (context) => VerImagen(imagenes[index])));
-                        setState(() {
-                          
-                          selectedImage = imagenes[index];
-                          
-                                if(indicador == "true"){
-                                  imagenes.remove(selectedImage);
-                                }
-                        });
-                      },
-                      child: SizedBox(
-                        //width: 400,
-                        //height: 200,
-                        child: Image.memory(imagenes[index]),
+                                  if (indicador == "true") {
+                                    imagenes.remove(selectedImage);
+                                  }
+                                });
+                              },
+                              child: SizedBox(
+                                //width: 400,
+                                //height: 200,
+                                child: Image.memory(imagenes[index]),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                maxLinesTextFormField(
+                    _contenidoC, "Contenido de la nota", false, 2000),
+                loading == true
+                    ? const Row()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [opcionesNota(this)]),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25)),
+                          backgroundColor:
+                              const Color.fromARGB(255, 99, 91, 250),
+                        ),
+                        onPressed: () {
+                          if (_tituloC.text != '') {
+                            saveNota();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        "El título de la nota no debe estar vacía")));
+                          }
+                        },
+                        child: const Text("Aceptar")),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 99, 91, 250),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25)),
+                        ),
+                        onPressed: () {},
+                        child: const Text("Cancelar")),
+                  ],
                 ),
-                    );
-                  },
-                ),
-          ),
-
-          maxLinesTextFormField(
-              _contenidoC, "Contenido de la nota", false, 2000),
-          loading == true ? const Row()
-          :    
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            
-            children: [
-              opcionesNota(this)
-            ]),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)),
-                    backgroundColor: const Color.fromARGB(255, 99, 91, 250),
-                  ),
-                  onPressed: () {
-                    if (_tituloC.text != '') {
-                      saveNota();
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text(
-                              "El título de la nota no debe estar vacía")));
-                    }
-                  },
-                  child: const Text("Aceptar")),
-              const SizedBox(
-                width: 15,
-              ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 99, 91, 250),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)),
-                  ),
-                  onPressed: () {
-                 
-                  },
-                  child: const Text("Cancelar")),              
-            ],
-          ),
-        ],
-      ))),
+              ],
+            ))),
     );
   }
 
-showSystemMessage(String message){
-   ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text(message)));
-}
+  showSystemMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
 
-
-Future saveNota() async {
+  Future saveNota() async {
     setState(() {
       loading = true;
     });
-    var response = await controller.saveNota(titulo: _tituloC.text,contenido: _contenidoC.text);
-    if (response.isLeft){
-          setState((){
-              loading = false;
-          });
-          String text ='';
-          text = response.left.message!;
-          showSystemMessage(text);
-      }
-     if (response.isRight){ 
-        setState(() {
-          _contenidoC.text = '';
-          _tituloC.text = '';
-          loading = false;
- //         imagenVisible = false;
-        });
-      }
+    var response = await controller.saveNota(
+        titulo: _tituloC.text, contenido: _contenidoC.text);
+    if (response.isLeft) {
+      setState(() {
+        loading = false;
+      });
+      String text = '';
+      text = response.left.message!;
+      showSystemMessage(text);
+    }
+    if (response.isRight) {
+      setState(() {
+        _contenidoC.text = '';
+        _tituloC.text = '';
+        loading = false;
+        //         imagenVisible = false;
+      });
+    }
   }
 
   Future getTextFromIa() async {
@@ -189,69 +179,64 @@ Future saveNota() async {
       loading = true;
     });
     var response = await controller.showTextFromIA();
-    if(response.isLeft){
-        setState((){
-          loading = false;
-        });
-          String text ='';
-          text = response.left.message!;
-          showSystemMessage(text);      
-    }
-  if (response.isRight){
-          setState(() {
-          _contenidoC.text = "${_contenidoC.text}\n${response.right}";
-          loading = false;
-        }); 
-    }    
-  }
-  
-    void showAudioToText({required String contenido,required String titulo}){
+    if (response.isLeft) {
       setState(() {
-         noteContent = '$contenido ';
-         _contenidoC.text = contenido;
-         _tituloC.text = titulo;
-         loading = false;
+        loading = false;
+      });
+      String text = '';
+      text = response.left.message!;
+      showSystemMessage(text);
+    }
+    if (response.isRight) {
+      setState(() {
+        _contenidoC.text = "${_contenidoC.text}\n${response.right}";
+        loading = false;
       });
     }
+  }
 
-    String getTitulo(){
-      return _tituloC.text;
-    }
+  void showAudioToText({required String contenido, required String titulo}) {
+    setState(() {
+      noteContent = '$contenido ';
+      _contenidoC.text = contenido;
+      _tituloC.text = titulo;
+      loading = false;
+    });
+  }
 
-    String getContenido(){
-      return _contenidoC.text;
-    }
+  String getTitulo() {
+    return _tituloC.text;
+  }
 
-  void getEsbozado(Uint8List? bytes)  {
+  String getContenido() {
+    return _contenidoC.text;
+  }
+
+  void getEsbozado(Uint8List? bytes) {
     if (bytes != null) {
       setState(() {
         imagen = bytes;
-       // imagenVisible = true;
+        // imagenVisible = true;
         imagenes.add(bytes); // nuevo
       });
     }
   }
 
-  void getFromGallery()  async{
-      var response= await controller.getImageGallery();
+  void getFromGallery() async {
+    var response = await controller.getImageGallery();
 
-      if (response.isLeft){
-          String text ='';
-          text = response.left.message!;
-          showSystemMessage(text);
-      } else{
-        Uint8List bytes = response.right;
-        setState(() {
-          imagen = bytes;
-          imagenes.add(bytes); 
-        });
-      }
-
-      
-      
-    
+    if (response.isLeft) {
+      String text = '';
+      text = response.left.message!;
+      showSystemMessage(text);
+    } else {
+      Uint8List bytes = response.right;
+      setState(() {
+        imagen = bytes;
+        imagenes.add(bytes);
+      });
+    }
   }
-
 }
 
 
