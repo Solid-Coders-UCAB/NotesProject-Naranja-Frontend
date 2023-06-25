@@ -1,10 +1,8 @@
 import 'dart:typed_data';
-
-import 'package:firstapp/infrastructure/views/nota_nueva.dart';
-import 'package:firstapp/infrastructure/views/ver_imagen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/nota.dart';
+import 'package:firstapp/infrastructure/views/editar_nota.dart';
 
 class notePreviewWidget extends StatelessWidget{
 
@@ -21,9 +19,13 @@ class notePreviewWidget extends StatelessWidget{
       Material(
         child: ListTile(
           title: Text(nota.getTitulo),
-          subtitle: Text(nota.getContenido),
-          onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => const NotaNueva())),
-          leading: getImage(),
+          subtitle: getImage(),
+          onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => 
+          EditarNota(
+            tituloNota: nota.titulo!, 
+            contenidoNota: nota.contenido!, 
+            imagenes: nota.imagenes
+          )))
         ),      
       )
     ));   

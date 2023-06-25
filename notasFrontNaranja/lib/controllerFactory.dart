@@ -8,13 +8,13 @@ import 'package:firstapp/infrastructure/controllers/drawingRoomController.dart';
 import 'package:firstapp/infrastructure/controllers/homeController.dart';
 import 'package:firstapp/infrastructure/controllers/imageToTextWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
+import 'package:firstapp/infrastructure/controllers/editarNotaWidgetController.dart';
 import 'package:firstapp/infrastructure/implementations/HTTPnoteRepositoy.dart';
 import 'package:firstapp/infrastructure/implementations/drawingRoomImp/screenshot_imp.dart';
 import 'package:firstapp/infrastructure/implementations/connectionCheckerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imageToTextImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerGalleryImp.dart';
-
 import 'application/getAllNotesFromServerService.dart';
 
 //fabrica de controladores
@@ -49,6 +49,13 @@ class controllerFactory {
   static homeController createHomeController(){
     return homeController(getAllNotesFromServerService: getAllNotesFromServerService(
                                                         noteRepo: httpNoteRepository()));
+  }
+
+    static editarNotaWidgetController editarNotaWidController(){
+    return editarNotaWidgetController(imageToText: imageToTextService(ia: iaTextImp()), 
+                                     imageService: getImageFromCamaraService(picker: imagePickerImp()),
+                                     galleryService: getImageFromGalleryService(picker: imagePickerGalleryImp()), 
+                                     );    
   }
 
 }                       
