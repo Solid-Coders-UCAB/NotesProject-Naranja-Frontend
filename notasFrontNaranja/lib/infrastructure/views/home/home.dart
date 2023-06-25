@@ -108,7 +108,6 @@ class homeState extends State<Home> {
         notas = response.right;
         loading = false;
       });
-      print(notas);
     }
   }
 
@@ -123,10 +122,7 @@ class homeState extends State<Home> {
 
   Widget notePreview(Nota note) {
     return (notePreviewWidget(
-        nota: Nota(
-            contenido: note.getContenido,
-            titulo: note.getTitulo,
-            imagenes: note.imagenes)));
+        nota: note));
   }
 }
 

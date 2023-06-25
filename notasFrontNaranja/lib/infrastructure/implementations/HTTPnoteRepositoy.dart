@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:either_dart/src/either.dart';
 import 'package:firstapp/domain/errores.dart';
@@ -11,39 +12,63 @@ import 'package:firstapp/domain/repositories/noteRepository.dart';
 import 'package:http/http.dart';
 
 class httpNoteRepository implements noteRepository{
+
+  String domain = '192.168.1.13:3000';
+
   
   @override
   Future<Either<MyError, String>> createNota(Nota note) async {
-    var body = jsonEncode({
-    "titulo": note.getTitulo,
-    "cuerpo": note.getContenido,
-    "fechaCreacion": note.getDate.toString(),
-    "fechaModificacion": note.getEditDate.toString(),
-    "estado": note.getEstado,
-    "longitud": note.getLongitud,
-    "latitud": note.getLatitud
-   });
 
-    Response response;
+    MultipartRequest request;
+    StreamedResponse response;
 
-  try{ 
+    Uint8List buffer = note.imagenes![0];
+    final tempDir = await getTemporaryDirectory();
+    File file = await File('${tempDir.path}/image.png').create(); 
+    file.writeAsBytesSync(buffer);
+    
 
-    response = await post(Uri.parse('http://192.168.1.2:3000/nota/create'), //aqui colocar la red de tu compu local
-      body: body,
-      headers: {
-        "Accept": "application/json",
-        "content-type": "application/json"
-      });
+    var uri = Uri.parse('http://$domain/nota/create');
 
-    // return Right(response.body);  
 
-  }catch(e){
-    String error = 'error al procesar la solicitud al servidor: $e';
+    request = MultipartRequest('POST',uri)
+    ..fields['titulo'] = note.getTitulo
+    ..fields['estado'] = note.getEstado
+    ..fields['cuerpo'] = note.getContenido
+    ..fields['fechaCreacion'] = note.getDate.toString()
+    ..fields['fechaModificacion'] = note.getEditDate.toString()
+    ..fields['longitud'] = note.getLongitud.toString()
+    ..fields['latitud'] = note.getLatitud.toString()
+    ..fields['idCarpeta'] = 'e776849c-4f92-4a57-a3b3-e79dbe2dfc34';
+
+    List<Uint8List>? imagenes = note.imagenes;
+
+    if (imagenes != null){
+      int cont = 0;
+      for (Uint8List buffer in imagenes){
+          final tempDir = await getTemporaryDirectory();
+          File file = await File('${tempDir.path}/${note.getid}Image$cont.png').create(); 
+          print(file.path);
+          file.writeAsBytesSync(buffer);
+          request.files.add( MultipartFile(
+                              'imagen',file.readAsBytes().asStream(),
+                               file.lengthSync(),
+                               filename: file.path));
+         cont++;
+      }
+    }
+ 
+
+    response = await request.send();   
+
+    if (response.statusCode == 200){    
+      return Right(await response.stream.bytesToString());
+    }                   
+
+
+    String error = 'error al procesar la solicitud al servidor: $response';
          return Left(MyError(key: AppError.NotFound,
                                   message: error));
-  } 
-
-    return Right(response.body);
  }
  
   @override
@@ -51,8 +76,7 @@ class httpNoteRepository implements noteRepository{
 
     List<Nota> notas = [];
     List<Uint8List> images = [];
-    int contador = 0;
-    var response = await get(Uri.parse('http://192.168.1.13:3000/nota/findAll'));
+    var response = await get(Uri.parse('http://$domain/nota/findAll'));
    
     if (response.statusCode == 200){
 
@@ -61,7 +85,6 @@ class httpNoteRepository implements noteRepository{
       for (var jsonNote in jsonData){
 
        for (var jsonImage in jsonNote['cuerpo']['imagen']){
-        contador = contador + 1;
         List<dynamic> bufferDynamic = jsonImage["data"];
         Uint8List buffer = Uint8List.fromList(bufferDynamic.cast<int>());
         images.add(buffer);

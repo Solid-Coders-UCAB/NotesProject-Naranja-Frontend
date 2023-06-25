@@ -26,7 +26,8 @@ class createNoteInServerService implements service<CreatenoteParams,String>{
       n_edit_date:  DateTime.now(),
       estado: 'guardada',
       longitud: params.getLongitud,
-      latitud: params.getLatitud
+      latitud: params.getLatitud,
+      imagenes: params.imagenes
     );
 
     if (note.isLeft){         //error al crear la nota

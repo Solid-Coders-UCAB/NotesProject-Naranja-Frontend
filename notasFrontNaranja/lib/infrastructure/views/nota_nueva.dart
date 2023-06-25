@@ -155,7 +155,7 @@ class NuevaNotaState extends State<NuevaNota> {
       loading = true;
     });
     var response = await controller.saveNota(
-        titulo: _tituloC.text, contenido: _contenidoC.text);
+        titulo: _tituloC.text, contenido: _contenidoC.text,imagenes: imagenes);
     if (response.isLeft) {
       setState(() {
         loading = false;
@@ -169,6 +169,7 @@ class NuevaNotaState extends State<NuevaNota> {
         _contenidoC.text = '';
         _tituloC.text = '';
         loading = false;
+        imagenes = [];
         //         imagenVisible = false;
       });
     }

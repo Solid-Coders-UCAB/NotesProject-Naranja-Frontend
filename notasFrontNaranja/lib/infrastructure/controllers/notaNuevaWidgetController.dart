@@ -16,11 +16,11 @@ class notaNuevaWidgetController {
 
   notaNuevaWidgetController({required this.imageToText, required this.imageService, required this.galleryService, required this.createNotaService });
 
-  Future<Either<MyError,String>> saveNota( {required String titulo,required String contenido,int? longitud,int? latitud} ) async {
+  Future<Either<MyError,String>> saveNota({required String titulo,String? contenido,int? longitud,int? latitud, List<Uint8List>? imagenes} ) async {
     longitud??=0;
     latitud??=0;
 
-    var serviceResponse = await createNotaService.execute(CreatenoteParams(titulo: titulo, contenido: contenido,longitud: longitud,latitud: latitud));
+    var serviceResponse = await createNotaService.execute(CreatenoteParams(titulo: titulo, contenido: contenido,imagenes: imagenes,longitud: longitud,latitud: latitud));
 
       if (serviceResponse.isLeft){
         return Left(serviceResponse.left);

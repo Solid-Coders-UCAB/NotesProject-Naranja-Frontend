@@ -1,15 +1,19 @@
+import 'dart:typed_data';
+
 class CreatenoteParams {
   
   int? longitud;
   int? latitud;
-  String? titulo;
+  String titulo;
   String? contenido;
+  List<Uint8List>? imagenes;
   
   CreatenoteParams({
     this.contenido,
-    this.titulo,
+    required this.titulo,
     this.longitud,
     this.latitud,
+    this.imagenes
   });
 
 

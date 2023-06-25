@@ -31,12 +31,11 @@ class notePreviewWidget extends StatelessWidget{
 
   Widget getImage(){
    if ( nota.imagenes!.isEmpty ) {
-      print(nota.getContenido);
       return Text('');
    }
     List<Uint8List> imagenes = nota.imagenes as List<Uint8List>;
     return CircleAvatar(
-            radius: 100,
+            radius: 35,
             backgroundImage: Image.memory(imagenes[0]).image
             );
   }
