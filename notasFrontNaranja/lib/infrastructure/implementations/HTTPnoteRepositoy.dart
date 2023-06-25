@@ -28,7 +28,7 @@ class httpNoteRepository implements noteRepository{
 
   try{ 
 
-    response = await post(Uri.parse('http://192.168.1.2:3000/nota/create'), //aqui colocar la red de tu compu local
+    response = await post(Uri.parse('http://192.168.0.106:3000/nota/create'), //aqui colocar la red de tu compu local
       body: body,
       headers: {
         "Accept": "application/json",
@@ -52,7 +52,7 @@ class httpNoteRepository implements noteRepository{
     List<Nota> notas = [];
     List<Uint8List> images = [];
     int contador = 0;
-    var response = await get(Uri.parse('http://192.168.1.13:3000/nota/findAll'));
+    var response = await get(Uri.parse('http://192.168.0.106:3000/nota/findAll'));
    
     if (response.statusCode == 200){
 

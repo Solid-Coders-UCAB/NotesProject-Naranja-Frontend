@@ -38,7 +38,6 @@ class NuevaNotaState extends State<NuevaNota> {
   Uint8List? imagen;
   notaNuevaWidgetController controller =
       controllerFactory.notaNuevaWidController();
-  //bool imagenVisible = false;
   Uint8List? selectedImage;
   List<Uint8List> imagenes = [];
 
@@ -169,7 +168,6 @@ class NuevaNotaState extends State<NuevaNota> {
         _contenidoC.text = '';
         _tituloC.text = '';
         loading = false;
-        //         imagenVisible = false;
       });
     }
   }

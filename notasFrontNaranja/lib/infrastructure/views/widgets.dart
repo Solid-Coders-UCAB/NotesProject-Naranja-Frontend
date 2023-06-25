@@ -141,7 +141,7 @@ Widget opcionesNota( NuevaNotaState state){
             
             // Opcion de imagen a texto
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
               child: InkWell(
                 child: const Icon(Icons.camera_alt),
                 onTap: (){
@@ -152,7 +152,7 @@ Widget opcionesNota( NuevaNotaState state){
 
             // Opcion de esbozar una nota
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
               child: InkWell(
                 child: const Icon(Icons.draw),
                 onTap: () async {
@@ -166,24 +166,24 @@ Widget opcionesNota( NuevaNotaState state){
                 )
             ),
 
-            // Opcion de esbozar una nota
+            // Opcion de voz a texto
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
               child: InkWell(
                 child: const Icon(Icons.mic),
                 onTap: () async {            
-                    
+                  String espacio = " ";
                    String audio = await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) =>  SpeechScreen(text: '')));                    
-                    state.showAudioToText(contenido: state.getContenido() + audio,titulo: state.getTitulo() );
+                    state.showAudioToText(contenido: state.getContenido() + audio + espacio,titulo: state.getTitulo() );
                 },
                 )
             ),
 
             // Opcion de elegir imagen de la galeria
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
               child: InkWell(
                 child: const Icon(Icons.photo),
                 onTap: ()  {            
@@ -198,4 +198,3 @@ Widget opcionesNota( NuevaNotaState state){
   ]
   );
 }
-
