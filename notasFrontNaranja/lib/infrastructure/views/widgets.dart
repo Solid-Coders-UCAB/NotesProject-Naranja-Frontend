@@ -180,6 +180,17 @@ Widget opcionesNota( NuevaNotaState state){
                 },
                 )
             ),
+
+            // Opcion de elegir imagen de la galeria
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                child: const Icon(Icons.photo),
+                onTap: ()  {            
+                    state.getFromGallery();
+                },
+                )
+            ),
           ],
         ),
       )
