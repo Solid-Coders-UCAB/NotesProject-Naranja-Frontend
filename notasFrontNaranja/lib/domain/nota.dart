@@ -1,9 +1,13 @@
 
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/errores.dart';
 
 class Nota {
 
+  List<Uint8List>? imagenes;
   int? longitud;
   int? latitud;
   String? estado;
@@ -14,6 +18,7 @@ class Nota {
   String? id;
 
   Nota({
+    this.imagenes,
     this.n_edit_date,
     this.n_date,
     this.contenido,
@@ -26,6 +31,7 @@ class Nota {
 
 
   static Either<MyError,Nota> create({
+    imagenes,
     DateTime? n_edit_date,
     n_date,
     contenido,
@@ -43,7 +49,8 @@ class Nota {
       longitud: longitud,
       latitud: latitud,
       estado: estado,
-      id: id
+      id: id,
+      imagenes: imagenes
     ) );
   }
 

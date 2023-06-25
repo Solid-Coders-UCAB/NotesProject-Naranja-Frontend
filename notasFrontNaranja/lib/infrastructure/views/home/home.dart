@@ -124,7 +124,7 @@ void createNote() async {
 }
 
 Widget notePreview(Nota note){
-  return(notePreviewWidget(nota: Nota(contenido: note.getContenido,titulo: note.getTitulo)));
+  return(notePreviewWidget(nota: Nota(contenido: note.getContenido,titulo: note.getTitulo,imagenes: note.imagenes)));
 }
 
 }
