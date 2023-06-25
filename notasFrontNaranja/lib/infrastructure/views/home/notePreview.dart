@@ -21,8 +21,9 @@ class notePreviewWidget extends StatelessWidget{
       Material(
         child: ListTile(
           title: Text(nota.getTitulo),
-          subtitle: getImage(),
-          onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => const NotaNueva()))
+          subtitle: Text(nota.getContenido),
+          onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => const NotaNueva())),
+          leading: getImage(),
         ),      
       )
     ));   
@@ -31,13 +32,12 @@ class notePreviewWidget extends StatelessWidget{
   Widget getImage(){
    if ( nota.imagenes!.isEmpty ) {
       print(nota.getContenido);
-      return Text(nota.getContenido);
+      return Text('');
    }
     List<Uint8List> imagenes = nota.imagenes as List<Uint8List>;
-    return Column(
-            children:[ Image.memory(imagenes[0],scale: 1,fit: BoxFit.cover),
-                       imagenes.length > 1 ? Image.memory(imagenes[1],scale: 1,fit: BoxFit.cover) : Text('HOLA')
-              ]
+    return CircleAvatar(
+            radius: 100,
+            backgroundImage: Image.memory(imagenes[0]).image
             );
   }
     
