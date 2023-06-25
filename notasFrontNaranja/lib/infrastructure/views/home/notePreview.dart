@@ -19,7 +19,7 @@ class notePreviewWidget extends StatelessWidget{
       Material(
         child: ListTile(
           title: Text(nota.getTitulo),
-          subtitle: getImage(),
+          leading: getImage(),
           onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => 
           EditarNota(
             tituloNota: nota.titulo!, 
