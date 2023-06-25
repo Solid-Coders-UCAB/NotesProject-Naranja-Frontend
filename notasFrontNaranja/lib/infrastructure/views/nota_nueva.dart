@@ -228,9 +228,28 @@ Future saveNota() async {
         imagen = bytes;
        // imagenVisible = true;
         imagenes.add(bytes); // nuevo
-        print(imagenes.length);
       });
     }
+  }
+
+  void getFromGallery()  async{
+      var response= await controller.getImageGallery();
+
+      if (response.isLeft){
+          String text ='';
+          text = response.left.message!;
+          showSystemMessage(text);
+      } else{
+        Uint8List bytes = response.right;
+        setState(() {
+          imagen = bytes;
+          imagenes.add(bytes); 
+        });
+      }
+
+      
+      
+    
   }
 
 }
