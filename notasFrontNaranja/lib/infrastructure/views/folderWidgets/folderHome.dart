@@ -1,3 +1,4 @@
+import 'package:firstapp/infrastructure/views/widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/folder.dart';
@@ -17,12 +18,14 @@ class folderHomeState extends State<folderHome> {
   
   bool loading = false;
   List<folder> folders = <folder>[];
+  final TextEditingController buscarNota = TextEditingController(text: '');
   //homeFolderController controller = controllerFactory.createHomeFolderController();
 
   @override
   void initState() {
     super.initState();
-    //showAllFolders();
+    folders.add(folder(name: 'carpeta1'));
+    folders.add(folder(name: 'carpeta2'));
   }
 
   @override
@@ -30,7 +33,7 @@ class folderHomeState extends State<folderHome> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
-        title: const Text("Notas"),
+        title: const Text("Carpetas"),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -63,16 +66,44 @@ class folderHomeState extends State<folderHome> {
           ? const Center(
               child: SizedBox(
                   width: 30, height: 30, child: CircularProgressIndicator()))
-          : ListView.builder(
-              itemCount: folders.length,
-              itemBuilder: (context, index) {
-                return Text('por hacer');
-              },
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-            ),
-    );
+          : 
+          listaCarpetas()
+        );
+        
   }
+
+  Widget listaCarpetas(){
+
+     return 
+                 ListView.builder(
+                          itemCount: folders.length + 1 ,
+                          itemBuilder: (context, index) {
+                            if (index == folders.length){
+                              return const Card(
+                                      child: 
+                                       Material(
+                                          child: ListTile(
+                                          title: Text("agregar nueva carpeta"),
+                                          leading: Icon(Icons.plus_one))));
+                            }
+                                return(Card(
+                                      child: 
+                                       Material(
+                                          child: ListTile(
+                                          title: Text(folders[index].name),
+                                          leading: const Icon(Icons.folder),
+        ),      
+      )
+    )); 
+                          },
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+     );
+                
+  }
+
+
+
 
   void reset() {
     setState(() {
