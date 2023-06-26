@@ -1,6 +1,6 @@
 import 'package:firstapp/application/createNoteInServerService.dart';
 import 'package:firstapp/controllerFactory.dart';
-import 'package:firstapp/domain/parameterObjects/createNoteParams.dart';
+import 'package:firstapp/application/DTOS/createNoteParams.dart';
 import 'package:flutter/material.dart';
 import './infrastructure/views/inicio_sesion.dart';
 import 'infrastructure/views/pruebaImageToText.dart';

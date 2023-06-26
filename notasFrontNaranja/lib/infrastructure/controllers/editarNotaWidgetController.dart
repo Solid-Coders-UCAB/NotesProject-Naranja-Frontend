@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:either_dart/either.dart';
 import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/domain/errores.dart';
-import 'package:firstapp/domain/parameterObjects/imageToTextParams.dart';
-import 'package:firstapp/domain/parameterObjects/updateNoteParams.dart';
+import 'package:firstapp/application/DTOS/imageToTextParams.dart';
+import 'package:firstapp/application/DTOS/updateNoteParams.dart';
 
 class editarNotaWidgetController {
 

@@ -2,7 +2,9 @@ import 'package:firstapp/infrastructure/views/widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/folder.dart';
+import '../../controllers/homeFolderController.dart';
 import '../home/navigationBar.dart';
+import 'package:firstapp/controllerFactory.dart';
 
 class folderHome extends StatefulWidget {
   
@@ -19,13 +21,27 @@ class folderHomeState extends State<folderHome> {
   bool loading = false;
   List<folder> folders = <folder>[];
   final TextEditingController buscarNota = TextEditingController(text: '');
-  //homeFolderController controller = controllerFactory.createHomeFolderController();
+  homeFolderController controller = controllerFactory.homefolderController();
+
+  void changeState(List<folder> f){
+    setState(() {
+      loading = false;
+      folders = f;
+    });
+  }
+
+  void showSystemMessage(String? message){
+    setState(() {
+      loading = false;
+    });
+     ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message!)));
+  }
 
   @override
   void initState() {
     super.initState();
-    folders.add(folder(name: 'carpeta1'));
-    folders.add(folder(name: 'carpeta2'));
+    controller.getAllFolders(this);
   }
 
   @override
@@ -84,7 +100,10 @@ class folderHomeState extends State<folderHome> {
                                        Material(
                                           child: ListTile(
                                           title: Text("agregar nueva carpeta"),
-                                          leading: Icon(Icons.plus_one))));
+                                          leading: Icon(Icons.plus_one),
+                                          )
+                                        )
+                                      );
                             }
                                 return(Card(
                                       child: 
@@ -107,13 +126,13 @@ class folderHomeState extends State<folderHome> {
 
   void reset() {
     setState(() {
-      loading = true;
+      loading = false;
     });
   }
 
-  void setLoadingState() {
+  void setLoadingState(bool l) {
     setState(() {
-      loading = true;
+      loading = l;
     });
   }
 

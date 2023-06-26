@@ -5,7 +5,7 @@ import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/domain/errores.dart';
 
 import '../domain/nota.dart';
-import '../domain/parameterObjects/createNoteParams.dart';
+import 'DTOS/createNoteParams.dart';
 import '../domain/repositories/noteRepository.dart';
 
 

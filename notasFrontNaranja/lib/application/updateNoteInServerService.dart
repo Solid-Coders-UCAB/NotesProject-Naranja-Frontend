@@ -4,7 +4,7 @@ import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/domain/errores.dart';
 
 import '../domain/nota.dart';
-import '../domain/parameterObjects/updateNoteParams.dart';
+import 'DTOS/updateNoteParams.dart';
 import '../domain/repositories/noteRepository.dart';
 
 

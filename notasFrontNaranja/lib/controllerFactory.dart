@@ -1,5 +1,6 @@
 import 'package:firstapp/application/connectionCheckerDecorator.dart';
 import 'package:firstapp/application/createNoteInServerService.dart';
+import 'package:firstapp/application/getAllFoldersFromServerService.dart';
 import 'package:firstapp/application/getImageFromCameraService.dart';
 import 'package:firstapp/application/getImageFromGalleryService.dart';
 import 'package:firstapp/application/imageToTextService.dart';
@@ -10,13 +11,16 @@ import 'package:firstapp/infrastructure/controllers/homeController.dart';
 import 'package:firstapp/infrastructure/controllers/imageToTextWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/editarNotaWidgetController.dart';
-import 'package:firstapp/infrastructure/implementations/HTTPnoteRepositoy.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/HTTPfolderRepository.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/HTTPnoteRepositoy.dart';
 import 'package:firstapp/infrastructure/implementations/drawingRoomImp/screenshot_imp.dart';
 import 'package:firstapp/infrastructure/implementations/connectionCheckerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imageToTextImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerGalleryImp.dart';
 import 'application/getAllNotesFromServerService.dart';
+import 'infrastructure/controllers/homeFolderController.dart';
+
 
 //fabrica de controladores
 
@@ -58,6 +62,10 @@ class controllerFactory {
                                      galleryService: getImageFromGalleryService(picker: imagePickerGalleryImp()), 
                                      updateNotaService: updateNoteInServerService(noteRepo: httpNoteRepository())
                                      );    
+  }
+
+  static homeFolderController homefolderController(){
+    return homeFolderController(getAllFoldersService: getAllFoldersFromServerService(folderRepo: HTTPfolderRepository()));
   }
 
 }                       
