@@ -34,6 +34,7 @@ class notePreviewWidget extends StatelessWidget{
     ));   
   } 
 
+
   Widget getImage(){
    if ( nota.imagenes!.isEmpty ) {
       return Text('');

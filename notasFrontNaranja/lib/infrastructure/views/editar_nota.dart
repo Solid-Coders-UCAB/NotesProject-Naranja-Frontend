@@ -72,9 +72,7 @@ class EditarNotaState extends State<NotaEditar> {
   @override
   Widget build(BuildContext context) {
     
-    if (imagenes == null) {
-      imagenes = [];
-    }
+    imagenes ??= [];
 
     final TextEditingController _tituloC =
         TextEditingController(text: tituloNota);
@@ -224,7 +222,6 @@ class EditarNotaState extends State<NotaEditar> {
                   onPressed: () async {
                     if (_tituloC.text != '') {
                       updateNota(_tituloC.text, _contenidoC.text);
-                      Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Nota editada")));
                     } else {
@@ -306,14 +303,16 @@ class EditarNotaState extends State<NotaEditar> {
   }
 
   void regresarHome(){
-    home.showNotes();
-    Navigator.pop(context);
+    //home.showNotes();
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                 builder: (context) => Home()),(Route<dynamic> route) => false);
   }
 
-    Future updateNota(String titulo, String contenido) async {
+  updateNota(String titulo, String contenido) async {
     setState(() {
       loading = true;
     });
+    
     var response = await controller.updateNota(
       titulo: titulo, 
       contenido: contenido, 
@@ -335,8 +334,9 @@ class EditarNotaState extends State<NotaEditar> {
     }
     if (response.isRight) {
 
-        home.showNotes();
-        //Navigator.pop(context);
+       loading = false;
+
+      regresarHome();
     }
   }
 

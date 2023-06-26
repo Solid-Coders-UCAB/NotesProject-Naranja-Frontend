@@ -11,7 +11,7 @@ import 'package:http/http.dart';
 
 class httpNoteRepository implements noteRepository{
 
-  String domain = '192.168.0.106:3000';
+  String domain = '192.168.1.13:3000';
 
   
   @override
@@ -73,7 +73,10 @@ class httpNoteRepository implements noteRepository{
 
     List<Nota> notas = [];
     List<Uint8List> images = [];
+
+
     var response = await get(Uri.parse('http://$domain/nota/findAll'));
+
    
    if (response.statusCode == 200){
 
@@ -132,7 +135,7 @@ Future<Either<MyError, String>> updateNota(Nota note) async {
     ..fields['fechaModificacion'] = note.getEditDate.toString()
     ..fields['longitud'] = note.getLongitud.toString()
     ..fields['latitud'] = note.getLatitud.toString()
-    ..fields['idCarpeta'] = 'fa378750-9763-4466-902f-26200a4fc603'
+    ..fields['idCarpeta'] = 'e776849c-4f92-4a57-a3b3-e79dbe2dfc34'
     ..fields['idNota'] = note.getid;
 
     List<Uint8List>? imagenes = note.imagenes;
