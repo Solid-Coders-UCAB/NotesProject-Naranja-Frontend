@@ -6,6 +6,8 @@ import 'package:firstapp/controllerFactory.dart';
 import '../controllers/editarNotaWidgetController.dart';
 import 'package:firstapp/infrastructure/views/drawing_room_screen.dart';
 import 'package:firstapp/infrastructure/views/speech_to_text_prueba.dart';
+import 'package:firstapp/domain/nota.dart';
+import 'home/home.dart';
 /// Esta ventana se abre al seleccionar una nota para editarla o eliminarla
 ///
 // ignore: must_be_immutable
@@ -13,18 +15,25 @@ class EditarNota extends StatelessWidget {
   String tituloNota;
   String contenidoNota;
   List<Uint8List>? imagenes = [];
+  Nota note;
+  homeState h;
 
-  EditarNota({super.key, required this.tituloNota, required this.contenidoNota, required this.imagenes});
+  EditarNota({super.key, required this.tituloNota, required this.contenidoNota, required this.imagenes, required this.note, required this.h});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(""),
+        title: const Text("Nueva nota"),
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+        leading: 
+            IconButton(
+              icon: new Icon(Icons.transit_enterexit_outlined),
+              onPressed: () {h!.showNotes(); Navigator.pop(context); }
+            ),
       ),
       body: Center(
-        child: NotaEditar(tituloNota: tituloNota, contenidoNota: contenidoNota, imagenes: imagenes),
+        child: NotaEditar(tituloNota: tituloNota, contenidoNota: contenidoNota, imagenes: imagenes, note: note, home: h),
       ),
     );
   }
@@ -34,21 +43,24 @@ class EditarNota extends StatelessWidget {
 class NotaEditar extends StatefulWidget {
   String tituloNota;
   String contenidoNota;
+  Nota note;
+  homeState home;
   List<Uint8List>? imagenes = [];
 
-  NotaEditar({super.key, required this.tituloNota, required this.contenidoNota, required this.imagenes});
+  NotaEditar({super.key, required this.tituloNota, required this.contenidoNota, required this.imagenes, required this.note, required this.home});
 
   @override
   // ignore: no_logic_in_create_state
-  State<NotaEditar> createState() => EditarNotaState(tituloNota: tituloNota, contenidoNota: contenidoNota, imagenes: imagenes);
+  State<NotaEditar> createState() => EditarNotaState(tituloNota: tituloNota, contenidoNota: contenidoNota, imagenes: imagenes, note: note, home: home);
 }
 
 class EditarNotaState extends State<NotaEditar> {
   String tituloNota;
   String contenidoNota;
   List<Uint8List>? imagenes = [];
-
-  EditarNotaState({required this.tituloNota, required this.contenidoNota, required this.imagenes});
+  Nota note;
+  homeState home;
+  EditarNotaState({required this.tituloNota, required this.contenidoNota, required this.imagenes, required this.note, required this.home});
 
   Uint8List? selectedImage;
   
@@ -211,7 +223,7 @@ class EditarNotaState extends State<NotaEditar> {
                   ),
                   onPressed: () async {
                     if (_tituloC.text != '') {
-                      // Aqui debe agregarse la funcion para editar nota
+                      updateNota(_tituloC.text, _contenidoC.text);
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Nota editada")));
@@ -258,15 +270,11 @@ class EditarNotaState extends State<NotaEditar> {
                                     child: Text("Aceptar")),
                                 TextButton(
                                     onPressed: () {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop('dialog');
-                                      Navigator.pop(context);
+                                      regresarHome();
                                     },
                                     child: Text("Cancelar")),
                               ],
                             ));
-
-                    ////////   esto es lo que se hace
                   },
                   child: const Text("Eliminar")),
               const SizedBox(
@@ -295,6 +303,41 @@ class EditarNotaState extends State<NotaEditar> {
     //_contenidoC.dispose();
     //_tituloC.dispose();
     super.dispose();
+  }
+
+  void regresarHome(){
+    home.showNotes();
+    Navigator.pop(context);
+  }
+
+    Future updateNota(String titulo, String contenido) async {
+    setState(() {
+      loading = true;
+    });
+    var response = await controller.updateNota(
+      titulo: titulo, 
+      contenido: contenido, 
+      idNota: note.getid, 
+      n_date: note.getDate,
+      longitud: note.getLongitud,
+      latitud: note.getLatitud,
+      imagenes: imagenes);
+
+    if (response.isLeft) {
+      String text = '';
+      text = response.left.message!;
+      
+      showSystemMessage(text);
+      setState(() {
+        loading = false;
+      });
+      
+    }
+    if (response.isRight) {
+
+        home.showNotes();
+        //Navigator.pop(context);
+    }
   }
 
     showSystemMessage(String message) {

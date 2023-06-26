@@ -3,6 +3,7 @@ import 'package:firstapp/application/createNoteInServerService.dart';
 import 'package:firstapp/application/getImageFromCameraService.dart';
 import 'package:firstapp/application/getImageFromGalleryService.dart';
 import 'package:firstapp/application/imageToTextService.dart';
+import 'package:firstapp/application/updateNoteInServerService.dart';
 import 'package:firstapp/application/widgetToImageService.dart';
 import 'package:firstapp/infrastructure/controllers/drawingRoomController.dart';
 import 'package:firstapp/infrastructure/controllers/homeController.dart';
@@ -55,6 +56,7 @@ class controllerFactory {
     return editarNotaWidgetController(imageToText: imageToTextService(ia: iaTextImp()), 
                                      imageService: getImageFromCamaraService(picker: imagePickerImp()),
                                      galleryService: getImageFromGalleryService(picker: imagePickerGalleryImp()), 
+                                     updateNotaService: updateNoteInServerService(noteRepo: httpNoteRepository())
                                      );    
   }
 
