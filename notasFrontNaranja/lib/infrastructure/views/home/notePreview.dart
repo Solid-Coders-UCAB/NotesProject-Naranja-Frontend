@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/nota.dart';
 import 'package:firstapp/infrastructure/views/editar_nota.dart';
+import 'package:firstapp/infrastructure/views/home/home.dart';
 
 class notePreviewWidget extends StatelessWidget{
 
   final Nota nota;
-
-  const notePreviewWidget({super.key,required this.nota});
+  final homeState home;
+  const notePreviewWidget({super.key,required this.nota, required this.home});
      
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,9 @@ class notePreviewWidget extends StatelessWidget{
           EditarNota(
             tituloNota: nota.titulo!, 
             contenidoNota: nota.contenido!, 
-            imagenes: nota.imagenes
+            imagenes: nota.imagenes,
+            note: nota,
+            h: home,
           )))
         ),      
       )

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../nota_nueva.dart';
 import 'notePreview.dart';
 import 'package:firstapp/infrastructure/views/home/navigationBar.dart';
-import 'package:either_dart/either.dart';
 
 // En este código está toda la interfaz de la app de notas
 class PaginaPrincipal extends StatelessWidget {
@@ -120,7 +119,7 @@ class homeState extends State<Home> {
 
   Widget notePreview(Nota note) {
     return (notePreviewWidget(
-        nota: note));
+        nota: note, home: this));
   }
 }
 

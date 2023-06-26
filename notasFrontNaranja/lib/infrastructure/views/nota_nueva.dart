@@ -7,6 +7,7 @@ import 'package:firstapp/infrastructure/views/ver_imagen.dart';
 
 import 'home/home.dart';
 
+// ignore: must_be_immutable
 class NotaNueva extends StatelessWidget {
 
   homeState? h;
@@ -32,6 +33,7 @@ class NotaNueva extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class NuevaNota extends StatefulWidget {
 
   homeState home;
