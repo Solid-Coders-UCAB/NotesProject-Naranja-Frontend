@@ -1,3 +1,4 @@
+import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 import 'package:firstapp/infrastructure/views/home/home.dart';
 import 'package:flutter/material.dart';
 
@@ -42,9 +43,8 @@ class NavBar extends StatelessWidget {
               leading: const Icon(Icons.folder_outlined),
               title: const Text('Carpetas'),
               onTap: () {
-                Navigator.pop(context);
-                //Navigator.of(context).push(MaterialPageRoute(
-                //  builder: (context) => Pagina a llamar));
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                 builder: (context) => folderHome()),(Route<dynamic> route) => false);
               },
             ),
             ListTile(

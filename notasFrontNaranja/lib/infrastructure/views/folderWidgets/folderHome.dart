@@ -1,44 +1,28 @@
-import 'package:firstapp/controllerFactory.dart';
-import 'package:firstapp/domain/nota.dart';
-import 'package:firstapp/infrastructure/controllers/homeController.dart';
 import 'package:flutter/material.dart';
-import '../nota_nueva.dart';
-import 'notePreview.dart';
-import 'package:firstapp/infrastructure/views/home/navigationBar.dart';
-import 'package:either_dart/either.dart';
 
-// En este código está toda la interfaz de la app de notas
-class PaginaPrincipal extends StatelessWidget {
-  const PaginaPrincipal({super.key});
+import '../../../domain/folder.dart';
+import '../home/navigationBar.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Notas',
-      home: Home(),
-    );
-  }
-}
-
-class Home extends StatefulWidget {
-  Home({super.key});
-
-  @override
-  homeState createState() => homeState();
-}
-
-class homeState extends State<Home> {
+class folderHome extends StatefulWidget {
   
-  homeState();
+  folderHome({super.key});
+
+  @override
+  folderHomeState createState() => folderHomeState();
+}
+
+class folderHomeState extends State<folderHome> {
+  
+  folderHomeState();
   
   bool loading = false;
-  List<Nota> notas = <Nota>[];
-  homeController controller = controllerFactory.createHomeController();
+  List<folder> folders = <folder>[];
+  //homeFolderController controller = controllerFactory.createHomeFolderController();
 
   @override
   void initState() {
     super.initState();
-    showNotes();
+    //showAllFolders();
   }
 
   @override
@@ -67,7 +51,7 @@ class homeState extends State<Home> {
         child: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 99, 91, 250),
           onPressed: () async {
-            createNote();
+           // createNote();
           },
           heroTag: 'addButton',
           child: const Icon(Icons.add),
@@ -80,9 +64,9 @@ class homeState extends State<Home> {
               child: SizedBox(
                   width: 30, height: 30, child: CircularProgressIndicator()))
           : ListView.builder(
-              itemCount: notas.length,
+              itemCount: folders.length,
               itemBuilder: (context, index) {
-                return notePreview(notas[index]);
+                return Text('por hacer');
               },
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
@@ -102,26 +86,6 @@ class homeState extends State<Home> {
     });
   }
 
-  void showNotes() async {
-    loading = true;
-    var response = await controller.getAllNotesFromServer(this);
-    if (response.isRight) {
-      setState(() {
-        notas = response.right;
-        loading = false;
-      });
-    }
-  }
-
-  void createNote() async {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => NotaNueva(this)));
-  }
-
-  Widget notePreview(Nota note) {
-    return (notePreviewWidget(
-        nota: note));
-  }
 }
 
 class MyListWidget extends StatelessWidget {
