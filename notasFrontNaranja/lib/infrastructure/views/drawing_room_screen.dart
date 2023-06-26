@@ -230,7 +230,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
         // ignore: use_build_ntext_synchronously, use_build_context_synchronously
         Navigator.push(context,
                               MaterialPageRoute(
-                              builder: (context) => const NotaNueva()));
+                              builder: (context) => NotaNueva(null)));
       }
 
     } catch (e) {

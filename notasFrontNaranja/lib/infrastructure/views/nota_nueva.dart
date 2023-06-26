@@ -5,8 +5,13 @@ import '../controllers/notaNuevaWidgetController.dart';
 import './widgets.dart';
 import 'package:firstapp/infrastructure/views/ver_imagen.dart';
 
+import 'home/home.dart';
+
 class NotaNueva extends StatelessWidget {
-  const NotaNueva({super.key});
+
+  homeState? h;
+  
+  NotaNueva(this.h,{super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,24 +19,34 @@ class NotaNueva extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Nueva nota"),
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+        leading: 
+            IconButton(
+              icon: new Icon(Icons.transit_enterexit_outlined),
+              onPressed: () {h!.showNotes(); Navigator.pop(context); }
+            ),
       ),
-      body: const Center(
-        child: NuevaNota(),
+      body: Center(
+        child: NuevaNota(h!)
       ),
     );
   }
 }
 
 class NuevaNota extends StatefulWidget {
-  const NuevaNota({
-    super.key,
-  });
+
+  homeState home;
+  NuevaNota(this.home,{super.key});
 
   @override
-  State<NuevaNota> createState() => NuevaNotaState();
+  State<NuevaNota> createState() => NuevaNotaState(home);
 }
 
 class NuevaNotaState extends State<NuevaNota> {
+
+  homeState home;
+
+  NuevaNotaState(this.home);
+
   String noteContent = '';
   String noteTitle = '';
   bool loading = false;
@@ -135,7 +150,7 @@ class NuevaNotaState extends State<NuevaNota> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25)),
                         ),
-                        onPressed: () {},
+                        onPressed: () {regresarHome();},
                         child: const Text("Cancelar")),
                   ],
                 ),
@@ -147,6 +162,11 @@ class NuevaNotaState extends State<NuevaNota> {
   showSystemMessage(String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void regresarHome(){
+    home.showNotes();
+    Navigator.pop(context);
   }
 
   Future saveNota() async {
@@ -171,6 +191,8 @@ class NuevaNotaState extends State<NuevaNota> {
         imagenes = [];
         //         imagenVisible = false;
       });
+        home.showNotes();
+        Navigator.pop(context);
     }
   }
 

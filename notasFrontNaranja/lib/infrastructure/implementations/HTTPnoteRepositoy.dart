@@ -78,7 +78,7 @@ class httpNoteRepository implements noteRepository{
     List<Uint8List> images = [];
     var response = await get(Uri.parse('http://$domain/nota/findAll'));
    
-    if (response.statusCode == 200){
+   if (response.statusCode == 200){
 
       var jsonData = json.decode(response.body);
 
@@ -104,8 +104,6 @@ class httpNoteRepository implements noteRepository{
         notas.add(nota);
         images = [];
       } 
-
-
       return Right(notas);
     }
           

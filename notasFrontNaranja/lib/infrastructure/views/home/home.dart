@@ -28,7 +28,9 @@ class Home extends StatefulWidget {
 }
 
 class homeState extends State<Home> {
+  
   homeState();
+  
   bool loading = false;
   List<Nota> notas = <Nota>[];
   homeController controller = controllerFactory.createHomeController();
@@ -114,7 +116,7 @@ class homeState extends State<Home> {
   void createNote() async {
     //Abrir pagina de agregar nota
     String? refresh01 = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const NotaNueva()));
+        context, MaterialPageRoute(builder: (context) => NotaNueva(this)));
     if (refresh01 == 'refresh') {
       //refresh(id_client);
     }
