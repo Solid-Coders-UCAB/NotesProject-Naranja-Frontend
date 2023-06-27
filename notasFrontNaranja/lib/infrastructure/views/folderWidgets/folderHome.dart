@@ -5,6 +5,8 @@ import '../../../domain/folder.dart';
 import '../../controllers/homeFolderController.dart';
 import '../home/navigationBar.dart';
 import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/infrastructure/views/carpeta_nueva.dart';
+import 'package:firstapp/infrastructure/views/editar_carpeta.dart';
 
 class folderHome extends StatefulWidget {
   
@@ -95,25 +97,37 @@ class folderHomeState extends State<folderHome> {
                           itemCount: folders.length + 1 ,
                           itemBuilder: (context, index) {
                             if (index == folders.length){
-                              return const Card(
-                                      child: 
-                                       Material(
-                                          child: ListTile(
-                                          title: Text("agregar nueva carpeta"),
-                                          leading: Icon(Icons.plus_one),
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                                MaterialPageRoute(builder: (context) => CarpetaNueva()));
+                                },
+                                child: const Card(
+                                        child: 
+                                         Material(
+                                            child: ListTile(
+                                            title: Text("agregar nueva carpeta"),
+                                            leading: Icon(Icons.plus_one),
+                                            )
                                           )
-                                        )
-                                      );
+                                        ),
+                              );
                             }
-                                return(Card(
-                                      child: 
-                                       Material(
-                                          child: ListTile(
-                                          title: Text(folders[index].name),
-                                          leading: const Icon(Icons.folder),
-        ),      
-      )
-    )); 
+                                return GestureDetector(
+                                  onTap: () {
+                                  Navigator.push(context,
+                                                MaterialPageRoute(builder: (context) => EditarCarpeta()));
+                                },
+                                  child: ( Card(
+                                        child: 
+                                         Material(
+                                            child: ListTile(
+                                            title: Text(folders[index].name),
+                                            leading: const Icon(Icons.folder),
+                                        ),      
+                                      )
+                                    )),
+                                ); 
                           },
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,

@@ -11,7 +11,7 @@ import 'package:http/http.dart';
 
 class httpNoteRepository implements noteRepository{
 
-  String domain = '192.168.1.13:3000';
+  String domain = '192.168.0.106:3000';
 
   
   @override
@@ -37,7 +37,7 @@ class httpNoteRepository implements noteRepository{
     ..fields['fechaModificacion'] = note.getEditDate.toString()
     ..fields['longitud'] = note.getLongitud.toString()
     ..fields['latitud'] = note.getLatitud.toString()
-    ..fields['idCarpeta'] = 'fa378750-9763-4466-902f-26200a4fc603';
+    ..fields['idCarpeta'] = '155c6297-510d-45be-ad1c-e02f1634fd8b';
 
     List<Uint8List>? imagenes = note.imagenes;
 

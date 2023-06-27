@@ -21,7 +21,10 @@ class homeFolderController {
         folderHome.changeState(serviceResponse.right);
       }
 
-      folderHome.showSystemMessage(serviceResponse.left.message);   
+      if (serviceResponse.isLeft){
+        folderHome.showSystemMessage(serviceResponse.left.message);
+      }
+         
   }
   
 }
