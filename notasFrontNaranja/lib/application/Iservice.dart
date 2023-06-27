@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, file_names
 
 import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/errores.dart';

@@ -29,7 +29,7 @@ class EditarNota extends StatelessWidget {
         leading: 
             IconButton(
               icon: new Icon(Icons.transit_enterexit_outlined),
-              onPressed: () {h!.showNotes(); Navigator.pop(context); }
+              onPressed: () {h.showNotes(); Navigator.pop(context); }
             ),
       ),
       body: Center(

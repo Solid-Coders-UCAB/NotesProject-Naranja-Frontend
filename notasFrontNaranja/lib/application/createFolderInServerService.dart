@@ -1,5 +1,7 @@
+// ignore_for_file: file_names, camel_case_types
+
 import 'package:either_dart/either.dart';
-import 'package:either_dart/src/either.dart';
+//import 'package:either_dart/src/either.dart';
 import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/folder.dart';

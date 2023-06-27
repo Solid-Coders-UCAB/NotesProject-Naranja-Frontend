@@ -1,4 +1,5 @@
-import 'package:firstapp/infrastructure/views/widgets.dart';
+// ignore_for_file: file_names, camel_case_types
+
 import 'package:flutter/material.dart';
 
 import '../../../domain/folder.dart';
@@ -8,7 +9,7 @@ import 'package:firstapp/controllerFactory.dart';
 
 class folderHome extends StatefulWidget {
   
-  folderHome({super.key});
+  const folderHome({super.key});
 
   @override
   folderHomeState createState() => folderHomeState();
