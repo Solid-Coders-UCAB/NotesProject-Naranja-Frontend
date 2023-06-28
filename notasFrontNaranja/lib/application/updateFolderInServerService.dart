@@ -1,31 +1,31 @@
 import 'package:either_dart/either.dart';
-import 'package:either_dart/src/either.dart';
+import 'package:firstapp/application/DTOS/updateFolderDTO.dart';
 import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/folder.dart';
 import 'package:firstapp/domain/repositories/folderRepository.dart';
-import 'DTOS/createFolderDTO.dart';
 
 // ignore: camel_case_types
-class createFolderInServerService implements service<createFolderDTO,String>{
+class updateFolderInServerService implements service<updateFolderDTO,String>{
 
   folderRepository folderRepo;
 
-  createFolderInServerService({required this.folderRepo});
+  updateFolderInServerService({required this.folderRepo});
 
  
   @override
   Future<Either<MyError, String>> execute(params) async{
 
     Either<MyError,folder> f = folder.create(
-      name: params.getName
+      name: params.getName(),
+      id: params.getId()
     );
 
       if (f.isLeft){
         return Left(f.left);
       }
 
-    var repoResponse = await folderRepo.createFolder(f.right);
+    var repoResponse = await folderRepo.updateFolder(f.right);
       if (repoResponse.isRight){
         return Right(repoResponse.right);
       }

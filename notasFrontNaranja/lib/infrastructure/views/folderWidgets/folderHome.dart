@@ -1,12 +1,10 @@
-import 'package:firstapp/infrastructure/views/widgets.dart';
 import 'package:flutter/material.dart';
-
 import '../../../domain/folder.dart';
 import '../../controllers/homeFolderController.dart';
 import '../home/navigationBar.dart';
 import 'package:firstapp/controllerFactory.dart';
-import 'package:firstapp/infrastructure/views/carpeta_nueva.dart';
-import 'package:firstapp/infrastructure/views/editar_carpeta.dart';
+import 'package:firstapp/infrastructure/views/folderWidgets/carpeta_nueva.dart';
+import 'notas_en_carpeta.dart';
 
 class folderHome extends StatefulWidget {
   
@@ -100,7 +98,7 @@ class folderHomeState extends State<folderHome> {
                               return GestureDetector(
                                 onTap: () {
                                   Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => CarpetaNueva()));
+                                                MaterialPageRoute(builder: (context) => const CarpetaNueva()));
                                 },
                                 child: const Card(
                                         child: 
@@ -116,7 +114,7 @@ class folderHomeState extends State<folderHome> {
                                 return GestureDetector(
                                   onTap: () {
                                   Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => EditarCarpeta()));
+                                                MaterialPageRoute(builder: (context) => NotasEnCarpeta(nombreCarpeta: folders[index].name, idCarpeta: folders[index].id.toString(),)));
                                 },
                                   child: ( Card(
                                         child: 

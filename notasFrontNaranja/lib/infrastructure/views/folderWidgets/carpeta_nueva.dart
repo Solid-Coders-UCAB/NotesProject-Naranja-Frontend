@@ -1,12 +1,12 @@
+import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 import 'package:firstapp/controllerFactory.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../controllers/notaNuevaWidgetController.dart';
-import './widgets.dart';
+import '../../controllers/carpetaNuevaWidgetController.dart';
+import '../widgets.dart';
 
 class CarpetaNueva extends StatelessWidget {
   
-  CarpetaNueva({super.key});
+  const CarpetaNueva({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,23 +16,11 @@ class CarpetaNueva extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
         leading: 
             IconButton(
-              icon: new Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () {Navigator.pop(context); }
             ),
-        actions: <Widget>[
-          ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 99, 91, 250),
-                        ),
-                        onPressed: () {
-
-                        },
-                        child: const Text("Crear")
-                        ),
-        ],
       ),
-      body: Center(
+      body: const Center(
         child: NuevaCarpeta()
       ),
     );
@@ -42,7 +30,7 @@ class CarpetaNueva extends StatelessWidget {
 // ignore: must_be_immutable
 class NuevaCarpeta extends StatefulWidget {
 
-  NuevaCarpeta({super.key});
+  const NuevaCarpeta({super.key});
 
   @override
   State<NuevaCarpeta> createState() => NuevaCarpetaState();
@@ -52,18 +40,14 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
 
 
   NuevaCarpetaState();
-
-  String carpetaTitle = '';
   bool loading = false;
-  Uint8List? imagen;
-  notaNuevaWidgetController controller =
-      controllerFactory.notaNuevaWidController();
-  Uint8List? selectedImage;
-  List<Uint8List> imagenes = [];
+
+  carpetaNuevaWidgetController controller =
+      controllerFactory.createCarpetaNuevaWidgetController();
 
 //
 
-  final TextEditingController _tituloC = TextEditingController(text: "");
+  final TextEditingController _nombreCarpeta = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +55,6 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
       alignment: Alignment.topCenter,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
-        //height: 500.0,
         color: Colors.white,
         child: loading == true
             ? const Center(
@@ -83,7 +66,7 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  genericTextFormField(_tituloC, "Nombre de la carpeta", false, 40),
+                  genericTextFormField(_nombreCarpeta, "Nombre de la carpeta", false, 40),
     
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -96,13 +79,15 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
                                 const Color.fromARGB(255, 99, 91, 250),
                           ),
                           onPressed: () {
-                            if (_tituloC.text != '') {
-                           // Aqui se crea la carpeta
+                            if (_nombreCarpeta.text != '') {
+                              crearCarpeta(_nombreCarpeta.text);
+                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                            builder: (context) => folderHome()),(Route<dynamic> route) => false);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text(
-                                          "El título de la nota no debe estar vacía")));
+                                          "El nombre de la carpeta no debe estar vacío")));
                             }
                           },
                           child: const Text("Crear")),
@@ -117,5 +102,41 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
       ),
     );
   }
+
+void regresarHome(){
+    //home.showNotes();
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                 builder: (context) => folderHome()),(Route<dynamic> route) => false);
+  }
+  showSystemMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future crearCarpeta(String nombreCarpeta) async {
+    setState(() {
+      loading = true;
+    });
+    var response = await controller.createCarpeta(nombreCarpeta: nombreCarpeta);
+
+    if (response.isLeft) {
+      setState(() {
+        loading = false;
+      });
+      String text = '';
+      text = response.left.message!;
+      showSystemMessage(text);
+    }
+
+    if (response.isRight) {
+
+       loading = false;
+
+      regresarHome();
+    }
+    
+  }
+
+  
 
 }

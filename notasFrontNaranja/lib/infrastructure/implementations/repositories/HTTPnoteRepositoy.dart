@@ -37,7 +37,7 @@ class httpNoteRepository implements noteRepository{
     ..fields['fechaModificacion'] = note.getEditDate.toString()
     ..fields['longitud'] = note.getLongitud.toString()
     ..fields['latitud'] = note.getLatitud.toString()
-    ..fields['idCarpeta'] = '155c6297-510d-45be-ad1c-e02f1634fd8b';
+    ..fields['idCarpeta'] = 'fa378750-9763-4466-902f-26200a4fc603';
 
     List<Uint8List>? imagenes = note.imagenes;
 
@@ -135,7 +135,7 @@ Future<Either<MyError, String>> updateNota(Nota note) async {
     ..fields['fechaModificacion'] = note.getEditDate.toString()
     ..fields['longitud'] = note.getLongitud.toString()
     ..fields['latitud'] = note.getLatitud.toString()
-    ..fields['idCarpeta'] = 'e776849c-4f92-4a57-a3b3-e79dbe2dfc34'
+    ..fields['idCarpeta'] = 'fa378750-9763-4466-902f-26200a4fc603'
     ..fields['idNota'] = note.getid;
 
     List<Uint8List>? imagenes = note.imagenes;

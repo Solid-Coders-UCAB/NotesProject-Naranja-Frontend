@@ -22,7 +22,7 @@ class NotaNueva extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
         leading: 
             IconButton(
-              icon: const Icon(Icons.arrow_back_rounded),
+              icon: new Icon(Icons.transit_enterexit_outlined),
               onPressed: () {h!.showNotes(); Navigator.pop(context); }
             ),
       ),

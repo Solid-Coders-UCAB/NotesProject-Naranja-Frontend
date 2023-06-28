@@ -16,7 +16,7 @@ class notaNuevaWidgetController {
 
   notaNuevaWidgetController({required this.imageToText, required this.imageService, required this.galleryService, required this.createNotaService });
 
-  Future<Either<MyError,String>> saveNota({required String titulo,String? contenido,int? longitud,int? latitud, List<Uint8List>? imagenes} ) async {
+  Future<Either<MyError,String>> saveNota({required String titulo, required contenido, int? longitud,int? latitud, List<Uint8List>? imagenes} ) async {
     longitud??=0;
     latitud??=0;
 
