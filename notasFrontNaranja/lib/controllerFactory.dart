@@ -18,7 +18,7 @@ import 'package:firstapp/infrastructure/implementations/connectionCheckerImp.dar
 import 'package:firstapp/infrastructure/implementations/imagePickerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imageToTextImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerGalleryImp.dart';
-import 'application/getAllNotesFromServerService.dart';
+import 'application/getAllNotEliminatedNotesFromServerService.dart';
 import 'infrastructure/controllers/homeFolderController.dart';
 
 
@@ -38,7 +38,8 @@ class controllerFactory {
   }
 
   static notaNuevaWidgetController notaNuevaWidController(){
-    return notaNuevaWidgetController(imageToText: imageToTextService(ia: iaTextImp()), 
+    return notaNuevaWidgetController(imageToText: imageToTextService(ia: iaTextImp()),
+                                    //geolocator: geolocatorService(geolocator: gelocatorImp), 
                                      imageService: getImageFromCamaraService(picker: imagePickerImp()),
                                      galleryService: getImageFromGalleryService(picker: imagePickerGalleryImp()), 
                                      createNotaService: connectionCheckerDecorator
@@ -52,7 +53,7 @@ class controllerFactory {
   }
 
   static homeController createHomeController(){
-    return homeController(getAllNotesFromServerService: getAllNotesFromServerService(
+    return homeController(getAllNotesFromServerService: getAllNotEliminatedNotesFromServerService(
                                                         noteRepo: httpNoteRepository()));
   }
 
@@ -67,6 +68,8 @@ class controllerFactory {
   static homeFolderController homefolderController(){
     return homeFolderController(getAllFoldersService: getAllFoldersFromServerService(folderRepo: HTTPfolderRepository()));
   }
+
+
 
 }                       
 

@@ -8,7 +8,7 @@ import 'package:http/http.dart';
 
 class HTTPfolderRepository implements folderRepository {
 
-  String domain = '192.168.1.13:3000';
+  String domain = '192.168.1.2:3000';
   
   @override
   Future<Either<MyError, String>> createFolder(folder folder) async {

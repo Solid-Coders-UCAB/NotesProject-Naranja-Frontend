@@ -8,9 +8,11 @@ abstract class imagePickerGallery {
   Future<Either<MyError,File>> getImage();
 }
 
+
 class getImageFromGalleryService implements service<void,File>{
   
   imagePickerGallery picker;
+  //pepito
 
     getImageFromGalleryService({required this.picker});
    

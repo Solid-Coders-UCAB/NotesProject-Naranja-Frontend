@@ -7,22 +7,29 @@ import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/domain/repositories/noteRepository.dart';
 
-class getAllNotesFromServerService  implements service<void,List<Nota>>{
+class getAllNotEliminatedNotesFromServerService  implements service<void,List<Nota>>{
   
   noteRepository noteRepo;
 
-  getAllNotesFromServerService({required this.noteRepo});
+  getAllNotEliminatedNotesFromServerService({required this.noteRepo});
 
   @override
   Future<Either<MyError, List<Nota>>> execute(params) async {
     
     var notes = await noteRepo.getALLnotes();
+    List<Nota> NotEliminatedNotes = [];
 
       if (notes.isLeft){
         return Left(notes.left);
       }
 
-      return Right(notes.right);
+    for (var note in notes.right){
+      if (note.estado != 'Eliminada'){
+       NotEliminatedNotes.add(note);
+      }
+    }
+
+      return Right(NotEliminatedNotes);
 
   }
   

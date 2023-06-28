@@ -14,6 +14,7 @@ class notaNuevaWidgetController {
   service<void,File> galleryService;
   service<CreatenoteParams,String> createNotaService;
 
+
   notaNuevaWidgetController({required this.imageToText, required this.imageService, required this.galleryService, required this.createNotaService });
 
   Future<Either<MyError,String>> saveNota({required String titulo,String? contenido,int? longitud,int? latitud, List<Uint8List>? imagenes} ) async {
@@ -58,4 +59,12 @@ class notaNuevaWidgetController {
     
     return Right(imagen);
    }
+
+  //getGeolocalization(){
+  //
+  //   geolocatorService.execute() is left , is right
+
+  //}
+
+
 }

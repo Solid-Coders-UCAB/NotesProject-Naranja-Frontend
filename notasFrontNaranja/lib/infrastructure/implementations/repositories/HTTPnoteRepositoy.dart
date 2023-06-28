@@ -11,7 +11,7 @@ import 'package:http/http.dart';
 
 class httpNoteRepository implements noteRepository{
 
-  String domain = '192.168.1.13:3000';
+  String domain = '192.168.1.2:3000';
 
   
   @override
@@ -73,14 +73,22 @@ class httpNoteRepository implements noteRepository{
 
     List<Nota> notas = [];
     List<Uint8List> images = [];
+    Response response;
+    Response response1;
 
 
-    var response = await get(Uri.parse('http://$domain/nota/findAll'));
+    try{ 
+      response = await get(Uri.parse('http://$domain/nota/findAll'));
+      response1 = response;
+    }catch(e){
+      return Left(MyError(key: AppError.NotFound,
+                                  message: "$e"));
+    }
 
    
-   if (response.statusCode == 200){
+   if (response1.statusCode == 200){
 
-      var jsonData = json.decode(response.body);
+      var jsonData = json.decode(response1.body);
 
       for (var jsonNote in jsonData){
 
@@ -96,10 +104,18 @@ class httpNoteRepository implements noteRepository{
                      n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
                      n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
                      estado: jsonNote['estado'],
-                     latitud: jsonNote['geolocalizacion']['latitud'],
-                     longitud: jsonNote['geolocalizacion']['longitud'],
                      imagenes: images                                
                ).right;
+
+        var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
+        if ( jsonAssignedGeolocalitation){
+            nota.latitud = jsonNote['geolocalizacion']['latitud'];
+            nota.longitud = jsonNote['geolocalizacion']['longitud'];
+        }else{
+            nota.latitud = null;
+            nota.longitud = null;
+        }
+
 
         notas.add(nota);
         images = [];
@@ -127,7 +143,7 @@ Future<Either<MyError, String>> updateNota(Nota note) async {
     var uri = Uri.parse('http://$domain/nota/modificate');
 
 
-    request = MultipartRequest('PUT',uri)
+   request = MultipartRequest('PUT',uri)
     ..fields['titulo'] = note.getTitulo
     ..fields['estado'] = note.getEstado
     ..fields['cuerpo'] = note.getContenido
@@ -155,16 +171,47 @@ Future<Either<MyError, String>> updateNota(Nota note) async {
     }
  
 
+   try{
     response = await request.send();  
+   }catch(e){
+    return Left(MyError(key: AppError.NotFound,
+                message: "$e" ));
+   }
 
     if (response.statusCode == 200){    
       return Right(await response.stream.bytesToString());
-    }                   
+    } 
+
+    var res = response.stream.bytesToString();                  
 
 
-    String error = 'error al procesar la solicitud al servidor: $response';
+    String error = 'error al procesar la solicitud al servidor: $res';
          return Left(MyError(key: AppError.NotFound,
                                   message: error));
  }
-    
+ 
+@override
+Future<Either<MyError, String>> deleteNota(Nota note) async {    
+     var body = jsonEncode({
+        "idNota": note.id,
+      });
+  Response r1;
+  try{
+   r1 = await post(Uri.parse('http://$domain/nota/delete'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+  }catch(e){
+    return Left(MyError(key: AppError.NotFound,
+                                  message: "$e"));
+  }
+    if (r1.statusCode != 200){
+      return Left(MyError(key: AppError.NotFound,
+                                  message: r1.body));
+    }
+  return const Right('nota eliminada exitosamente');     
+}
+
 }

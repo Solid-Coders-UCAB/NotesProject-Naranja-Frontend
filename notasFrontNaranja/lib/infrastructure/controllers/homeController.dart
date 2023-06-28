@@ -1,11 +1,9 @@
-// ignore_for_file: file_names, camel_case_types
+// ignore_for_file: file_names, camel_case_types, invalid_use_of_protected_member
 
 import 'package:either_dart/either.dart';
 import 'package:firstapp/application/Iservice.dart';
-import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/infrastructure/views/home/home.dart';
 
-import '../../domain/nota.dart';
 
 class homeController {
   
@@ -13,14 +11,19 @@ class homeController {
 
   homeController({required this.getAllNotesFromServerService});
 
-  Future<Either<MyError,List<Nota>>> getAllNotesFromServer(homeState widget) async {
+   void getAllNotesFromServer(homeState widget) async {
     
     var notas = await getAllNotesFromServerService.execute(null);
 
-    
-    return Right(notas.right);
+      if (notas.isLeft){
+        widget.showSystemMessage(notas.left.message);
+      }else {
+        widget.setState(() {
+          widget.notas = notas.right;
+          widget.loading = false;
+        });
+      }
       
-
   }
 
   
