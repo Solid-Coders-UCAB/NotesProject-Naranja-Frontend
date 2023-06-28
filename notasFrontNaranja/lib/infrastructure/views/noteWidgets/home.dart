@@ -2,9 +2,9 @@ import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/infrastructure/controllers/homeController.dart';
 import 'package:flutter/material.dart';
-import '../nota_nueva.dart';
+import 'nota_nueva.dart';
 import 'notePreview.dart';
-import 'package:firstapp/infrastructure/views/home/navigationBar.dart';
+import 'package:firstapp/infrastructure/views/systemWidgets/navigationBar.dart';
 
 // En este código está toda la interfaz de la app de notas
 class PaginaPrincipal extends StatelessWidget {

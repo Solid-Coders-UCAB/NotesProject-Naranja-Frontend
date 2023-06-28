@@ -1,5 +1,5 @@
 import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
-import 'package:firstapp/infrastructure/views/home/home.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {

@@ -1,11 +1,11 @@
 import 'package:firstapp/controllerFactory.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../controllers/notaNuevaWidgetController.dart';
-import './widgets.dart';
-import 'package:firstapp/infrastructure/views/ver_imagen.dart';
+import '../../controllers/notaNuevaWidgetController.dart';
+import '../systemWidgets/widgets.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/ver_imagen.dart';
 
-import 'home/home.dart';
+import 'home.dart';
 
 // ignore: must_be_immutable
 class NotaNueva extends StatelessWidget {

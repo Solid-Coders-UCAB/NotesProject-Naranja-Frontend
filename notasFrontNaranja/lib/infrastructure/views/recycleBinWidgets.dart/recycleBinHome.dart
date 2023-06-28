@@ -41,7 +41,7 @@ class recycleBinHomeState extends State<recycleBinHome> {
   @override
   void initState() {
     super.initState();
-    controller.getAllFolders(this);
+   // controller.showAllEliminatedNotes(this);
   }
 
   @override
@@ -79,14 +79,14 @@ class recycleBinHomeState extends State<recycleBinHome> {
 
      return 
                  ListView.builder(
-                          itemCount: folders.length + 1 ,
+                          itemCount: notas.length + 1 ,
                           itemBuilder: (context, index) {
                                 return
                                    Card(
                                         child: 
                                          Material(
                                             child: ListTile(
-                                            title: Text(folders[index].name),
+                                            title: Text( notas[index].getTitulo ),
                                             leading: const Icon(Icons.folder),
                                         ),      
                                       )
@@ -97,7 +97,6 @@ class recycleBinHomeState extends State<recycleBinHome> {
      );
                 
   }
-
 
 
 

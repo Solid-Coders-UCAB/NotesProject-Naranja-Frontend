@@ -1,7 +1,7 @@
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/editarCarpetaWidgetController.dart';
 import 'package:flutter/material.dart';
-import '../widgets.dart';
+import '../systemWidgets/widgets.dart';
 import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 
 // ignore: must_be_immutable

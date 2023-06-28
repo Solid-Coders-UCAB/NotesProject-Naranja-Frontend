@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../domain/folder.dart';
 import '../../controllers/homeFolderController.dart';
-import '../home/navigationBar.dart';
+import '../systemWidgets/navigationBar.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/views/folderWidgets/carpeta_nueva.dart';
 import 'notas_en_carpeta.dart';

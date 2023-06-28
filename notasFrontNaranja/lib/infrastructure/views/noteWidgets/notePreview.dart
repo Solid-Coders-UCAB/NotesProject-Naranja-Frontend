@@ -2,8 +2,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import '../../../domain/nota.dart';
-import 'package:firstapp/infrastructure/views/editar_nota.dart';
-import 'package:firstapp/infrastructure/views/home/home.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/editar_nota.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 
 class notePreviewWidget extends StatelessWidget{
 

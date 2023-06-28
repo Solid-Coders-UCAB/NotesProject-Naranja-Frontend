@@ -2,7 +2,7 @@
 import 'dart:io';
 import 'package:firstapp/infrastructure/controllers/drawingRoomController.dart';
 import 'package:firstapp/infrastructure/theme/app_color.dart';
-import 'package:firstapp/infrastructure/views/nota_nueva.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/nota_nueva.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firstapp/infrastructure/implementations/drawingRoomImp/drawing_point.dart';

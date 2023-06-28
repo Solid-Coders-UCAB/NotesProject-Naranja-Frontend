@@ -1,8 +1,8 @@
-import 'package:firstapp/infrastructure/views/nota_nueva.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/nota_nueva.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:firstapp/infrastructure/views/drawing_room_screen.dart';
-import 'package:firstapp/infrastructure/views/speech_to_text_prueba.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 
 Widget genericTextFormField(TextEditingController controllerData, String text, boolean,int maxLength) {
   return Container(

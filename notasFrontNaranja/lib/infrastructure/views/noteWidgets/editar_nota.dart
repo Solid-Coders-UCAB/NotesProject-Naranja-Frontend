@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import './widgets.dart';
-import 'package:firstapp/infrastructure/views/ver_imagen.dart';
+import '../systemWidgets/widgets.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/ver_imagen.dart';
 import 'package:firstapp/controllerFactory.dart';
-import '../controllers/editarNotaWidgetController.dart';
-import 'package:firstapp/infrastructure/views/drawing_room_screen.dart';
-import 'package:firstapp/infrastructure/views/speech_to_text_prueba.dart';
+import '../../controllers/editarNotaWidgetController.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 import 'package:firstapp/domain/nota.dart';
-import 'home/home.dart';
+import 'home.dart';
 /// Esta ventana se abre al seleccionar una nota para editarla o eliminarla
 ///
 // ignore: must_be_immutable

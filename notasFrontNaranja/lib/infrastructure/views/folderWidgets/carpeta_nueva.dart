@@ -2,7 +2,7 @@ import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:flutter/material.dart';
 import '../../controllers/carpetaNuevaWidgetController.dart';
-import '../widgets.dart';
+import '../systemWidgets/widgets.dart';
 
 class CarpetaNueva extends StatelessWidget {
   
