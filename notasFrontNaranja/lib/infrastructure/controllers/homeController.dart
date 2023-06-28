@@ -10,16 +10,16 @@ class homeController {
 
    void getAllNotesFromServer(homeState widget) async {
 
-    widget.setState(() {
-      widget.loading = true;
-    });
+    widget.loading = true;
 
-    
     var notas = await getAllNotesFromServerService.execute(null);
 
      if (widget.mounted) {
       
       if (notas.isLeft){
+        widget.setState(() {
+          widget.loading = false;
+        });
         widget.showSystemMessage(notas.left.message);
       }else {
         widget.setState(() {
