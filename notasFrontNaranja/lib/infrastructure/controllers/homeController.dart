@@ -1,6 +1,4 @@
 // ignore_for_file: file_names, camel_case_types, invalid_use_of_protected_member
-
-import 'package:either_dart/either.dart';
 import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/infrastructure/views/home/home.dart';
 
@@ -12,6 +10,10 @@ class homeController {
   homeController({required this.getAllNotesFromServerService});
 
    void getAllNotesFromServer(homeState widget) async {
+
+    widget.setState(() {
+      widget.loading = true;
+    });
     
     var notas = await getAllNotesFromServerService.execute(null);
 

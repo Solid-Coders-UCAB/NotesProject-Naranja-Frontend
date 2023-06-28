@@ -84,14 +84,12 @@ class CarpetaEditarState extends State<CarpetaEditar> {
                           ),
                           onPressed: () {
                             if (_nombreCarpeta.text != '') {
-                              updateNota(_nombreCarpeta.text, idCarpeta);
-                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                              builder: (context) => folderHome()),(Route<dynamic> route) => false);
+                              updateCarpeta(_nombreCarpeta.text, idCarpeta);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text(
-                                          "El título de la nota no debe estar vacía")));
+                                          "El título de la carpeta no debe estar vacío")));
                             }
                           },
                           child: const Text("Cambiar nombre")),
@@ -112,7 +110,7 @@ class CarpetaEditarState extends State<CarpetaEditar> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  updateNota(String nombreCarpeta, String idCarpeta) async {
+  updateCarpeta(String nombreCarpeta, String idCarpeta) async {
     setState(() {
       loading = true;
     });
@@ -129,10 +127,9 @@ class CarpetaEditarState extends State<CarpetaEditar> {
       showSystemMessage(text);   
     }
     if (response.isRight) {
-       ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          "Nombre actualizado correctamente")));
+      showSystemMessage('carpeta actualizada correctamente');
+       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+       builder: (context) => folderHome()),(Route<dynamic> route) => false);
     }
   }
 

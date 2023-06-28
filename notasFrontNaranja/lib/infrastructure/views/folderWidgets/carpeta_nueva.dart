@@ -81,8 +81,6 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
                           onPressed: () {
                             if (_nombreCarpeta.text != '') {
                               crearCarpeta(_nombreCarpeta.text);
-                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                            builder: (context) => folderHome()),(Route<dynamic> route) => false);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(

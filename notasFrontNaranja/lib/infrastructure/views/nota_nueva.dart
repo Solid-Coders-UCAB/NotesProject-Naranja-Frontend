@@ -263,24 +263,3 @@ class NuevaNotaState extends State<NuevaNota> {
   }
 }
 
-
-
-
- //         Visibility(
-   //         visible: imagenVisible,
-     //       child: GestureDetector(
-       //       onTap: (){
-         //       Navigator.push(context,
-           //                   MaterialPageRoute(
-             //                 builder: (context) => VerImagen(imagen)));
-              //},
-     //         child: SizedBox(
-                
-       //         width: 400,
-         //       height: 200,
-           //     child: Image.memory(
-             //                 imagen!,
-               //         ),
-//              ),
-  //          ),
-    //      ),
