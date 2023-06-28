@@ -186,16 +186,12 @@ class NuevaNotaState extends State<NuevaNota> {
       showSystemMessage(text);
     }
     if (response.isRight) {
-      setState(() {
-        _contenidoC.text = '';
-        _tituloC.text = '';
-        loading = false;
-        imagenes = [];
-        //         imagenVisible = false;
-      });
+
       showSystemMessage('nota agregada satisfactoriamente');
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
                  builder: (context) => Home()),(Route<dynamic> route) => false); 
+
+
     }
   }
 
