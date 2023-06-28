@@ -242,36 +242,34 @@ class EditarNotaState extends State<NotaEditar> {
                     backgroundColor: const Color.fromARGB(255, 99, 91, 250),
                   ),
                   onPressed: () {
-                    showDialog(
-                        //Ventana de advertencia para confirmar eliminar la nota
-                        //Ventana de dialogo, aparece si el usuario ingresa mal sus datos
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (_) => AlertDialog(
-                              title: const Text("Advertencia"),
-                              content: const Text(
-                                  "Esta seguro de que desea eliminar la nota?"), // Modificar el comentario de advertencia
-                              actions: [
-                                TextButton(
-                                    onPressed: () async {
-                                      /// Aqui se debe eliminar en la BD
-
-                                      Navigator.pop(context);
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop('dialog');
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text("Nota eliminada")));
-                                    },
-                                    child: Text("Aceptar")),
-                                TextButton(
-                                    onPressed: () {
-                                      regresarHome();
-                                    },
-                                    child: Text("Cancelar")),
-                              ],
-                            ));
+                    showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const ListTile(
+            title: Text('Esta seguro que desea eliminar la nota?'),
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('eliminar permanentemente'),
+            onTap: () {
+              Navigator.pop(context);
+              controller.eliminarNotaAction(widget: this,imagenes: note.imagenes,
+              id: note.getid , titulo: note.getTitulo, contenido: note.getContenido, n_date: note.getEditDate);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.exit_to_app_rounded),
+            title: Text('Cancelar'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    }); 
                   },
                   child: const Text("Eliminar")),
               const SizedBox(
@@ -340,9 +338,9 @@ class EditarNotaState extends State<NotaEditar> {
     }
   }
 
-    showSystemMessage(String message) {
+    showSystemMessage(String? message) {
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+        .showSnackBar(SnackBar(content: Text(message!)));
   }
 
   Future getTextFromIa() async {

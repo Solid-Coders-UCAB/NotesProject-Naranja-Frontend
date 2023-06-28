@@ -171,7 +171,7 @@ class NuevaNotaState extends State<NuevaNota> {
     Navigator.pop(context);
   }
 
-  Future saveNota() async {
+  saveNota() async {
     setState(() {
       loading = true;
     });
@@ -193,8 +193,9 @@ class NuevaNotaState extends State<NuevaNota> {
         imagenes = [];
         //         imagenVisible = false;
       });
-        home.showNotes();
-        Navigator.pop(context);
+      showSystemMessage('nota agregada satisfactoriamente');
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                 builder: (context) => Home()),(Route<dynamic> route) => false); 
     }
   }
 

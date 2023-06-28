@@ -50,7 +50,7 @@ class _InicioState extends State<Inicio> {
           backgroundColor: const Color.fromARGB(255, 154, 181, 255),
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10)),
       onPressed: () {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
             builder: (context) =>  PaginaPrincipal()));

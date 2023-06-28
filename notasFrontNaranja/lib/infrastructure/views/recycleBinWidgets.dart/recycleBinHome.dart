@@ -1,10 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:firstapp/domain/nota.dart';
+import 'package:firstapp/infrastructure/controllers/recycleBinHomeController.dart';
 import 'package:flutter/material.dart';
-import '../../../domain/folder.dart';
-import '../../controllers/homeFolderController.dart';
 import '../systemWidgets/navigationBar.dart';
 import 'package:firstapp/controllerFactory.dart';
-import 'package:firstapp/infrastructure/views/folderWidgets/carpeta_nueva.dart';
 
 class recycleBinHome extends StatefulWidget {
   
@@ -21,7 +21,9 @@ class recycleBinHomeState extends State<recycleBinHome> {
   bool loading = false;
   List<Nota> notas = <Nota>[];
   final TextEditingController buscarNota = TextEditingController(text: '');
-  homeFolderController controller = controllerFactory.homefolderController();
+  recycleBinHomeController controller = controllerFactory.recycleBinhomeController();
+  bool showNBottons = false;
+
 
   void changeState({required List<Nota> notas,required bool loading}){
     setState(() {
@@ -41,7 +43,7 @@ class recycleBinHomeState extends State<recycleBinHome> {
   @override
   void initState() {
     super.initState();
-   // controller.showAllEliminatedNotes(this);
+   controller.getAllNotesFromServer(this);
   }
 
   @override
@@ -79,18 +81,10 @@ class recycleBinHomeState extends State<recycleBinHome> {
 
      return 
                  ListView.builder(
-                          itemCount: notas.length + 1 ,
+                          itemCount: notas.length  ,
                           itemBuilder: (context, index) {
                                 return
-                                   Card(
-                                        child: 
-                                         Material(
-                                            child: ListTile(
-                                            title: Text( notas[index].getTitulo ),
-                                            leading: const Icon(Icons.folder),
-                                        ),      
-                                      )
-                                    );  
+                                   notePreview(index);
                           },
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
@@ -98,7 +92,86 @@ class recycleBinHomeState extends State<recycleBinHome> {
                 
   }
 
+  Widget notePreview(int index){
+    return Card(
+            child: 
+             Material(
+                child: ListTile(
+                      title: Text( notas[index].getTitulo ),
+                      leading: iconNotePreview(index),
+                      onTap: (){
+                    showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const ListTile(
+            title: Text('Opciones'),
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('eliminar permanentemente'),
+            onTap: () {
+              eliminarPermanentementeOnPressed();
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.check),
+            title: Text('Restaurar'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    });  
+            },  
+            )
+          )
+        );
+  }
 
+  void eliminarPermanentementeOnPressed(){
+
+
+  }
+
+  Widget botonesNotePreview(){
+    return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Botón 1'),
+                  ),
+                 const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 2),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Botón 2')),
+                   ]
+              );
+  }
+
+
+
+  Widget iconNotePreview(int index){
+    if ( notas[index].imagenes!.isEmpty ) {
+      return const CircleAvatar(
+            radius: 35,
+            backgroundColor: Colors.white38,
+            child: Icon(Icons.note_rounded)
+            );
+   }
+    List<Uint8List> imagenes = notas[index].imagenes as List<Uint8List>;
+    return CircleAvatar(
+            radius: 35,
+            backgroundImage: Image.memory(imagenes[0]).image
+            );
+  }
 
   void reset() {
     setState(() {

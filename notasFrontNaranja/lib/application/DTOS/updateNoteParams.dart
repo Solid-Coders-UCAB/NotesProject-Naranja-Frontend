@@ -10,8 +10,10 @@ class UpdateNoteParams {
   String contenido;
   List<Uint8List>? imagenes;
   DateTime n_date;
+  String estado;
   
   UpdateNoteParams({
+    required this.estado,
     required this.idNota,
     required this.contenido,
     required this.titulo,

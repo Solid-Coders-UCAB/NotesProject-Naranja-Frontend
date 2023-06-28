@@ -1,5 +1,6 @@
 import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
+import 'package:firstapp/infrastructure/views/recycleBinWidgets.dart/recycleBinHome.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {
@@ -54,6 +55,14 @@ class NavBar extends StatelessWidget {
                 Navigator.pop(context);
                 //Navigator.of(context).push(MaterialPageRoute(
                 //  builder: (context) => Pagina a llamar));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.cleaning_services_rounded),
+              title: const Text('Papelera'),
+              onTap: () {
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                 builder: (context) => const recycleBinHome()),(Route<dynamic> route) => false);
               },
             ),
             const Divider(

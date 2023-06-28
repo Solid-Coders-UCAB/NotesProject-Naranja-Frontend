@@ -12,6 +12,7 @@ import 'package:firstapp/infrastructure/controllers/homeController.dart';
 import 'package:firstapp/infrastructure/controllers/imageToTextWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/editarNotaWidgetController.dart';
+import 'package:firstapp/infrastructure/controllers/recycleBinHomeController.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPfolderRepository.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPnoteRepositoy.dart';
 import 'package:firstapp/infrastructure/implementations/drawingRoomImp/screenshot_imp.dart';
@@ -19,6 +20,7 @@ import 'package:firstapp/infrastructure/implementations/connectionCheckerImp.dar
 import 'package:firstapp/infrastructure/implementations/imagePickerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imageToTextImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerGalleryImp.dart';
+import 'application/getAllEliminatedNotes.dart';
 import 'application/getAllNotEliminatedNotesFromServerService.dart';
 import 'infrastructure/controllers/homeFolderController.dart';
 import 'package:firstapp/application/createFolderInServerService.dart';
@@ -78,6 +80,10 @@ class controllerFactory {
 
   static editarCarpetaWidgetController createEditarCarpetaWidgetController(){
     return editarCarpetaWidgetController(updateCarpetaService: updateFolderInServerService(folderRepo: HTTPfolderRepository()));
+  }
+
+  static recycleBinHomeController recycleBinhomeController(){
+   return recycleBinHomeController(getAllEliminatedNotesFromServerService: getAllEliminatedNotesFromServerService(noteRepo: httpNoteRepository()));
   }
 
 }                       
