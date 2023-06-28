@@ -4,6 +4,7 @@ import 'package:firstapp/application/getAllFoldersFromServerService.dart';
 import 'package:firstapp/application/getImageFromCameraService.dart';
 import 'package:firstapp/application/getImageFromGalleryService.dart';
 import 'package:firstapp/application/imageToTextService.dart';
+import 'package:firstapp/application/updateFolderInServerService.dart';
 import 'package:firstapp/application/updateNoteInServerService.dart';
 import 'package:firstapp/application/widgetToImageService.dart';
 import 'package:firstapp/infrastructure/controllers/drawingRoomController.dart';
@@ -20,7 +21,9 @@ import 'package:firstapp/infrastructure/implementations/imageToTextImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerGalleryImp.dart';
 import 'application/getAllNotEliminatedNotesFromServerService.dart';
 import 'infrastructure/controllers/homeFolderController.dart';
-
+import 'package:firstapp/application/createFolderInServerService.dart';
+import 'package:firstapp/infrastructure/controllers/carpetaNuevaWidgetController.dart';
+import 'package:firstapp/infrastructure/controllers/editarCarpetaWidgetController.dart';
 
 //fabrica de controladores
 
@@ -69,7 +72,13 @@ class controllerFactory {
     return homeFolderController(getAllFoldersService: getAllFoldersFromServerService(folderRepo: HTTPfolderRepository()));
   }
 
+  static carpetaNuevaWidgetController createCarpetaNuevaWidgetController(){
+    return carpetaNuevaWidgetController(createCarpetaService: createFolderInServerService(folderRepo: HTTPfolderRepository()));
+  }
 
+  static editarCarpetaWidgetController createEditarCarpetaWidgetController(){
+    return editarCarpetaWidgetController(updateCarpetaService: updateFolderInServerService(folderRepo: HTTPfolderRepository()));
+  }
 
 }                       
 

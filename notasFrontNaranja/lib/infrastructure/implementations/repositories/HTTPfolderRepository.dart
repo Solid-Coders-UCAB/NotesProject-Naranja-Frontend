@@ -28,7 +28,7 @@ class HTTPfolderRepository implements folderRepository {
       });
 
       if (response.statusCode == 200){
-        return const Right('carpeta guardada exitosamente');
+        return const Right('Carpeta guardada exitosamente');
       }else{
         return Left(MyError(key: AppError.NotFound,message: response.body));
       }
@@ -70,4 +70,33 @@ class HTTPfolderRepository implements folderRepository {
 
   }
   
+    @override
+  Future<Either<MyError, String>> updateFolder(folder folder) async {
+    
+    var body = jsonEncode({
+    "nombre": folder.name,
+    "idCarpeta": folder.id.toString()
+  });
+
+  try{
+
+  final Response response = await put(Uri.parse('http://$domain/carpeta/modificate'),
+
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+
+      if (response.statusCode == 200){
+        return const Right('Carpeta actualizada exitosamente');
+      }else{
+        return Left(MyError(key: AppError.NotFound,message: response.body));
+      }
+
+  }catch(e){
+      return Left(MyError(key: AppError.NotFound,message: '$e'));
+  }  
+
+  }
 }

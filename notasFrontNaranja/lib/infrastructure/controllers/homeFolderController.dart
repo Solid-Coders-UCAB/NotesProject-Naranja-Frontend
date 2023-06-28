@@ -1,7 +1,6 @@
 import 'package:firstapp/application/getAllFoldersFromServerService.dart';
 import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 
-
 class homeFolderController {
 
   getAllFoldersFromServerService getAllFoldersService;
@@ -20,6 +19,10 @@ class homeFolderController {
         folderHome.showSystemMessage(serviceResponse.left.message);   
       }
 
+      if (serviceResponse.isLeft){
+        folderHome.showSystemMessage(serviceResponse.left.message);
+      }
+         
   }
   
 }

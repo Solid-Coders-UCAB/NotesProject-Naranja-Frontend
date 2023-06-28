@@ -1,11 +1,10 @@
-// ignore_for_file: file_names, camel_case_types
-
 import 'package:flutter/material.dart';
-
 import '../../../domain/folder.dart';
 import '../../controllers/homeFolderController.dart';
 import '../home/navigationBar.dart';
 import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/infrastructure/views/folderWidgets/carpeta_nueva.dart';
+import 'notas_en_carpeta.dart';
 
 class folderHome extends StatefulWidget {
   
@@ -96,25 +95,37 @@ class folderHomeState extends State<folderHome> {
                           itemCount: folders.length + 1 ,
                           itemBuilder: (context, index) {
                             if (index == folders.length){
-                              return const Card(
-                                      child: 
-                                       Material(
-                                          child: ListTile(
-                                          title: Text("agregar nueva carpeta"),
-                                          leading: Icon(Icons.plus_one),
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                                MaterialPageRoute(builder: (context) => const CarpetaNueva()));
+                                },
+                                child: const Card(
+                                        child: 
+                                         Material(
+                                            child: ListTile(
+                                            title: Text("agregar nueva carpeta"),
+                                            leading: Icon(Icons.plus_one),
+                                            )
                                           )
-                                        )
-                                      );
+                                        ),
+                              );
                             }
-                                return(Card(
-                                      child: 
-                                       Material(
-                                          child: ListTile(
-                                          title: Text(folders[index].name),
-                                          leading: const Icon(Icons.folder),
-        ),      
-      )
-    )); 
+                                return GestureDetector(
+                                  onTap: () {
+                                  Navigator.push(context,
+                                                MaterialPageRoute(builder: (context) => NotasEnCarpeta(nombreCarpeta: folders[index].name, idCarpeta: folders[index].id.toString(),)));
+                                },
+                                  child: ( Card(
+                                        child: 
+                                         Material(
+                                            child: ListTile(
+                                            title: Text(folders[index].name),
+                                            leading: const Icon(Icons.folder),
+                                        ),      
+                                      )
+                                    )),
+                                ); 
                           },
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
