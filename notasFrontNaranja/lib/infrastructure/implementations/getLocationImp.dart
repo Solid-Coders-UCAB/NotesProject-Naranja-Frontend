@@ -12,21 +12,22 @@ class GetLocationImp implements GetUserLocation {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
     if (!serviceEnabled) {
-      return Future.error('Los servicios de ubicación no está habilitados');
+      return const Left(MyError(key: AppError.NotFound,message: 'los servicios de ubicacion no estan habilitados'));
     }
 
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Los permisos de ubicación han sido rechazados');
+        return const Left(MyError(key: AppError.NotFound,message: 'Los permisos de ubicación han sido rechazados'));
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Los permisos de ubicación han sido rechazados permanentemente, no podemos encontrar su ');
+      return const Left(MyError(key: AppError.NotFound,message: 'Los permisos de ubicación han sido rechazados'));
     }
+
+    
     try {
       Position userPosition = await Geolocator.getCurrentPosition();
 
@@ -34,6 +35,7 @@ class GetLocationImp implements GetUserLocation {
 
       userLocation.latitude = userPosition.latitude.toString();
       userLocation.longitude = userPosition.longitude.toString();
+
       return Right(userLocation);
     } catch (e) {
       return Left(MyError(key: AppError.NotFound, message: '$e'));
