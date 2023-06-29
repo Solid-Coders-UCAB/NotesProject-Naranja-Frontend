@@ -63,7 +63,7 @@ class httpNoteRepository implements noteRepository{
     }                   
 
 
-    String error = 'error al procesar la solicitud al servidor: $response';
+    String error = 'error al procesar la solicitud al servidor: ${response.stream.bytesToString()}';
          return Left(MyError(key: AppError.NotFound,
                                   message: error));
  }
@@ -149,10 +149,15 @@ Future<Either<MyError, String>> updateNota(Nota note) async {
     ..fields['cuerpo'] = note.getContenido
     ..fields['fechaCreacion'] = note.getDate.toString()
     ..fields['fechaModificacion'] = note.getEditDate.toString()
-    ..fields['longitud'] = note.getLongitud.toString()
-    ..fields['latitud'] = note.getLatitud.toString()
+    //..fields['longitud'] = note.getLongitud.toString()
+    //..fields['latitud'] = note.getLatitud.toString()
     ..fields['idCarpeta'] = 'fa378750-9763-4466-902f-26200a4fc603'
     ..fields['idNota'] = note.getid;
+
+        if (note.latitud != null && note.longitud != null){
+            request.fields['longitud'] = note.getLatitud.toString();
+            request.fields['latitud'] = note.getLongitud.toString();
+         }
 
     List<Uint8List>? imagenes = note.imagenes;
 
