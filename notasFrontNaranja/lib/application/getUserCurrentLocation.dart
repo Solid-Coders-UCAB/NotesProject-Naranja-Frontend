@@ -7,13 +7,8 @@ abstract class GetUserLocation {
   Future<Either<MyError, Location>> getCurrentLocation();
 }
 
-// abstract class GetAddressLocation {
-//   Future<Either<MyError, Location>> getAddress();
-// }
-
 class GetUserCurrentLocationService implements service<void, Location> {
   GetUserLocation location;
-  // GetAddressLocation address;
 
   GetUserCurrentLocationService({
     required this.location,

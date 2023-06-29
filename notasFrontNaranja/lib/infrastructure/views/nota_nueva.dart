@@ -1,4 +1,5 @@
 import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/domain/location.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../controllers/notaNuevaWidgetController.dart';
@@ -9,10 +10,9 @@ import 'home/home.dart';
 
 // ignore: must_be_immutable
 class NotaNueva extends StatelessWidget {
-
   homeState? h;
-  
-  NotaNueva(this.h,{super.key});
+
+  NotaNueva(this.h, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,31 +20,28 @@ class NotaNueva extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Nueva nota"),
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
-        leading: 
-            IconButton(
-              icon: const Icon(Icons.arrow_back_rounded),
-              onPressed: () {h!.showNotes(); Navigator.pop(context); }
-            ),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () {
+              h!.showNotes();
+              Navigator.pop(context);
+            }),
       ),
-      body: Center(
-        child: NuevaNota(h!)
-      ),
+      body: Center(child: NuevaNota(h!)),
     );
   }
 }
 
 // ignore: must_be_immutable
 class NuevaNota extends StatefulWidget {
-
   homeState home;
-  NuevaNota(this.home,{super.key});
+  NuevaNota(this.home, {super.key});
 
   @override
   State<NuevaNota> createState() => NuevaNotaState(home);
 }
 
 class NuevaNotaState extends State<NuevaNota> {
-
   homeState home;
 
   NuevaNotaState(this.home);
@@ -57,6 +54,8 @@ class NuevaNotaState extends State<NuevaNota> {
       controllerFactory.notaNuevaWidController();
   Uint8List? selectedImage;
   List<Uint8List> imagenes = [];
+  String latitud = '';
+  String longitud = '';
 
 //
 
@@ -118,10 +117,22 @@ class NuevaNotaState extends State<NuevaNota> {
                 maxLinesTextFormField(
                     _contenidoC, "Contenido de la nota", false, 2000),
                 loading == true
+                    //-------------Botón de más opciones-------------
                     ? const Row()
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: [opcionesNota(this)]),
+                        children: [
+                            opcionesNota(this),
+                            ElevatedButton(
+                                onPressed: () {
+                                  getUserPosition();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Latitud: $latitud, Longitud: $longitud')));
+                                },
+                                child: const Icon(Icons.map_outlined))
+                          ]),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -152,7 +163,9 @@ class NuevaNotaState extends State<NuevaNota> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25)),
                         ),
-                        onPressed: () {regresarHome();},
+                        onPressed: () {
+                          regresarHome();
+                        },
                         child: const Text("Cancelar")),
                   ],
                 ),
@@ -166,7 +179,7 @@ class NuevaNotaState extends State<NuevaNota> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void regresarHome(){
+  void regresarHome() {
     home.showNotes();
     Navigator.pop(context);
   }
@@ -176,7 +189,7 @@ class NuevaNotaState extends State<NuevaNota> {
       loading = true;
     });
     var response = await controller.saveNota(
-        titulo: _tituloC.text, contenido: _contenidoC.text,imagenes: imagenes);
+        titulo: _tituloC.text, contenido: _contenidoC.text, imagenes: imagenes);
     if (response.isLeft) {
       setState(() {
         loading = false;
@@ -193,8 +206,8 @@ class NuevaNotaState extends State<NuevaNota> {
         imagenes = [];
         //         imagenVisible = false;
       });
-        home.showNotes();
-        Navigator.pop(context);
+      home.showNotes();
+      Navigator.pop(context);
     }
   }
 
@@ -258,6 +271,28 @@ class NuevaNotaState extends State<NuevaNota> {
       setState(() {
         imagen = bytes;
         imagenes.add(bytes);
+      });
+    }
+  }
+
+  Future getUserPosition() async {
+    Location location = Location();
+    var response = await controller.getUserLocation();
+    if (response.isLeft) {
+      setState(() {
+        loading = false;
+      });
+
+      String text = '';
+      text = response.left.message!;
+      showSystemMessage(text);
+    }
+    if (response.isRight) {
+      location = response.right;
+      setState(() {
+        latitud = location.getLatitude;
+        longitud = location.getLongitude;
+        loading = false;
       });
     }
   }
