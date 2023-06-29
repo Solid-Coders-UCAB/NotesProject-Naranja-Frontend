@@ -1,10 +1,6 @@
-import 'package:either_dart/either.dart';
+// ignore_for_file: file_names, camel_case_types, invalid_use_of_protected_member
 import 'package:firstapp/application/Iservice.dart';
-import 'package:firstapp/application/getAllNotesFromServerService.dart';
-import 'package:firstapp/domain/errores.dart';
-import 'package:firstapp/infrastructure/views/home/home.dart';
-
-import '../../domain/nota.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 
 class homeController {
   
@@ -12,13 +8,28 @@ class homeController {
 
   homeController({required this.getAllNotesFromServerService});
 
-  Future<Either<MyError,List<Nota>>> getAllNotesFromServer(homeState widget) async {
-    
+   void getAllNotesFromServer(homeState widget) async {
+
+    widget.loading = true;
+
     var notas = await getAllNotesFromServerService.execute(null);
 
-    
-    return Right(notas.right);
+     if (widget.mounted) {
       
+      if (notas.isLeft){
+        widget.setState(() {
+          widget.loading = false;
+        });
+        widget.showSystemMessage(notas.left.message);
+      }else {
+        widget.setState(() {
+          widget.notas = notas.right;
+          widget.loading = false;
+        });
+      }   
+
+    }
+
 
   }
 

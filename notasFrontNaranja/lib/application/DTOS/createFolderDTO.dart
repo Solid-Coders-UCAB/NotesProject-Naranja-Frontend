@@ -1,7 +1,11 @@
+// ignore: camel_case_types
 class createFolderDTO{
 
-  String? name;
+  String nombreCarpeta;
 
-  get getName => name;
+  createFolderDTO({
+    required this.nombreCarpeta
+  });
+  get getName => nombreCarpeta;
   
 }

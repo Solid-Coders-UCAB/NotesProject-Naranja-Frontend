@@ -2,11 +2,11 @@ import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/domain/location.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../controllers/notaNuevaWidgetController.dart';
-import './widgets.dart';
-import 'package:firstapp/infrastructure/views/ver_imagen.dart';
+import '../../controllers/notaNuevaWidgetController.dart';
+import '../systemWidgets/widgets.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/ver_imagen.dart';
 
-import 'home/home.dart';
+import 'home.dart';
 
 // ignore: must_be_immutable
 class NotaNueva extends StatelessWidget {
@@ -21,7 +21,7 @@ class NotaNueva extends StatelessWidget {
         title: const Text("Nueva nota"),
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back_rounded),
+            icon: new Icon(Icons.transit_enterexit_outlined),
             onPressed: () {
               h!.showNotes();
               Navigator.pop(context);
@@ -184,7 +184,7 @@ class NuevaNotaState extends State<NuevaNota> {
     Navigator.pop(context);
   }
 
-  Future saveNota() async {
+  saveNota() async {
     setState(() {
       loading = true;
     });
@@ -199,15 +199,10 @@ class NuevaNotaState extends State<NuevaNota> {
       showSystemMessage(text);
     }
     if (response.isRight) {
-      setState(() {
-        _contenidoC.text = '';
-        _tituloC.text = '';
-        loading = false;
-        imagenes = [];
-        //         imagenVisible = false;
-      });
-      home.showNotes();
-      Navigator.pop(context);
+      showSystemMessage('nota agregada satisfactoriamente');
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Home()),
+          (Route<dynamic> route) => false);
     }
   }
 
@@ -297,25 +292,3 @@ class NuevaNotaState extends State<NuevaNota> {
     }
   }
 }
-
-
-
-
- //         Visibility(
-   //         visible: imagenVisible,
-     //       child: GestureDetector(
-       //       onTap: (){
-         //       Navigator.push(context,
-           //                   MaterialPageRoute(
-             //                 builder: (context) => VerImagen(imagen)));
-              //},
-     //         child: SizedBox(
-                
-       //         width: 400,
-         //       height: 200,
-           //     child: Image.memory(
-             //                 imagen!,
-               //         ),
-//              ),
-  //          ),
-    //      ),

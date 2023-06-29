@@ -2,9 +2,9 @@ import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/infrastructure/controllers/homeController.dart';
 import 'package:flutter/material.dart';
-import '../nota_nueva.dart';
+import 'nota_nueva.dart';
 import 'notePreview.dart';
-import 'package:firstapp/infrastructure/views/home/navigationBar.dart';
+import 'package:firstapp/infrastructure/views/systemWidgets/navigationBar.dart';
 
 // En este código está toda la interfaz de la app de notas
 class PaginaPrincipal extends StatelessWidget {
@@ -101,15 +101,16 @@ class homeState extends State<Home> {
     });
   }
 
-  void showNotes() async {
-    loading = true;
-    var response = await controller.getAllNotesFromServer(this);
-    if (response.isRight) {
-      setState(() {
-        notas = response.right;
-        loading = false;
-      });
-    }
+  void showNotes() async { 
+   controller.getAllNotesFromServer(this);
+  }
+
+  void showSystemMessage(String? message){
+    setState(() {
+      loading = false;
+    });
+     ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message!)));
   }
 
   void createNote() async {

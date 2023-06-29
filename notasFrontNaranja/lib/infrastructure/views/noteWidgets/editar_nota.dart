@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import './widgets.dart';
-import 'package:firstapp/infrastructure/views/ver_imagen.dart';
+import '../systemWidgets/widgets.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/ver_imagen.dart';
 import 'package:firstapp/controllerFactory.dart';
-import '../controllers/editarNotaWidgetController.dart';
-import 'package:firstapp/infrastructure/views/drawing_room_screen.dart';
-import 'package:firstapp/infrastructure/views/speech_to_text_prueba.dart';
+import '../../controllers/editarNotaWidgetController.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 import 'package:firstapp/domain/nota.dart';
-import 'home/home.dart';
+import 'home.dart';
 /// Esta ventana se abre al seleccionar una nota para editarla o eliminarla
 ///
 // ignore: must_be_immutable
@@ -28,7 +28,7 @@ class EditarNota extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
         leading: 
             IconButton(
-              icon: new Icon(Icons.transit_enterexit_outlined),
+              icon: const Icon(Icons.transit_enterexit_outlined),
               onPressed: () {h!.showNotes(); Navigator.pop(context); }
             ),
       ),
@@ -242,36 +242,34 @@ class EditarNotaState extends State<NotaEditar> {
                     backgroundColor: const Color.fromARGB(255, 99, 91, 250),
                   ),
                   onPressed: () {
-                    showDialog(
-                        //Ventana de advertencia para confirmar eliminar la nota
-                        //Ventana de dialogo, aparece si el usuario ingresa mal sus datos
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (_) => AlertDialog(
-                              title: const Text("Advertencia"),
-                              content: const Text(
-                                  "Esta seguro de que desea eliminar la nota?"), // Modificar el comentario de advertencia
-                              actions: [
-                                TextButton(
-                                    onPressed: () async {
-                                      /// Aqui se debe eliminar en la BD
-
-                                      Navigator.pop(context);
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop('dialog');
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text("Nota eliminada")));
-                                    },
-                                    child: Text("Aceptar")),
-                                TextButton(
-                                    onPressed: () {
-                                      regresarHome();
-                                    },
-                                    child: Text("Cancelar")),
-                              ],
-                            ));
+                    showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const ListTile(
+            title: Text('Esta seguro que desea eliminar la nota?'),
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('eliminar permanentemente'),
+            onTap: () {
+              Navigator.pop(context);
+              controller.eliminarNotaAction(widget: this,imagenes: note.imagenes,
+              id: note.getid , titulo: note.getTitulo, contenido: note.getContenido, n_date: note.getEditDate);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.exit_to_app_rounded),
+            title: Text('Cancelar'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    }); 
                   },
                   child: const Text("Eliminar")),
               const SizedBox(
@@ -340,9 +338,9 @@ class EditarNotaState extends State<NotaEditar> {
     }
   }
 
-    showSystemMessage(String message) {
+    showSystemMessage(String? message) {
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+        .showSnackBar(SnackBar(content: Text(message!)));
   }
 
   Future getTextFromIa() async {

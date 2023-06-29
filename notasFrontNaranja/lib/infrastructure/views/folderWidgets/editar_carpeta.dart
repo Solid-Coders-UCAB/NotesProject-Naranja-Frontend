@@ -1,12 +1,14 @@
 import 'package:firstapp/controllerFactory.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firstapp/infrastructure/controllers/editarCarpetaWidgetController.dart';
 import 'package:flutter/material.dart';
-import '../controllers/notaNuevaWidgetController.dart';
-import './widgets.dart';
+import '../systemWidgets/widgets.dart';
+import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 
+// ignore: must_be_immutable
 class EditarCarpeta extends StatelessWidget {
-  
-  EditarCarpeta({super.key});
+  String nombreCarpeta;
+  String idCarpeta;
+  EditarCarpeta({super.key, required this.nombreCarpeta, required this.idCarpeta});
 
   @override
   Widget build(BuildContext context) {
@@ -19,21 +21,9 @@ class EditarCarpeta extends StatelessWidget {
               icon: new Icon(Icons.close),
               onPressed: () {Navigator.pop(context); }
             ),
-        actions: <Widget>[
-          ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 99, 91, 250),
-                        ),
-                        onPressed: () {
-
-                        },
-                        child: const Text("Cambiar nombre")
-                        ),
-        ],
       ),
       body: Center(
-        child: CarpetaEditar()
+        child: CarpetaEditar(nombreCarpeta: nombreCarpeta, idCarpeta: idCarpeta,)
       ),
     );
   }
@@ -41,32 +31,30 @@ class EditarCarpeta extends StatelessWidget {
 
 // ignore: must_be_immutable
 class CarpetaEditar extends StatefulWidget {
-
-  CarpetaEditar({super.key});
+  String nombreCarpeta;
+  String idCarpeta;
+  CarpetaEditar({super.key, required this.nombreCarpeta, required this.idCarpeta});
 
   @override
-  State<CarpetaEditar> createState() => CarpetaEditarState();
+  // ignore: no_logic_in_create_state
+  State<CarpetaEditar> createState() => CarpetaEditarState(nombreCarpeta: nombreCarpeta, idCarpeta: idCarpeta);
 }
 
 class CarpetaEditarState extends State<CarpetaEditar> {
-
-
-  CarpetaEditarState();
+  String nombreCarpeta;
+  String idCarpeta;
+  CarpetaEditarState({required this.nombreCarpeta, required this.idCarpeta});
 
   String carpetaTitle = '';
   bool loading = false;
-  Uint8List? imagen;
-  notaNuevaWidgetController controller =
-      controllerFactory.notaNuevaWidController();
-  Uint8List? selectedImage;
-  List<Uint8List> imagenes = [];
+  editarCarpetaWidgetController controller =
+      controllerFactory.createEditarCarpetaWidgetController();
 
-//
-
-  final TextEditingController _tituloC = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
+    // ignore: no_leading_underscores_for_local_identifiers
+    final TextEditingController _nombreCarpeta = TextEditingController(text: nombreCarpeta);
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
@@ -82,7 +70,7 @@ class CarpetaEditarState extends State<CarpetaEditar> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  genericTextFormField(_tituloC, "Nombre de la carpeta", false, 40),
+                  genericTextFormField(_nombreCarpeta, "Nombre de la carpeta", false, 40),
     
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -95,13 +83,13 @@ class CarpetaEditarState extends State<CarpetaEditar> {
                                 const Color.fromARGB(255, 99, 91, 250),
                           ),
                           onPressed: () {
-                            if (_tituloC.text != '') {
-                           // Aqui se crea la carpeta
+                            if (_nombreCarpeta.text != '') {
+                              updateCarpeta(_nombreCarpeta.text, idCarpeta);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text(
-                                          "El título de la nota no debe estar vacía")));
+                                          "El título de la carpeta no debe estar vacío")));
                             }
                           },
                           child: const Text("Cambiar nombre")),
@@ -115,6 +103,34 @@ class CarpetaEditarState extends State<CarpetaEditar> {
               ),
       ),
     );
+  }
+
+  showSystemMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  updateCarpeta(String nombreCarpeta, String idCarpeta) async {
+    setState(() {
+      loading = true;
+    });
+    
+    var response = await controller.updateCarpeta(
+      nombreCarpeta: nombreCarpeta,
+      idCarpeta: idCarpeta
+      );
+
+    if (response.isLeft) {
+      String text = '';
+      text = response.left.message!;
+      loading = false;
+      showSystemMessage(text);   
+    }
+    if (response.isRight) {
+      showSystemMessage('carpeta actualizada correctamente');
+       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+       builder: (context) => folderHome()),(Route<dynamic> route) => false);
+    }
   }
 
 }

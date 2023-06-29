@@ -1,6 +1,24 @@
 import 'package:flutter/material.dart';
-import 'home/home.dart';
-import './widgets.dart';
+import '../noteWidgets/home.dart';
+import 'widgets.dart';
+
+class App extends StatelessWidget{
+  
+  const App({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(         
+        primarySwatch: Colors.blue,
+      ),
+      home: const Inicio(),
+    );
+  }
+}
+
 
 class Inicio extends StatefulWidget {
   const Inicio({super.key});
@@ -10,22 +28,47 @@ class Inicio extends StatefulWidget {
 }
 
 class _InicioState extends State<Inicio> {
-  //Controlador para guardar los cambios en los textfield
+
   TextEditingController userText = TextEditingController(text: "");
   TextEditingController userPass = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: bodyInicio(
-          context, userText, userPass), // Se pasa context como parametro
+    return 
+     Scaffold(
+      body: bodyInicio(), // Se pasa context como parametro
     );
   }
-}
 
-Widget bodyInicio(BuildContext context, TextEditingController userText,
+  Widget botonEntrar(TextEditingController userText,
     TextEditingController userPass) {
   //Se agrega el argumento context
+  return TextButton(
+      style: TextButton.styleFrom(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          backgroundColor: const Color.fromARGB(255, 154, 181, 255),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10)),
+      onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+            builder: (context) =>  PaginaPrincipal()));
+
+        //alerta(context,true,"Wrong Password","The password didnt match");
+        ///Envia al usuario a la ventana de inicio
+      }, // Funcion para cuando se presione el boton (se debe validar el usuario que va a ingresar para ver sus notas)
+      child: const Text(
+        "Ingresar",
+        style: TextStyle(fontSize: 25, color: Colors.white),
+      ));
+}
+
+
+
+
+Widget bodyInicio() {
+  
   return Container(
     height: double.infinity,
     decoration: const BoxDecoration(
@@ -67,7 +110,7 @@ Widget bodyInicio(BuildContext context, TextEditingController userText,
                   genericSizedBox(25),
                   genericTextFormField(userPass, "Contraseña", true, 20),
                   genericSizedBox(25),
-                  botonEntrar(context, userText, userPass),
+                  botonEntrar(userText,userPass),
                   genericSizedBox(25),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -98,28 +141,6 @@ Widget bodyInicio(BuildContext context, TextEditingController userText,
     ),
   );
 }
-
-// Boton para ingresar
-Widget botonEntrar(BuildContext context, TextEditingController userText,
-    TextEditingController userPass) {
-  //Se agrega el argumento context
-  return TextButton(
-      style: TextButton.styleFrom(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-          backgroundColor: const Color.fromARGB(255, 154, 181, 255),
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10)),
-      onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-            builder: (context) =>  PaginaPrincipal()));
-
-        //alerta(context,true,"Wrong Password","The password didnt match");
-        ///Envia al usuario a la ventana de inicio
-      }, // Funcion para cuando se presione el boton (se debe validar el usuario que va a ingresar para ver sus notas)
-      child: const Text(
-        "Ingresar",
-        style: TextStyle(fontSize: 25, color: Colors.white),
-      ));
 }
+
+

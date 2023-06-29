@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:typed_data';
 
 class CreatenoteParams {
@@ -5,11 +7,11 @@ class CreatenoteParams {
   int? longitud;
   int? latitud;
   String titulo;
-  String? contenido;
+  String contenido;
   List<Uint8List>? imagenes;
   
   CreatenoteParams({
-    this.contenido,
+    required this.contenido,
     required this.titulo,
     this.longitud,
     this.latitud,

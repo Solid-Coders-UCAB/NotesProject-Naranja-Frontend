@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types, unused_field, void_checks
+// ignore_for_file: camel_case_types, unused_field, void_checks, file_names
 import 'dart:io';
 import 'package:either_dart/either.dart';
 import 'package:firstapp/application/Iservice.dart';
@@ -8,9 +8,11 @@ abstract class imagePickerGallery {
   Future<Either<MyError,File>> getImage();
 }
 
+
 class getImageFromGalleryService implements service<void,File>{
   
   imagePickerGallery picker;
+  //pepito
 
     getImageFromGalleryService({required this.picker});
    

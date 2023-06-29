@@ -1,9 +1,10 @@
+// ignore_for_file: file_names, camel_case_types
+
 import 'package:either_dart/either.dart';
 
 import '../domain/errores.dart';
 import '../domain/folder.dart';
 import '../domain/repositories/folderRepository.dart';
-import 'DTOS/createFolderDTO.dart';
 import 'Iservice.dart';
 
 class getAllFoldersFromServerService implements service<void,List<folder>>{

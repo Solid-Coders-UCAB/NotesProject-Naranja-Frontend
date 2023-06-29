@@ -2,8 +2,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import '../../../domain/nota.dart';
-import 'package:firstapp/infrastructure/views/editar_nota.dart';
-import 'package:firstapp/infrastructure/views/home/home.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/editar_nota.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 
 class notePreviewWidget extends StatelessWidget{
 
@@ -20,6 +20,7 @@ class notePreviewWidget extends StatelessWidget{
       Material(
         child: ListTile(
           title: Text(nota.getTitulo),
+          subtitle: Text("ultima actualizacion: ${nota.getEditDate}"),
           leading: getImage(),
           onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => 
           EditarNota(
@@ -37,7 +38,11 @@ class notePreviewWidget extends StatelessWidget{
 
   Widget getImage(){
    if ( nota.imagenes!.isEmpty ) {
-      return Text('');
+      return const CircleAvatar(
+            radius: 35,
+            backgroundColor: Colors.white38,
+            child: Icon(Icons.note_rounded)
+            );
    }
     List<Uint8List> imagenes = nota.imagenes as List<Uint8List>;
     return CircleAvatar(

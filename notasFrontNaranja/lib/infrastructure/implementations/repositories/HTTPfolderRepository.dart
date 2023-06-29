@@ -8,7 +8,7 @@ import 'package:http/http.dart';
 
 class HTTPfolderRepository implements folderRepository {
 
-  String domain = '192.168.0.106:3000';
+  String domain = '192.168.1.2:3000';
   
   @override
   Future<Either<MyError, String>> createFolder(folder folder) async {
@@ -28,7 +28,7 @@ class HTTPfolderRepository implements folderRepository {
       });
 
       if (response.statusCode == 200){
-        return const Right('carpeta guardada exitosamente');
+        return const Right('Carpeta guardada exitosamente');
       }else{
         return Left(MyError(key: AppError.NotFound,message: response.body));
       }
@@ -70,15 +70,17 @@ class HTTPfolderRepository implements folderRepository {
 
   }
   
-    Future<Either<MyError, String>> updateFolder(folder folder) async {
+    @override
+  Future<Either<MyError, String>> updateFolder(folder folder) async {
     
     var body = jsonEncode({
     "nombre": folder.name,
+    "idCarpeta": folder.id.toString()
   });
 
   try{
 
-  final Response response = await post(Uri.parse('http://$domain/carpeta/create'),
+  final Response response = await put(Uri.parse('http://$domain/carpeta/modificate'),
 
       body: body,
       headers: {
@@ -87,7 +89,7 @@ class HTTPfolderRepository implements folderRepository {
       });
 
       if (response.statusCode == 200){
-        return const Right('carpeta guardada exitosamente');
+        return const Right('Carpeta actualizada exitosamente');
       }else{
         return Left(MyError(key: AppError.NotFound,message: response.body));
       }

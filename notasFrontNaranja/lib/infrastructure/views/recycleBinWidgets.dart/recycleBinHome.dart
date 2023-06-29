@@ -1,0 +1,188 @@
+import 'dart:typed_data';
+
+import 'package:firstapp/domain/nota.dart';
+import 'package:firstapp/infrastructure/controllers/recycleBinHomeController.dart';
+import 'package:flutter/material.dart';
+import '../systemWidgets/navigationBar.dart';
+import 'package:firstapp/controllerFactory.dart';
+
+class recycleBinHome extends StatefulWidget {
+  
+  const recycleBinHome({super.key});
+
+  @override
+  recycleBinHomeState createState() => recycleBinHomeState();
+}
+
+class recycleBinHomeState extends State<recycleBinHome> {
+  
+  recycleBinHomeState();
+  
+  bool loading = false;
+  List<Nota> notas = <Nota>[];
+  final TextEditingController buscarNota = TextEditingController(text: '');
+  recycleBinHomeController controller = controllerFactory.recycleBinhomeController();
+  bool showNBottons = false;
+
+
+  void changeState({required List<Nota> notas,required bool loading}){
+    setState(() {
+      this.loading = loading ;
+      this.notas = notas;
+    });
+  }
+
+  void showSystemMessage(String? message){
+    setState(() {
+      loading = false;
+    });
+     ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message!)));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+   controller.getAllNotesFromServer(this);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+        title: const Text("Papelera"),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: 'Menú',
+            );
+          },
+        ),
+      ),
+      //Side menu------------------------------
+      drawer: const NavBar(),
+
+      body: loading == true
+          ? const Center(
+              child: SizedBox(
+                  width: 30, height: 30, child: CircularProgressIndicator()))
+          : 
+          listaCarpetas()
+        );
+        
+  }
+
+  Widget listaCarpetas(){
+
+     return 
+                 ListView.builder(
+                          itemCount: notas.length  ,
+                          itemBuilder: (context, index) {
+                                return
+                                   notePreview(index);
+                          },
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+     );
+                
+  }
+
+  Widget notePreview(int index){
+    return Card(
+            child: 
+             Material(
+                child: ListTile(
+                      title: Text( notas[index].getTitulo ),
+                      leading: iconNotePreview(index),
+                      onTap: (){
+                    showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const ListTile(
+            title: Text('Opciones'),
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('eliminar permanentemente'),
+            onTap: () {
+              eliminarPermanentementeOnPressed();
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.check),
+            title: Text('Restaurar'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    });  
+            },  
+            )
+          )
+        );
+  }
+
+  void eliminarPermanentementeOnPressed(){
+
+
+  }
+
+  Widget botonesNotePreview(){
+    return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Botón 1'),
+                  ),
+                 const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 2),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Botón 2')),
+                   ]
+              );
+  }
+
+
+
+  Widget iconNotePreview(int index){
+    if ( notas[index].imagenes!.isEmpty ) {
+      return const CircleAvatar(
+            radius: 35,
+            backgroundColor: Colors.white38,
+            child: Icon(Icons.note_rounded)
+            );
+   }
+    List<Uint8List> imagenes = notas[index].imagenes as List<Uint8List>;
+    return CircleAvatar(
+            radius: 35,
+            backgroundImage: Image.memory(imagenes[0]).image
+            );
+  }
+
+  void reset() {
+    setState(() {
+      loading = false;
+    });
+  }
+
+  void setLoadingState(bool l) {
+    setState(() {
+      loading = l;
+    });
+  }
+
+}

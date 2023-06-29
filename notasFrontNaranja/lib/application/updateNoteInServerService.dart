@@ -23,7 +23,7 @@ class updateNoteInServerService implements service<UpdateNoteParams,String>{
       contenido: params.getContenido , 
       n_date: params.getDate,
       n_edit_date:  DateTime.now(),
-      estado: 'guardada',
+      estado: params.estado,
       longitud: params.getLongitud,
       latitud: params.getLatitud,
       imagenes: params.imagenes,

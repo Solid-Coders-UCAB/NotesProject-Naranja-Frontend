@@ -5,7 +5,7 @@ import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:flutter/material.dart';
-import '../controllers/imageToTextWidgetController.dart';
+import '../../controllers/imageToTextWidgetController.dart';
 
 
 class ImagePickerScreen extends StatefulWidget {
