@@ -134,12 +134,6 @@ Future<Either<MyError, String>> updateNota(Nota note) async {
     MultipartRequest request;
     StreamedResponse response;
 
-    //Uint8List buffer = note.imagenes![0];
-    //final tempDir = await getTemporaryDirectory();
-    //File file = await File('${tempDir.path}/image.png').create(); 
-    //file.writeAsBytesSync(buffer);
-    
-
     var uri = Uri.parse('http://$domain/nota/modificate');
 
 
