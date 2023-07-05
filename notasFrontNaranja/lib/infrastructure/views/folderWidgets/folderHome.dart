@@ -151,7 +151,10 @@ class folderHomeState extends State<folderHome> {
 }
 
 class MyListWidget extends StatelessWidget {
+  
   final List<String> cosas = ['Cosas 1', 'Cosas 2', 'Cosas 3'];
+
+  MyListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

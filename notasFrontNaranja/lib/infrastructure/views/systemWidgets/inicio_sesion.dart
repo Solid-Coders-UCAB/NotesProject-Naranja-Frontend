@@ -1,3 +1,4 @@
+import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
 import 'package:flutter/material.dart';
 import '../noteWidgets/home.dart';
 import 'widgets.dart';
@@ -53,7 +54,7 @@ class _InicioState extends State<Inicio> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-            builder: (context) =>  PaginaPrincipal()));
+            builder: (context) =>  HtmlEditorExampleApp()));
 
         //alerta(context,true,"Wrong Password","The password didnt match");
         ///Envia al usuario a la ventana de inicio

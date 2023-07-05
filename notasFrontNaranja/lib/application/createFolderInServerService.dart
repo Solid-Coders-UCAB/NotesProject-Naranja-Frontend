@@ -8,7 +8,6 @@ import 'package:firstapp/domain/folder.dart';
 import 'package:firstapp/domain/repositories/folderRepository.dart';
 import 'DTOS/createFolderDTO.dart';
 
-// ignore: camel_case_types
 class createFolderInServerService implements service<createFolderDTO,String>{
 
   folderRepository folderRepo;

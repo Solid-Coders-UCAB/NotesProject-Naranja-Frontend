@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
@@ -10,35 +11,43 @@ import 'package:file_picker/file_picker.dart';
 import 'package:html/parser.dart' show parse;
 
 
-void main() => runApp(HtmlEditorExampleApp());
-
 class HtmlEditorExampleApp extends StatelessWidget {
-  const HtmlEditorExampleApp({super.key});
+  
+  HtmlEditorExampleApp({super.key});
 
-  // This widget is the root of your application.
+  HtmlEditorExample textEditor = HtmlEditorExample();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(),
-      darkTheme: ThemeData.dark(),
-      home: HtmlEditorExample(title: 'Flutter HTML Editor Example'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Nueva nota"),
+        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+        leading: IconButton(
+            icon: Icon(Icons.transit_enterexit_outlined),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+      ),
+      body: textEditor,
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          showModalBottomSheet(context: context, builder: (context) => menuOpciones());
+        }),
     );
   }
-}
+
+} 
 
 class HtmlEditorExample extends StatefulWidget {
   
-  const HtmlEditorExample({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const HtmlEditorExample({super.key});
 
   @override
   _HtmlEditorExampleState createState() => _HtmlEditorExampleState();
 }
 
-class _HtmlEditorExampleState extends State<HtmlEditorExample> {
-  
+class _HtmlEditorExampleState extends State<HtmlEditorExample> {  
   String result = '';
   final HtmlEditorController controller = HtmlEditorController();
 
@@ -46,45 +55,35 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
   @override
   Widget build(BuildContext context) {
     return  
-    Scaffold(
-    appBar: AppBar(), 
-    body:  
-    SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-    child:
-    HtmlEditor(
-        controller: controller, //required
-        htmlEditorOptions: HtmlEditorOptions(
+      SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+      child:
+        HtmlEditor(
+         controller: controller, //required
+         htmlEditorOptions: HtmlEditorOptions(
           //initialText: html,
           hint: 'escribe aqui'        
         ),
-        htmlToolbarOptions: HtmlToolbarOptions(
-        toolbarPosition: ToolbarPosition.aboveEditor, //by default
-        toolbarType: ToolbarType.nativeScrollable,
-        renderBorder: false,
-        mediaUploadInterceptor:
-                      (PlatformFile file, InsertFileType type) async {
-                    
-            if (type == InsertFileType.image) {
-              String base64Data = base64.encode(file.bytes!);
-              String base64Image =
-              """<img src="data:image/${file.extension};base64,$base64Data" data-filename="${file.name}" width="300" height="300"/>""";
-              controller.insertHtml(base64Image);
-            }
+          htmlToolbarOptions: HtmlToolbarOptions(
+            toolbarPosition: ToolbarPosition.aboveEditor, //by default
+            toolbarType: ToolbarType.nativeScrollable,
+            renderBorder: false,
+            mediaUploadInterceptor: (PlatformFile file, InsertFileType type) async {                  
+              if (type == InsertFileType.image) {
+                String base64Data = base64.encode(file.bytes!);
+                String base64Image =
+                """<img src="data:image/${file.extension};base64,$base64Data" data-filename="${file.name}" width="300" height="300"/>""";
+                controller.insertHtml(base64Image);
+              }
                 return false;    
-                     }
-
-         ), //
-        otherOptions: OtherOptions(
-        height: 800,
-        decoration: BoxDecoration()
-        ),
+           }
+          ), //
+         otherOptions: OtherOptions(
+         height: 600,
+         decoration: BoxDecoration()
+         ),
         ),       
-      ),
-      floatingActionButton: FloatingActionButton(onPressed: () async => {
-        guardarStrong()
-      }),  
-    );
+      );
  }
 
  void guardarStrong() async {
@@ -106,5 +105,38 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
 
    });
  }
+
+}
+
+class menuOpciones extends StatelessWidget{
+  
+  const menuOpciones({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const ListTile(
+            title: Text('Esta seguro que desea eliminar la nota?'),
+          ),
+          ListTile(
+            leading: Icon(Icons.delete),
+            title: Text('eliminar permanentemente'),
+            onTap: () {
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                builder: (context) => Home()),(Route<dynamic> route) => false);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.exit_to_app_rounded),
+            title: Text('Cancelar'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+  }
 
 }
