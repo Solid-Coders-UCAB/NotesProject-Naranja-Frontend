@@ -7,6 +7,7 @@ import 'package:either_dart/either.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
@@ -171,6 +172,14 @@ void imageToText() async {
   }
 }
 
+void voiceToText() async {
+  String espacio = " ";
+  String audio = await Navigator.push(
+   context,
+   MaterialPageRoute(builder: (context) =>  SpeechScreen(text: '')));                    
+  editorC.setText(await editorC.getText() + espacio + audio);
+}
+
 void showSystemMessage(String? message){
     setState(() {
       loading = false;
@@ -213,6 +222,7 @@ Widget menuOpciones() {
             title: Text('Voz a texto'),
             onTap: () {
               Navigator.pop(context);
+              voiceToText();
             },
           ),
           ListTile(
