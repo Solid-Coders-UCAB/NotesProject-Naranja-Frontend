@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
@@ -9,6 +10,8 @@ import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'package:html/parser.dart' show parse;
+
+import '../systemWidgets/widgets.dart';
 
 
 class HtmlEditorExampleApp extends StatelessWidget {
@@ -30,10 +33,6 @@ class HtmlEditorExampleApp extends StatelessWidget {
             }),
       ),
       body: textEditor,
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          showModalBottomSheet(context: context, builder: (context) => menuOpciones());
-        }),
     );
   }
 
@@ -49,45 +48,77 @@ class HtmlEditorExample extends StatefulWidget {
 
 class _HtmlEditorExampleState extends State<HtmlEditorExample> {  
   String result = '';
-  final HtmlEditorController controller = HtmlEditorController();
+  final HtmlEditorController editorC = HtmlEditorController();
+  bool loading = false;
+  final TextEditingController tituloC = TextEditingController();
+
 
 
   @override
   Widget build(BuildContext context) {
-    return  
+    return
+    Container(
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+      color: Colors.white,
+      child: loading == true
+          ? const Center(
+              child: SizedBox(
+                  width: 30, height: 30, child: CircularProgressIndicator()))
+    : 
       SingleChildScrollView(
         scrollDirection: Axis.vertical,
       child:
-        HtmlEditor(
-         controller: controller, //required
-         htmlEditorOptions: HtmlEditorOptions(
-          //initialText: html,
-          hint: 'escribe aqui'        
-        ),
-          htmlToolbarOptions: HtmlToolbarOptions(
-            toolbarPosition: ToolbarPosition.aboveEditor, //by default
-            toolbarType: ToolbarType.nativeScrollable,
-            renderBorder: false,
-            mediaUploadInterceptor: (PlatformFile file, InsertFileType type) async {                  
-              if (type == InsertFileType.image) {
+        Form(
+          child:
+          Column( 
+            children: [
+              genericTextFormField(tituloC, "Título de la nota", false, 40),
+              htmlEditor()
+          ]       
+      )
+    )
+   )
+  );
+ }
+
+ Widget htmlEditor(){
+  return HtmlEditor(
+                controller: editorC, //required
+                htmlEditorOptions: HtmlEditorOptions(
+                //initialText: html,
+                hint: 'escribe aqui'        
+              ),
+              htmlToolbarOptions: HtmlToolbarOptions(
+              toolbarPosition: ToolbarPosition.belowEditor, //by default
+              toolbarType: ToolbarType.nativeGrid,
+              renderBorder: false,
+              customToolbarButtons: [
+                ElevatedButton(onPressed: () {
+                showBottomSheet(context: context, builder: (context) => menuOpciones());
+              }, child: const Text('mas opciones'))
+              ],
+              mediaUploadInterceptor: fileInterceptor
+              ), //
+              otherOptions: OtherOptions(
+              height: 600,
+              decoration: BoxDecoration()
+              ),
+            );
+ }
+
+
+ FutureOr<bool> fileInterceptor(PlatformFile file, InsertFileType type) async {
+  if (type == InsertFileType.image) {
                 String base64Data = base64.encode(file.bytes!);
                 String base64Image =
                 """<img src="data:image/${file.extension};base64,$base64Data" data-filename="${file.name}" width="300" height="300"/>""";
-                controller.insertHtml(base64Image);
+                editorC.insertHtml(base64Image);
               }
-                return false;    
-           }
-          ), //
-         otherOptions: OtherOptions(
-         height: 600,
-         decoration: BoxDecoration()
-         ),
-        ),       
-      );
+   return false; 
  }
 
  void guardarStrong() async {
-  String myString = await controller.getText();
+  String myString = await editorC.getText();
 
    int sizeInBytes = myString.codeUnits.length * 2;
    print('El tamaño del string es: $sizeInBytes bytes');
@@ -106,14 +137,7 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
    });
  }
 
-}
-
-class menuOpciones extends StatelessWidget{
-  
-  const menuOpciones({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+Widget menuOpciones() {
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -122,7 +146,7 @@ class menuOpciones extends StatelessWidget{
           ),
           ListTile(
             leading: Icon(Icons.delete),
-            title: Text('eliminar permanentemente'),
+            title: Text('salir'),
             onTap: () {
                 Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
                 builder: (context) => Home()),(Route<dynamic> route) => false);
@@ -140,3 +164,4 @@ class menuOpciones extends StatelessWidget{
   }
 
 }
+
