@@ -3,6 +3,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:either_dart/either.dart';
+import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -47,9 +50,12 @@ class HtmlEditorExample extends StatefulWidget {
 }
 
 class _HtmlEditorExampleState extends State<HtmlEditorExample> {  
-  String result = '';
-  final HtmlEditorController editorC = HtmlEditorController();
+  String initialText = '';
   bool loading = false;
+
+  final notaNuevaWidgetController controller = controllerFactory.notaNuevaWidController();
+
+  final HtmlEditorController editorC = HtmlEditorController();
   final TextEditingController tituloC = TextEditingController();
 
 
@@ -85,7 +91,7 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
   return HtmlEditor(
                 controller: editorC, //required
                 htmlEditorOptions: HtmlEditorOptions(
-                //initialText: html,
+                initialText: initialText,
                 hint: 'escribe aqui'        
               ),
               htmlToolbarOptions: HtmlToolbarOptions(
@@ -137,19 +143,55 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
    });
  }
 
+void regresarHome(){
+  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+  builder: (context) => Home()),(Route<dynamic> route) => false);
+}
+
+void saveNota() async {
+  var controllerResponse = await controller.saveNota(titulo: tituloC.text, contenido: await editorC.getText());  
+  if (controllerResponse.isLeft){
+    showSystemMessage(controllerResponse.left.message);
+  }else{
+     showSystemMessage('nota guardada satisfactoriamente');
+     regresarHome();
+  }
+}
+
+void imageToText() async {
+  var controllerResponse = await controller.showTextFromIA();
+  String text = controllerResponse.right;  
+  if (controllerResponse.isLeft){
+    showSystemMessage(controllerResponse.left.message);
+  }else{
+    print(text);
+     editorC.setText(await editorC.getText()+text);
+    print(await editorC.getText());
+
+  }
+}
+
+void showSystemMessage(String? message){
+    setState(() {
+      loading = false;
+    });
+     ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message!)));
+  }
+
 Widget menuOpciones() {
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const ListTile(
-            title: Text('Esta seguro que desea eliminar la nota?'),
-          ),
           ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('salir'),
+            leading: Icon(Icons.save),
+            title: Text('guardar nota'),
             onTap: () {
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                builder: (context) => Home()),(Route<dynamic> route) => false);
+              Navigator.pop(context);
+              setState(() {
+                loading = true;
+              });
+              saveNota();                
             },
           ),
           ListTile(
@@ -157,6 +199,35 @@ Widget menuOpciones() {
             title: Text('Cancelar'),
             onTap: () {
               Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.map),
+            title: Text('Agregar ubicacion'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.record_voice_over_rounded),
+            title: Text('Voz a texto'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.draw),
+            title: Text('Agregar dibujo'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.image),
+            title: Text('Imagen a texto'),
+            onTap: () {
+              Navigator.pop(context);
+              imageToText();  
             },
           ),
         ],

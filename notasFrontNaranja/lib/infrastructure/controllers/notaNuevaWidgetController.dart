@@ -24,10 +24,11 @@ class notaNuevaWidgetController {
 
   Future<Either<MyError, String>> saveNota(
       {required String titulo,
-      required contenido,
+      required String contenido,
       int? longitud,
       int? latitud,
       List<Uint8List>? imagenes}) async {
+    
     longitud ??= 0;
     latitud ??= 0;
 
