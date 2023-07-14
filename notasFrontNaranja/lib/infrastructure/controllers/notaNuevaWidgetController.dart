@@ -32,12 +32,20 @@ class notaNuevaWidgetController {
     longitud ??= 0;
     latitud ??= 0;
 
-    var serviceResponse = await createNotaService.execute(CreatenoteParams(
+    var params = CreatenoteParams(
         titulo: titulo,
         contenido: contenido,
         imagenes: imagenes,
         longitud: longitud,
-        latitud: latitud));
+        latitud: latitud);
+
+        print(params.contenido);
+
+
+
+    var serviceResponse = await createNotaService.execute(params);
+
+   
 
     if (serviceResponse.isLeft) {
       return Left(serviceResponse.left);

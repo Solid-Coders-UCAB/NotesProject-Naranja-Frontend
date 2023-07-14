@@ -1,9 +1,12 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/errores.dart';
+import 'package:firstapp/domain/etiqueta.dart';
+import 'package:html/parser.dart';
 
 class Nota {
 
@@ -16,6 +19,7 @@ class Nota {
   DateTime? n_date;
   DateTime? n_edit_date;
   String? id;
+  List<etiqueta>? etiquetas;
 
   Nota({
     this.imagenes,
@@ -26,7 +30,8 @@ class Nota {
     this.id,
     this.longitud,
     this.latitud,
-    this.estado
+    this.estado,
+    this.etiquetas
   });
 
 
@@ -39,7 +44,8 @@ class Nota {
     longitud,
     latitud,
     estado,
-    id
+    id,
+    etiquetas
   }){
     return Right( Nota(
       n_date: n_date,
@@ -50,7 +56,8 @@ class Nota {
       latitud: latitud,
       estado: estado,
       id: id,
-      imagenes: imagenes
+      imagenes: imagenes,
+      etiquetas: etiquetas
     ) );
   }
 
@@ -63,5 +70,20 @@ class Nota {
   get getLongitud => longitud;
   get getLatitud => latitud;
 
+  Uint8List? getFirstImage(){
+    try{
+      var document = parse(contenido);
+       var imgElement = document.getElementsByTagName('img').firstWhere((element) =>
+        element.attributes.containsKey('src') && element.attributes['src']!.startsWith('data:image/'));
+       String base64Image = imgElement.attributes['src']!;
+       Uint8List decodedImage = base64.decode(base64Image.split(',')[1]);
+       return decodedImage;
+    }catch(e){
+      return null;
+    }
+
+  }
+  
+
+
 }
-//Acá se tiene un modelo inicial de lo que contiene las notas

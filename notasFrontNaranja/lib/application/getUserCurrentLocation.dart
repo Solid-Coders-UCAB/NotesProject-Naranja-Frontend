@@ -23,4 +23,5 @@ class GetUserCurrentLocationService implements service<void, Location> {
     }
     return Right(getLocationResponse.right);
   }
+  
 }

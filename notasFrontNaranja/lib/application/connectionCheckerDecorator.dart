@@ -12,7 +12,8 @@ class connectionCheckerDecorator<params,result> extends serviceDecorator<params,
   connectionCheckerDecorator({required this.checker, required super.servicio});
 
     @override
-    Future<Either<MyError,result>> execute(params params) async {    
+    Future<Either<MyError,result>> execute(params params) async {   
+ 
 
       bool hasConnection = await checker.checkConnection();
 

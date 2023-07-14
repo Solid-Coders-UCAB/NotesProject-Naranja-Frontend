@@ -50,12 +50,10 @@ class controllerFactory {
         imageService: getImageFromCamaraService(picker: imagePickerImp()),
         galleryService:
             getImageFromGalleryService(picker: imagePickerGalleryImp()),
-        createNotaService: connectionCheckerDecorator(
-            checker: connectionCheckerImp(),
-            servicio:
-                createNoteInServerService(noteRepo: httpNoteRepository())),
+        createNotaService: 
+                createNoteInServerService(noteRepo: httpNoteRepository()),
         locationService:
-            GetUserCurrentLocationService(location: GetLocationImp()));
+            GetUserCurrentLocationService(location: GetLocationImp()) );
   }
 
 // Controlador para el widget de esbozado DrawingRoom

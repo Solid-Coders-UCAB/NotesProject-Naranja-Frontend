@@ -179,7 +179,7 @@ class recycleBinHomeState extends State<recycleBinHome> {
     });
   }
 
-  void setLoadingState(bool l) {
+  void setLoadingState({required bool l}) {
     setState(() {
       loading = l;
     });

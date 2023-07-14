@@ -3,32 +3,28 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:either_dart/either.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:file_picker/file_picker.dart';
 
-import 'package:html/parser.dart' show parse;
-
 import '../systemWidgets/widgets.dart';
 
 
-class HtmlEditorExampleApp extends StatelessWidget {
-  
-  HtmlEditorExampleApp({super.key});
+class HtmlEditorEditar extends StatelessWidget {
 
-  HtmlEditorExample textEditor = HtmlEditorExample();
+  String body;
+  
+  HtmlEditorEditar({super.key,required this.body});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Nueva nota"),
+        title: const Text("Editar nota"),
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
         leading: IconButton(
             icon: Icon(Icons.transit_enterexit_outlined),
@@ -36,28 +32,32 @@ class HtmlEditorExampleApp extends StatelessWidget {
               Navigator.pop(context);
             }),
       ),
-      body: textEditor,
+      body: HtmlEditorExample(body: body),
     );
   }
 
 } 
 
 class HtmlEditorExample extends StatefulWidget {
+
+  String body;
   
-  const HtmlEditorExample({super.key});
+  HtmlEditorExample({super.key,required this.body});
 
   @override
-  _HtmlEditorExampleState createState() => _HtmlEditorExampleState();
+  HtmlEditorExampleState createState() => HtmlEditorExampleState(initialText: body);
 }
 
-class _HtmlEditorExampleState extends State<HtmlEditorExample> {  
-  String initialText = '';
+class HtmlEditorExampleState extends State<HtmlEditorExample> {  
+  String initialText ;
   bool loading = false;
 
   final notaNuevaWidgetController controller = controllerFactory.notaNuevaWidController();
 
   final HtmlEditorController editorC = HtmlEditorController();
   final TextEditingController tituloC = TextEditingController();
+  
+  HtmlEditorExampleState({required this.initialText});
 
 
 
@@ -93,7 +93,7 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
                 controller: editorC, //required
                 htmlEditorOptions: HtmlEditorOptions(
                 initialText: initialText,
-                hint: 'escribe aqui'        
+                hint: 'recuperando contenido...'      
               ),
               htmlToolbarOptions: HtmlToolbarOptions(
               toolbarPosition: ToolbarPosition.belowEditor, //by default
@@ -224,4 +224,3 @@ Widget menuOpciones() {
   }
 
 }
-

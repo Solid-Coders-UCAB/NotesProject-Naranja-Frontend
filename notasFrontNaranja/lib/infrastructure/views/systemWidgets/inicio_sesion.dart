@@ -1,4 +1,3 @@
-import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
 import 'package:flutter/material.dart';
 import '../noteWidgets/home.dart';
 import 'widgets.dart';
@@ -50,11 +49,11 @@ class _InicioState extends State<Inicio> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
           backgroundColor: const Color.fromARGB(255, 154, 181, 255),
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10)),
-      onPressed: () {
+      onPressed: (){
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-            builder: (context) =>  HtmlEditorExampleApp()));
+            builder: (context) => Home()));
 
         //alerta(context,true,"Wrong Password","The password didnt match");
         ///Envia al usuario a la ventana de inicio
