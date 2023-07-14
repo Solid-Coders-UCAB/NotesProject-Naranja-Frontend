@@ -19,7 +19,8 @@ class createFolderInServerService implements service<createFolderDTO,String>{
   Future<Either<MyError, String>> execute(params) async{
 
     Either<MyError,folder> f = folder.create(
-      name: params.getName
+      name: params.getName,
+      predeterminada: false
     );
 
       if (f.isLeft){

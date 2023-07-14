@@ -9,6 +9,7 @@ class CreatenoteParams {
   String titulo;
   String contenido;
   List<Uint8List>? imagenes;
+  String? folderId;
   
   CreatenoteParams({
     required this.contenido,
@@ -23,4 +24,6 @@ class CreatenoteParams {
   get getContenido => contenido;
   get getLongitud => longitud;
   get getLatitud => latitud;
+  get getCarpeta => folderId;
+
 }

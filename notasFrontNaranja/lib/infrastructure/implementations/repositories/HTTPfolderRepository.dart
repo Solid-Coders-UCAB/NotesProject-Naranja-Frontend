@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:either_dart/either.dart';
 import 'package:either_dart/src/either.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/folder.dart';
@@ -40,14 +41,21 @@ class HTTPfolderRepository implements folderRepository {
   }
 
   @override
-  Future<Either<MyError, List<folder>>> getALLfolders() async {
+  Future<Either<MyError, List<folder>>> getALLfolders(String userId) async {
 
   Response response1;
   List<folder> folders = [];
+  var body = jsonEncode({
+    "idUsuario": userId,
+  });
 
   try{
-   var response = await get(Uri.parse('http://$domain/carpeta/findAll'));
-   response1 = response;
+      response1 = await post(Uri.parse('http://$domain/carpeta/findByUser'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
   }catch(e){
     return Left(MyError(key: AppError.NotFound,message: '$e'));
   }
@@ -58,7 +66,10 @@ class HTTPfolderRepository implements folderRepository {
 
     for (var jsonFolder in jsonData){
       var f = folder.create(name: jsonFolder['nombre']['nombre'],
-                    id:   jsonFolder['id']['UUID']);
+                    id:   jsonFolder['id']['UUID'],
+                    predeterminada: jsonFolder['predeterminada']
+                    );
+
       folders.add(f.right);              
     }
 
@@ -98,5 +109,19 @@ class HTTPfolderRepository implements folderRepository {
       return Left(MyError(key: AppError.NotFound,message: '$e'));
   }  
 
+  }
+  
+  @override
+  Future<Either<MyError, folder>> getDefaultFolder(String idUser) async  {
+    var res = await getALLfolders(idUser);
+      if (res.isLeft){
+        return Left(res.left);
+      }
+    for (var folder in res.right){
+      if (folder.predeterminada){
+        return Right(folder);
+      }
+    }
+    return const Left(MyError(key: AppError.NotFound,message: 'carpeta no encontrada'));  
   }
 }

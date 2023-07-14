@@ -22,6 +22,7 @@ import 'package:firstapp/infrastructure/implementations/connectionCheckerImp.dar
 import 'package:firstapp/infrastructure/implementations/imagePickerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imageToTextImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerGalleryImp.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/localUserRepository.dart';
 import 'application/getAllEliminatedNotes.dart';
 import 'application/getAllNotEliminatedNotesFromServerService.dart';
 import 'infrastructure/controllers/homeFolderController.dart';
@@ -41,7 +42,9 @@ class controllerFactory {
   }
 
   static createNoteInServerService createNoInServerService() {
-    return createNoteInServerService(noteRepo: httpNoteRepository());
+    return createNoteInServerService(noteRepo: httpNoteRepository(),
+                                     folderRepo: HTTPfolderRepository(),
+                                     localUserRepo: localUserRepository());
   }
 
   static notaNuevaWidgetController notaNuevaWidController() {
@@ -51,7 +54,9 @@ class controllerFactory {
         galleryService:
             getImageFromGalleryService(picker: imagePickerGalleryImp()),
         createNotaService: 
-                createNoteInServerService(noteRepo: httpNoteRepository()),
+                createNoteInServerService(noteRepo: httpNoteRepository(),
+                                          folderRepo: HTTPfolderRepository(),
+                                           localUserRepo: localUserRepository()),
         locationService:
             GetUserCurrentLocationService(location: GetLocationImp()) );
   }
@@ -65,7 +70,8 @@ class controllerFactory {
   static homeController createHomeController() {
     return homeController(
         getAllNotesFromServerService: getAllNotEliminatedNotesFromServerService(
-            noteRepo: httpNoteRepository()));
+            noteRepo: httpNoteRepository(),
+            localUserRepo: localUserRepository()));
   }
 
   static editarNotaWidgetController editarNotaWidController() {
@@ -81,7 +87,8 @@ class controllerFactory {
   static homeFolderController homefolderController() {
     return homeFolderController(
         getAllFoldersService:
-            getAllFoldersFromServerService(folderRepo: HTTPfolderRepository()));
+            getAllFoldersFromServerService(folderRepo: HTTPfolderRepository(),
+                                          localUserRepo: localUserRepository()));
   }
 
   static carpetaNuevaWidgetController createCarpetaNuevaWidgetController() {
@@ -100,6 +107,7 @@ class controllerFactory {
     return recycleBinHomeController(
         getAllEliminatedNotesFromServerService:
             getAllEliminatedNotesFromServerService(
-                noteRepo: httpNoteRepository()));
+                noteRepo: httpNoteRepository(),
+                localUserRepo: localUserRepository()));
   }
 }

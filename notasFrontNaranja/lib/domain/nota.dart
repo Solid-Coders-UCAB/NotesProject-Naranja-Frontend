@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/etiqueta.dart';
+import 'package:firstapp/domain/folder.dart';
 import 'package:html/parser.dart';
 
 class Nota {
@@ -20,6 +21,7 @@ class Nota {
   DateTime? n_edit_date;
   String? id;
   List<etiqueta>? etiquetas;
+  String idCarpeta;
 
   Nota({
     this.imagenes,
@@ -31,7 +33,8 @@ class Nota {
     this.longitud,
     this.latitud,
     this.estado,
-    this.etiquetas
+    this.etiquetas,
+    required this.idCarpeta
   });
 
 
@@ -45,7 +48,8 @@ class Nota {
     latitud,
     estado,
     id,
-    etiquetas
+    etiquetas,
+    carpeta
   }){
     return Right( Nota(
       n_date: n_date,
@@ -57,7 +61,8 @@ class Nota {
       estado: estado,
       id: id,
       imagenes: imagenes,
-      etiquetas: etiquetas
+      etiquetas: etiquetas,
+      idCarpeta: carpeta
     ) );
   }
 
@@ -69,6 +74,7 @@ class Nota {
   get getEstado => estado;
   get getLongitud => longitud;
   get getLatitud => latitud;
+  get getCarpeta => idCarpeta;
 
   Uint8List? getFirstImage(){
     try{

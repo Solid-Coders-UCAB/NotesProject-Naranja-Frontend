@@ -24,7 +24,7 @@ class httpNoteRepository implements noteRepository{
       'estado':note.getEstado,
       'fechaModificacion': note.getEditDate.toString(),
       'fechaCreacion': note.getDate.toString(),
-      'idCarpeta':'58382982-7450-410a-b364-152837563dd9'
+      'idCarpeta': note.idCarpeta
     });
 
   try{
@@ -50,25 +50,30 @@ class httpNoteRepository implements noteRepository{
 
  
   @override
-  Future<Either<MyError, List<Nota>>> getALLnotes() async {
+  Future<Either<MyError, List<Nota>>> getALLnotes(String userId) async {
 
     List<Nota> notas = [];
     Response response;
-    Response response1;
+    var body = jsonEncode({
+      'idUsuario': userId
+    });
 
 
     try{ 
-      response = await get(Uri.parse('http://$domain/nota/findAll'));
-      response1 = response;
+     response = await post(Uri.parse('http://$domain/nota/findByUser'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
     }catch(e){
       return Left(MyError(key: AppError.NotFound,
                                   message: "$e"));
     }
 
-   
-   if (response1.statusCode == 200){
+   if (response.statusCode == 200){
 
-      var jsonData = json.decode(response1.body);
+      var jsonData = json.decode(response.body);
 
       for (var jsonNote in jsonData){
 
@@ -79,16 +84,13 @@ class httpNoteRepository implements noteRepository{
        }
       */ 
 
-      
-
-
-
        Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
                      titulo: jsonNote['titulo']['titulo'],
                      contenido: jsonNote['cuerpo']['cuerpo'],
                      n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
                      n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
-                     estado: jsonNote['estado'],                              
+                     estado: jsonNote['estado'], 
+                     carpeta: ''                            
                ).right;
 
         var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
@@ -201,7 +203,7 @@ Future<Either<MyError, String>> deleteNota(Nota note) async {
 
 
 void main() async {
-  var execute = await httpNoteRepository().getALLnotes();
+  var execute = await httpNoteRepository().getALLnotes('');
     if (execute.isLeft){
       print(execute.left.message);
     }else{

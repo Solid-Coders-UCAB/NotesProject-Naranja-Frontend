@@ -1,6 +1,7 @@
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/infrastructure/controllers/homeController.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
 import 'package:flutter/material.dart';
 import 'nota_nueva.dart';
 import 'notePreview.dart';
@@ -115,7 +116,7 @@ class homeState extends State<Home> {
 
   void createNote() async {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => NotaNueva(this)));
+        context, MaterialPageRoute(builder: (context) => HtmlEditorExampleApp()));
   }
 
   Widget notePreview(Nota note) {

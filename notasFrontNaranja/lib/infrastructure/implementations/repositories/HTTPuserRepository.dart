@@ -61,8 +61,9 @@ class httpUserRepository implements userRepository {
    }; 
   
    try{
-      res = await get(Uri.parse('http://$domain/usuario/findByEmailPassword'),
-      headers: headers);
+      res = await post(Uri.parse('http://$domain/usuario/findByEmailPassword'),
+      headers: headers,
+      body: body);
     }catch(e){
       return Left(MyError(key: AppError.NotFound,message: '$e'));
     }

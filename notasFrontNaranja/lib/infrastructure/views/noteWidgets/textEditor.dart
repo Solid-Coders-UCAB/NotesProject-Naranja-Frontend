@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:either_dart/either.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
+import 'package:firstapp/infrastructure/views/etiquetasWidgets/notaEtiquetas.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 import 'package:flutter/foundation.dart';
@@ -187,6 +188,16 @@ Widget menuOpciones() {
             title: Text('Cancelar'),
             onTap: () {
               Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.new_label),
+            title: Text('etiquetas'),
+            onTap: () async {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                  builder: (context) => notaEtiquetas()));
             },
           ),
           ListTile(

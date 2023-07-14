@@ -44,7 +44,7 @@ void main() async {
   databaseFactory = databaseFactoryFfi;
   
   var sut = createUserService(serverRepo: httpUserRepository(), localRepo: localUserRepository()); 
-  var execute = await sut.execute(cmdCreateUser(nombre: 'alonzo2', correo: 'alonzo2@gmail.com', clave: '23041614d', fechaNacimiento: DateTime.now()));
+  var execute = await sut.execute(cmdCreateUser(nombre: 'prueba14/07', correo: 'prueba1407@gmail.com', clave: '23041614d', fechaNacimiento: DateTime.now()));
 
     if (execute.isRight){
       print(execute.right);

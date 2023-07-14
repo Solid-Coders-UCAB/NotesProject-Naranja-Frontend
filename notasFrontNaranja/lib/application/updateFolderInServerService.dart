@@ -18,7 +18,8 @@ class updateFolderInServerService implements service<updateFolderDTO,String>{
 
     Either<MyError,folder> f = folder.create(
       name: params.getName(),
-      id: params.getId()
+      id: params.getId(),
+      predeterminada: false
     );
 
       if (f.isLeft){

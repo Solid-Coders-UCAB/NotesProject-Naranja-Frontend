@@ -37,8 +37,9 @@ Future<Database> openBD() async {
     var database = await openBD();
  try{   
     await database.transaction((txn) async {
+      await txn.execute('DELETE FROM User');
       await txn.rawInsert(
-      'INSERT INTO User(id, name) VALUES("${u.id}", "${u.nombre}")');
+      'INSERT INTO User(id, name) VALUES("${u.id}", "${u.nombre}")');      
     });
     }catch(e){
       await database.close();
