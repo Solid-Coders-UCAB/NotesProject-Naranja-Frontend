@@ -15,7 +15,7 @@ class Nota {
   int? longitud;
   int? latitud;
   String? estado;
-  String? titulo;
+  String titulo;
   String? contenido;
   DateTime n_date;
   DateTime? n_edit_date;
@@ -28,7 +28,7 @@ class Nota {
     this.n_edit_date,
     required this.n_date,
     this.contenido,
-    this.titulo,
+    required this.titulo,
     required this.id,
     this.longitud,
     this.latitud,

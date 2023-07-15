@@ -65,6 +65,7 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
 
   @override
   Widget build(BuildContext context) {
+    tituloC.text = nota.titulo;
     return
     Container(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
