@@ -5,12 +5,10 @@ import 'package:either_dart/src/either.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/domain/repositories/noteRepository.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/HTTPrepository.dart';
 import 'package:http/http.dart';
 
-class httpNoteRepository implements noteRepository{
-
-  String domain = '192.168.0.103:3000';
-
+class httpNoteRepository extends HTTPrepository implements noteRepository{
   
   @override
   Future<Either<MyError, String>> createNota(Nota note) async {
