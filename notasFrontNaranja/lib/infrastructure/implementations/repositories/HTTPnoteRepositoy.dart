@@ -12,7 +12,7 @@ import 'package:http/http.dart';
 
 class httpNoteRepository implements noteRepository{
 
-  String domain = '192.168.1.2:3000';
+  String domain = '192.168.0.103:3000';
 
   
   @override

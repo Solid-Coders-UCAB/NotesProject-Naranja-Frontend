@@ -1,8 +1,10 @@
 import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
+import 'package:firstapp/infrastructure/views/etiquetasWidgets/etiquetasHome.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/recycleBinWidgets.dart/recycleBinHome.dart';
 import 'package:flutter/material.dart';
 
+// Ventana que contiene el menu lateral de opciones en la aplicacion
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
 
@@ -32,6 +34,7 @@ class NavBar extends StatelessWidget {
         child: Wrap(
           runSpacing: 15,
           children: [
+          // Home de notas (ventana principal)
             ListTile(
               leading: const Icon(Icons.home_outlined),
               title: const Text('Inicio'),
@@ -40,6 +43,7 @@ class NavBar extends StatelessWidget {
                 builder: (context) => Home(),
               )),
             ),
+          // Home de carpetas
             ListTile(
               leading: const Icon(Icons.folder_outlined),
               title: const Text('Carpetas'),
@@ -48,15 +52,17 @@ class NavBar extends StatelessWidget {
                  builder: (context) => folderHome()),(Route<dynamic> route) => false);
               },
             ),
+          // Home de etiquetas
             ListTile(
               leading: const Icon(Icons.label_outline),
               title: const Text('Etiquetas'),
               onTap: () {
                 Navigator.pop(context);
-                //Navigator.of(context).push(MaterialPageRoute(
-                //  builder: (context) => Pagina a llamar));
+                Navigator.of(context).push(MaterialPageRoute(
+                 builder: (context) => const etiquetasHome()));
               },
             ),
+          // Ventana de papelera para las notas eliminadas
             ListTile(
               leading: const Icon(Icons.cleaning_services_rounded),
               title: const Text('Papelera'),
@@ -68,6 +74,7 @@ class NavBar extends StatelessWidget {
             const Divider(
               color: Color.fromRGBO(114, 114, 114, 1),
             ),
+          // Ventana de perfil del usuario
             ListTile(
               leading: const Icon(Icons.account_circle_outlined),
               title: const Text('Perfil'),

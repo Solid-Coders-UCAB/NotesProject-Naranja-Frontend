@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:either_dart/either.dart';
 import 'package:either_dart/src/either.dart';
 import 'package:firstapp/domain/errores.dart';
@@ -9,8 +8,9 @@ import 'package:http/http.dart';
 
 class HTTPfolderRepository implements folderRepository {
 
-  String domain = '192.168.1.2:3000';
-  
+  String domain = '192.168.0.103:3000';
+
+
   @override
   Future<Either<MyError, String>> createFolder(folder folder) async {
     
@@ -67,7 +67,8 @@ class HTTPfolderRepository implements folderRepository {
     for (var jsonFolder in jsonData){
       var f = folder.create(name: jsonFolder['nombre']['nombre'],
                     id:   jsonFolder['id']['UUID'],
-                    predeterminada: jsonFolder['predeterminada']
+                    predeterminada: jsonFolder['predeterminada'],
+                    idUsuario: jsonFolder['idUsuario']['UUID']
                     );
 
       folders.add(f.right);              

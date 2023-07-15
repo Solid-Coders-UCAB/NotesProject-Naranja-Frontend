@@ -1,5 +1,24 @@
+import 'package:either_dart/either.dart';
+import 'package:firstapp/domain/nota.dart';
+
+import 'errores.dart';
+
 class etiqueta {
   String nombre;
+  String? id;
+  String idUsuario;
+  etiqueta({required this.nombre, required this.idUsuario, String? id});
 
-  etiqueta({required this.nombre});
+    static Either<MyError, etiqueta> create({
+    String? id,
+    required nombre,
+    required idUsuario
+  }){
+    return Right( etiqueta(
+      nombre: nombre,
+      idUsuario: idUsuario,
+      id: id
+     ) 
+    );
+  }
 }

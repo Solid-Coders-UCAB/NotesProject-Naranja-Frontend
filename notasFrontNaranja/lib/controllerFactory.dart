@@ -29,6 +29,9 @@ import 'infrastructure/controllers/homeFolderController.dart';
 import 'package:firstapp/application/createFolderInServerService.dart';
 import 'package:firstapp/infrastructure/controllers/carpetaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/editarCarpetaWidgetController.dart';
+import 'package:firstapp/infrastructure/controllers/homeEtiquetasController.dart';
+import 'package:firstapp/application/getAllEtiquetasFromServerService.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/HTTPetiquetasRepository.dart';
 
 //fabrica de controladores
 
@@ -94,13 +97,15 @@ class controllerFactory {
   static carpetaNuevaWidgetController createCarpetaNuevaWidgetController() {
     return carpetaNuevaWidgetController(
         createCarpetaService:
-            createFolderInServerService(folderRepo: HTTPfolderRepository()));
+            createFolderInServerService(folderRepo: HTTPfolderRepository(),
+                                        localUserRepo: localUserRepository()));
   }
 
   static editarCarpetaWidgetController createEditarCarpetaWidgetController() {
     return editarCarpetaWidgetController(
         updateCarpetaService:
-            updateFolderInServerService(folderRepo: HTTPfolderRepository()));
+            updateFolderInServerService(folderRepo: HTTPfolderRepository(),
+                                        localUserRepo: localUserRepository()));
   }
 
   static recycleBinHomeController recycleBinhomeController() {
@@ -109,5 +114,11 @@ class controllerFactory {
             getAllEliminatedNotesFromServerService(
                 noteRepo: httpNoteRepository(),
                 localUserRepo: localUserRepository()));
+  }
+
+   static homeEtiquetasController createHomeEtiquetasController() {
+    return homeEtiquetasController(
+            getAllEtiquetasService: getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(),
+                                                                    localUserRepo: localUserRepository()));
   }
 }
