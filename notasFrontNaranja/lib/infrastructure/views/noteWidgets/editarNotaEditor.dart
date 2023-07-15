@@ -131,11 +131,14 @@ void regresarHome(){
   builder: (context) => Home()),(Route<dynamic> route) => false);
 }
 
-void saveNota() async {
+void editarNota() async {
   
   String text = await editorC.getText();
+  setState(() {
+    loading = true;
+  });
   var controllerResponse = await controller.updateNota(
-    titulo: tituloC.text, contenido: text, idCarpeta: nota.idCarpeta, idNota: nota.id, n_date: nota.n_date);  
+    titulo: tituloC.text, contenido: text, idCarpeta: nota.idCarpeta, idNota: nota.id, n_date: nota.n_date); 
   if (controllerResponse.isLeft){
     showSystemMessage(controllerResponse.left.message);
   }else{
@@ -182,7 +185,7 @@ Widget menuOpciones() {
             title: Text('guardar nota'),
             onTap: () async {
               Navigator.pop(context);     
-              saveNota();    
+              editarNota();    
             },
           ),
           ListTile(
