@@ -73,17 +73,17 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
               child: SizedBox(
                   width: 30, height: 30, child: CircularProgressIndicator()))
     : 
-      SingleChildScrollView(
+    SingleChildScrollView(
         scrollDirection: Axis.vertical,
       child:
-        Form(
-          child:
+      //  Form(
+      //    child:
           Column( 
             children: [
               genericTextFormField(tituloC, "Título de la nota", false, 40),
               htmlEditor()
           ]       
-      )
+     // )
     )
    )
   );
@@ -112,7 +112,7 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
               mediaUploadInterceptor: fileInterceptor
               ), //
               otherOptions: OtherOptions(
-              height: 600,
+              height: 550,
               decoration: BoxDecoration()
               ),
             );
