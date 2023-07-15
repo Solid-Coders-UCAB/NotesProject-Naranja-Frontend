@@ -82,7 +82,11 @@ Future<void> main() async {
 
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
-  var repo = localUserRepository();
 
-  print(repo.getUser());
+  var repo = await localUserRepository().getUser();
+    if (repo.isLeft){
+      print(repo.left.message);
+    }else{
+      print(repo.right.id);
+    }
 }

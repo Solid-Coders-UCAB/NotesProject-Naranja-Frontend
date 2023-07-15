@@ -11,6 +11,7 @@ class UpdateNoteParams {
   List<Uint8List>? imagenes;
   DateTime n_date;
   String estado;
+  String idCarpeta;
   
   UpdateNoteParams({
     required this.estado,
@@ -20,7 +21,8 @@ class UpdateNoteParams {
     this.longitud,
     this.latitud,
     this.imagenes,
-    required this.n_date
+    required this.n_date,
+    required this.idCarpeta
   });
 
   get getIdNota => idNota;

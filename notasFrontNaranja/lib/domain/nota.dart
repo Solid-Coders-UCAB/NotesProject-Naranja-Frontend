@@ -17,19 +17,19 @@ class Nota {
   String? estado;
   String? titulo;
   String? contenido;
-  DateTime? n_date;
+  DateTime n_date;
   DateTime? n_edit_date;
-  String? id;
+  String id;
   List<etiqueta>? etiquetas;
   String idCarpeta;
 
   Nota({
     this.imagenes,
     this.n_edit_date,
-    this.n_date,
+    required this.n_date,
     this.contenido,
     this.titulo,
-    this.id,
+    required this.id,
     this.longitud,
     this.latitud,
     this.estado,
@@ -47,7 +47,7 @@ class Nota {
     longitud,
     latitud,
     estado,
-    id,
+    required String id,
     etiquetas,
     carpeta
   }){

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../../application/DTOS/cmdCreateUser.dart';
+import '../../../application/createUserService.dart';
+import '../../implementations/repositories/HTTPuserRepository.dart';
+import '../../implementations/repositories/localUserRepository.dart';
 import '../noteWidgets/home.dart';
 import 'widgets.dart';
 
@@ -50,10 +54,8 @@ class _InicioState extends State<Inicio> {
           backgroundColor: const Color.fromARGB(255, 154, 181, 255),
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10)),
       onPressed: (){
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-            builder: (context) => Home()));
+  
+          iniciar();
 
         //alerta(context,true,"Wrong Password","The password didnt match");
         ///Envia al usuario a la ventana de inicio
@@ -64,7 +66,21 @@ class _InicioState extends State<Inicio> {
       ));
 }
 
-
+Future<void> iniciar() async {
+    var user = await localUserRepository().getUser();
+    if (user.isLeft){
+     var res = await createUserService(serverRepo: httpUserRepository(), localRepo: localUserRepository()).execute(
+              cmdCreateUser(nombre: 'userTelefono', correo: 'telefono@gmail.com', clave: '23041614d', fechaNacimiento: DateTime.now())
+            );
+      if (res.isLeft){
+          print(res.left.message);
+      }
+    }
+     Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+            builder: (context) => Home()));
+}
 
 
 Widget bodyInicio() {

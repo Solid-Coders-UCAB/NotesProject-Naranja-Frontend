@@ -116,63 +116,32 @@ class httpNoteRepository implements noteRepository{
 
 @override
 Future<Either<MyError, String>> updateNota(Nota note) async {
-
-    MultipartRequest request;
-    StreamedResponse response;
-
-    var uri = Uri.parse('http://$domain/nota/modificate');
-
-
-   request = MultipartRequest('PUT',uri)
-    ..fields['titulo'] = note.getTitulo
-    ..fields['estado'] = note.getEstado
-    ..fields['cuerpo'] = note.getContenido
-    ..fields['fechaCreacion'] = note.getDate.toString()
-    ..fields['fechaModificacion'] = note.getEditDate.toString()
-    //..fields['longitud'] = note.getLongitud.toString()
-    //..fields['latitud'] = note.getLatitud.toString()
-    ..fields['idCarpeta'] = 'fa378750-9763-4466-902f-26200a4fc603'
-    ..fields['idNota'] = note.getid;
-
-        if (note.latitud != null && note.longitud != null){
-            request.fields['longitud'] = note.getLatitud.toString();
-            request.fields['latitud'] = note.getLongitud.toString();
-         }
-
-    List<Uint8List>? imagenes = note.imagenes;
-
-    if (imagenes != null){
-      int cont = 0;
-      for (Uint8List buffer in imagenes){
-          final tempDir = await getTemporaryDirectory();
-          File file = await File('${tempDir.path}/${note.getid}Image$cont.png').create(); 
-          file.writeAsBytesSync(buffer);
-          request.files.add( MultipartFile(
-                              'imagen',file.readAsBytes().asStream(),
-                               file.lengthSync(),
-                               filename: file.path));
-         cont++;
+    var body = jsonEncode({
+      "idNota": note.id,
+      "titulo": note.getTitulo,
+      'cuerpo':note.getContenido,
+      'estado':note.getEstado,
+      'fechaModificacion': note.getEditDate.toString(),
+      'fechaCreacion': note.getDate.toString(),
+      'idCarpeta': note.idCarpeta,
+      'latitud': note.latitud,
+      'longitud': note.longitud
+    });
+  try{
+  final Response response = await put(Uri.parse('http://$domain/nota/modificate'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+      if (response.statusCode == 200){
+        return const Right('Nota actualizada exitosamente');
+      }else{
+        return Left(MyError(key: AppError.NotFound,message: response.body));
       }
-    }
- 
-
-   try{
-    response = await request.send();  
-   }catch(e){
-    return Left(MyError(key: AppError.NotFound,
-                message: "$e" ));
-   }
-
-    if (response.statusCode == 200){    
-      return Right(await response.stream.bytesToString());
-    } 
-
-    var res = response.stream.bytesToString();                  
-
-
-    String error = 'error al procesar la solicitud al servidor: $res';
-         return Left(MyError(key: AppError.NotFound,
-                                  message: error));
+  }catch(e){
+      return Left(MyError(key: AppError.NotFound,message: '$e'));
+  } 
  }
  
 @override

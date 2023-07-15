@@ -4,7 +4,6 @@ import 'package:firstapp/infrastructure/views/noteWidgets/editarNotaEditor.dart'
 import 'package:flutter/material.dart';
 
 import '../../../domain/nota.dart';
-import 'package:firstapp/infrastructure/views/noteWidgets/editar_nota.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 
 class notePreviewWidget extends StatelessWidget{
@@ -34,7 +33,7 @@ class notePreviewWidget extends StatelessWidget{
           )))
           */
           Navigator.push(context,MaterialPageRoute(builder: (context) => 
-          HtmlEditorEditar(body: nota.getContenido)))
+          HtmlEditorEditar(nota: nota)))
         ),      
       )
     ));   

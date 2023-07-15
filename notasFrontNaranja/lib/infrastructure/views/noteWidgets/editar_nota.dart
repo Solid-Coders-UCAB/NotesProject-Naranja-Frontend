@@ -252,17 +252,18 @@ class EditarNotaState extends State<NotaEditar> {
             title: Text('Esta seguro que desea eliminar la nota?'),
           ),
           ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('eliminar permanentemente'),
+            leading: const Icon(Icons.delete),
+            title: const Text('eliminar permanentemente'),
             onTap: () {
               Navigator.pop(context);
               controller.eliminarNotaAction(widget: this,imagenes: note.imagenes,
-              id: note.getid , titulo: note.getTitulo, contenido: note.getContenido, n_date: note.getEditDate);
+              id: note.getid , titulo: note.getTitulo, contenido: note.getContenido, n_date: note.getEditDate,
+              idCarpeta: note.idCarpeta);
             },
           ),
           ListTile(
             leading: const Icon(Icons.exit_to_app_rounded),
-            title: Text('Cancelar'),
+            title: const Text('Cancelar'),
             onTap: () {
               Navigator.pop(context);
             },
@@ -318,7 +319,8 @@ class EditarNotaState extends State<NotaEditar> {
       n_date: note.getDate,
       longitud: note.getLongitud,
       latitud: note.getLatitud,
-      imagenes: imagenes);
+      imagenes: imagenes,
+      idCarpeta: note.idCarpeta);
 
     if (response.isLeft) {
       String text = '';

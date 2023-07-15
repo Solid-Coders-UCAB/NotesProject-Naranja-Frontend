@@ -16,9 +16,13 @@ class editarNotaWidgetController {
   service<void,File> galleryService;
   service<UpdateNoteParams,String> updateNotaService;
 
-  editarNotaWidgetController({required this.imageToText, required this.imageService, required this.galleryService, required this.updateNotaService });
+  editarNotaWidgetController(
+    {required this.imageToText, required this.imageService, required this.galleryService, required this.updateNotaService });
 
-  Future<Either<MyError,String>> updateNota({required String titulo, required String contenido,int? longitud,int? latitud, List<Uint8List>? imagenes, required String idNota, required n_date} ) async {
+  Future<Either<MyError,String>> updateNota(
+    {required String titulo, 
+     required String contenido,int? longitud,int? latitud, List<Uint8List>? imagenes, 
+     required String idNota, required DateTime n_date, required String idCarpeta} ) async {
     longitud??=0;
     latitud??=0;
 
@@ -30,7 +34,8 @@ class editarNotaWidgetController {
       imagenes: imagenes,
       longitud: longitud,
       latitud: latitud, 
-      n_date: n_date));
+      n_date: n_date,
+      idCarpeta: idCarpeta));
 
       if (serviceResponse.isLeft){
         return Left(serviceResponse.left);
@@ -70,7 +75,9 @@ class editarNotaWidgetController {
    }
 
    void eliminarNotaAction({ required EditarNotaState widget, required String id,
-    required String titulo, required String contenido,int? longitud,int? latitud, List<Uint8List>? imagenes,required n_date}) async {
+    required String titulo, 
+    required String contenido,int? longitud,
+    int? latitud, List<Uint8List>? imagenes,required n_date,required String idCarpeta}) async {
       
      widget.setState(() {
        widget.loading = true;
@@ -84,7 +91,8 @@ class editarNotaWidgetController {
       imagenes: imagenes,
       longitud: longitud,
       latitud: latitud, 
-      n_date: n_date));
+      n_date: n_date,
+      idCarpeta: idCarpeta));
 
       if (serviceResponse.isLeft){
        widget.setState(() {

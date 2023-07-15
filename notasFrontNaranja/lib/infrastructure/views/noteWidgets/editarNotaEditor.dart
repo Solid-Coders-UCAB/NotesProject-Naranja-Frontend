@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/infrastructure/controllers/editarNotaWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
@@ -11,14 +12,15 @@ import 'package:flutter/material.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../../../domain/nota.dart';
 import '../systemWidgets/widgets.dart';
 
 
 class HtmlEditorEditar extends StatelessWidget {
 
-  String body;
+  Nota nota;
   
-  HtmlEditorEditar({super.key,required this.body});
+  HtmlEditorEditar({super.key,required this.nota});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class HtmlEditorEditar extends StatelessWidget {
               Navigator.pop(context);
             }),
       ),
-      body: HtmlEditorExample(body: body),
+      body: HtmlEditorExample(nota: nota),
     );
   }
 
@@ -40,24 +42,24 @@ class HtmlEditorEditar extends StatelessWidget {
 
 class HtmlEditorExample extends StatefulWidget {
 
-  String body;
+  Nota nota;
   
-  HtmlEditorExample({super.key,required this.body});
+  HtmlEditorExample({super.key,required this.nota});
 
   @override
-  HtmlEditorExampleState createState() => HtmlEditorExampleState(initialText: body);
+  HtmlEditorExampleState createState() => HtmlEditorExampleState(nota: nota );
 }
 
 class HtmlEditorExampleState extends State<HtmlEditorExample> {  
-  String initialText ;
+  Nota nota;
   bool loading = false;
 
-  final notaNuevaWidgetController controller = controllerFactory.notaNuevaWidController();
+  final editarNotaWidgetController controller = controllerFactory.editarNotaWidController();
 
   final HtmlEditorController editorC = HtmlEditorController();
   final TextEditingController tituloC = TextEditingController();
   
-  HtmlEditorExampleState({required this.initialText});
+  HtmlEditorExampleState({required this.nota});
 
 
 
@@ -92,7 +94,7 @@ class HtmlEditorExampleState extends State<HtmlEditorExample> {
   return HtmlEditor(
                 controller: editorC, //required
                 htmlEditorOptions: HtmlEditorOptions(
-                initialText: initialText,
+                initialText: nota.contenido,
                 hint: 'recuperando contenido...'      
               ),
               htmlToolbarOptions: HtmlToolbarOptions(
@@ -132,7 +134,8 @@ void regresarHome(){
 void saveNota() async {
   
   String text = await editorC.getText();
-  var controllerResponse = await controller.saveNota(titulo: tituloC.text, contenido: text);  
+  var controllerResponse = await controller.updateNota(
+    titulo: tituloC.text, contenido: text, idCarpeta: nota.idCarpeta, idNota: nota.id, n_date: nota.n_date);  
   if (controllerResponse.isLeft){
     showSystemMessage(controllerResponse.left.message);
   }else{

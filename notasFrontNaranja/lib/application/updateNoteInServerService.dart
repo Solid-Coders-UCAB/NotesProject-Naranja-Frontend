@@ -27,7 +27,8 @@ class updateNoteInServerService implements service<UpdateNoteParams,String>{
       longitud: params.getLongitud,
       latitud: params.getLatitud,
       imagenes: params.imagenes,
-      id: params.idNota
+      id: params.idNota,
+      carpeta: params.idCarpeta 
     );
 
   //error al crear la nota
