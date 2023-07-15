@@ -47,10 +47,10 @@ class HtmlEditorExample extends StatefulWidget {
   HtmlEditorExample({super.key,required this.nota});
 
   @override
-  HtmlEditorExampleState createState() => HtmlEditorExampleState(nota: nota );
+  HtmlEditorEditExampleState createState() => HtmlEditorEditExampleState(nota: nota );
 }
 
-class HtmlEditorExampleState extends State<HtmlEditorExample> {  
+class HtmlEditorEditExampleState extends State<HtmlEditorExample> {  
   Nota nota;
   bool loading = false;
 
@@ -59,7 +59,7 @@ class HtmlEditorExampleState extends State<HtmlEditorExample> {
   final HtmlEditorController editorC = HtmlEditorController();
   final TextEditingController tituloC = TextEditingController();
   
-  HtmlEditorExampleState({required this.nota});
+  HtmlEditorEditExampleState({required this.nota});
 
 
 
@@ -147,6 +147,13 @@ void editarNota() async {
   }
 }
 
+void eliminarNota() async {
+  
+  String text = await editorC.getText();
+    controller.eliminarNotaAction1( widget: this,
+    titulo: tituloC.text, contenido: text, idCarpeta: nota.idCarpeta, id: nota.id, n_date: nota.n_date); 
+}
+
 void imageToText() async {
   var controllerResponse = await controller.showTextFromIA();
   String text = controllerResponse.right;  
@@ -182,10 +189,18 @@ Widget menuOpciones() {
         children: <Widget>[
           ListTile(
             leading: Icon(Icons.save),
-            title: Text('guardar nota'),
+            title: Text('guardar cambios'),
             onTap: () async {
               Navigator.pop(context);     
               editarNota();    
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.save),
+            title: Text('eliminar nota'),
+            onTap: () {
+              Navigator.pop(context);     
+              eliminarNota();    
             },
           ),
           ListTile(

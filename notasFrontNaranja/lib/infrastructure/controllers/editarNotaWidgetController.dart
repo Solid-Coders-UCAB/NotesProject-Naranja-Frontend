@@ -9,6 +9,8 @@ import 'package:firstapp/application/DTOS/imageToTextParams.dart';
 import 'package:firstapp/application/DTOS/updateNoteParams.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/editar_nota.dart';
 
+import '../views/noteWidgets/editarNotaEditor.dart';
+
 class editarNotaWidgetController {
 
   service<imageToTextParams,String> imageToText;
@@ -75,6 +77,36 @@ class editarNotaWidgetController {
    }
 
    void eliminarNotaAction({ required EditarNotaState widget, required String id,
+    required String titulo, 
+    required String contenido,int? longitud,
+    int? latitud, List<Uint8List>? imagenes,required n_date,required String idCarpeta}) async {
+      
+     widget.setState(() {
+       widget.loading = true;
+     }); 
+
+    var serviceResponse = await updateNotaService.execute(UpdateNoteParams(
+      estado: 'Eliminada',
+      idNota: id,
+      titulo: titulo, 
+      contenido: contenido,
+      imagenes: imagenes,
+      longitud: longitud,
+      latitud: latitud, 
+      n_date: n_date,
+      idCarpeta: idCarpeta));
+
+      if (serviceResponse.isLeft){
+       widget.setState(() {
+         widget.loading = false;
+       });
+       widget.showSystemMessage(serviceResponse.left.message); 
+      }else{
+       widget.showSystemMessage("nota eliminada satisfactoriamente");
+       widget.regresarHome();
+      }      
+   }
+  void eliminarNotaAction1({ required HtmlEditorEditExampleState widget, required String id,
     required String titulo, 
     required String contenido,int? longitud,
     int? latitud, List<Uint8List>? imagenes,required n_date,required String idCarpeta}) async {

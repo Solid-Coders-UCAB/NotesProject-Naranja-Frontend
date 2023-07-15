@@ -113,7 +113,8 @@ class recycleBinHomeState extends State<recycleBinHome> {
             leading: Icon(Icons.delete),
             title: Text('eliminar permanentemente'),
             onTap: () {
-              eliminarPermanentementeOnPressed();
+              Navigator.pop(context);
+              eliminarPermanentementeOnPressed(notas[index]);
             },
           ),
           ListTile(
@@ -132,9 +133,8 @@ class recycleBinHomeState extends State<recycleBinHome> {
         );
   }
 
-  void eliminarPermanentementeOnPressed(){
-
-
+  void eliminarPermanentementeOnPressed(Nota note){
+    controller.deleteNote(this,note);
   }
 
   Widget botonesNotePreview(){
@@ -159,17 +159,17 @@ class recycleBinHomeState extends State<recycleBinHome> {
 
 
   Widget iconNotePreview(int index){
-    if ( notas[index].imagenes!.isEmpty ) {
+    Uint8List? image = notas[index].getFirstImage(); 
+    if (image == null){
       return const CircleAvatar(
             radius: 35,
             backgroundColor: Colors.white38,
             child: Icon(Icons.note_rounded)
             );
    }
-    List<Uint8List> imagenes = notas[index].imagenes as List<Uint8List>;
     return CircleAvatar(
             radius: 35,
-            backgroundImage: Image.memory(imagenes[0]).image
+            backgroundImage: Image.memory(image).image
             );
   }
 

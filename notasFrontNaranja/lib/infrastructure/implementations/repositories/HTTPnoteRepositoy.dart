@@ -1,9 +1,6 @@
 // ignore_for_file: file_names, implementation_imports
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:either_dart/either.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:either_dart/src/either.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/nota.dart';
@@ -101,10 +98,7 @@ class httpNoteRepository implements noteRepository{
             nota.latitud = null;
             nota.longitud = null;
         }
-
-
         notas.add(nota);
-        //images = [];
       } 
       return Right(notas);
     }
@@ -151,7 +145,7 @@ Future<Either<MyError, String>> deleteNota(Nota note) async {
       });
   Response r1;
   try{
-   r1 = await post(Uri.parse('http://$domain/nota/delete'),
+   r1 = await delete(Uri.parse('http://$domain/nota/delete'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -168,9 +162,53 @@ Future<Either<MyError, String>> deleteNota(Nota note) async {
   return const Right('nota eliminada exitosamente');     
 }
 
+  @override
+  Future<Either<MyError, List<Nota>>> getAllEliminatedNotes(String userId) async {
+    List<Nota> notas = [];
+    Response response;
+    var body = jsonEncode({
+      'idUsuario': userId
+    });
+    try{ 
+     response = await post(Uri.parse('http://$domain/nota/findDeleted'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+    }catch(e){
+      return Left(MyError(key: AppError.NotFound,
+                                  message: "$e"));
+    }
+   if (response.statusCode == 200){
+      var jsonData = json.decode(response.body);
+    for (var jsonNote in jsonData){
+       Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
+                     titulo: jsonNote['titulo']['titulo'],
+                     contenido: jsonNote['cuerpo']['cuerpo'],
+                     n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
+                     n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
+                     estado: jsonNote['estado'], 
+                     carpeta: jsonNote['idCarpeta']['UUID']                            
+                    ).right;
+        var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
+        if ( jsonAssignedGeolocalitation){
+            nota.latitud = jsonNote['geolocalizacion']['latitud'];
+            nota.longitud = jsonNote['geolocalizacion']['longitud'];
+        }else{
+            nota.latitud = null;
+            nota.longitud = null;
+        }
+        notas.add(nota);
+      } 
+      return Right(notas);
+    }
+          
+    return Left(MyError(key: AppError.NotFound,
+                message: response.body ));
+  }
+
 }
-
-
 void main() async {
   var execute = await httpNoteRepository().getALLnotes('');
     if (execute.isLeft){

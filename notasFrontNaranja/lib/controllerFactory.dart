@@ -1,5 +1,6 @@
 import 'package:firstapp/application/connectionCheckerDecorator.dart';
 import 'package:firstapp/application/createNoteInServerService.dart';
+import 'package:firstapp/application/deleteNoteFromServerService.dart';
 import 'package:firstapp/application/getAllFoldersFromServerService.dart';
 import 'package:firstapp/application/getImageFromCameraService.dart';
 import 'package:firstapp/application/getImageFromGalleryService.dart';
@@ -108,6 +109,10 @@ class controllerFactory {
         getAllEliminatedNotesFromServerService:
             getAllEliminatedNotesFromServerService(
                 noteRepo: httpNoteRepository(),
-                localUserRepo: localUserRepository()));
+                localUserRepo: localUserRepository()),
+        deleteNoteFromServerService: 
+                deleteNoteFromServerService(
+                  noteRepo: httpNoteRepository())
+        );
   }
 }

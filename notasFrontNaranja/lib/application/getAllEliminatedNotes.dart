@@ -25,20 +25,13 @@ class getAllEliminatedNotesFromServerService  implements service<void,List<Nota>
         return Left(user.left); 
       }
        
-    var notes = await noteRepo.getALLnotes(user.right.id);
-    List<Nota> EliminatedNotes = [];
+    var notes = await noteRepo.getAllEliminatedNotes(user.right.id);
 
       if (notes.isLeft){
         return Left(notes.left);
       }
     //
-    for (var note in notes.right){
-      if (note.estado == 'Eliminada'){
-       EliminatedNotes.add(note);
-      }
-    }
-    //
-      return Right(EliminatedNotes);
+      return Right(notes.right);
 
   }
   
