@@ -90,7 +90,7 @@ class httpNoteRepository implements noteRepository{
                      n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
                      n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
                      estado: jsonNote['estado'], 
-                     carpeta: ''                            
+                     carpeta: jsonNote['idCarpeta']['UUID']                            
                ).right;
 
         var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
