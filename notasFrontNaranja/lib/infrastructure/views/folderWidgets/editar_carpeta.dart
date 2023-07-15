@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../systemWidgets/widgets.dart';
 import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 
+// Ventana para editar el nombre de una carpeta
+
 // ignore: must_be_immutable
 class EditarCarpeta extends StatelessWidget {
   String nombreCarpeta;
@@ -44,9 +46,10 @@ class CarpetaEditarState extends State<CarpetaEditar> {
   String nombreCarpeta;
   String idCarpeta;
   CarpetaEditarState({required this.nombreCarpeta, required this.idCarpeta});
-
   String carpetaTitle = '';
   bool loading = false;
+
+  // Se crea un controlador con la logica para Editar Carpeta
   editarCarpetaWidgetController controller =
       controllerFactory.createEditarCarpetaWidgetController();
 
@@ -54,6 +57,7 @@ class CarpetaEditarState extends State<CarpetaEditar> {
   @override
   Widget build(BuildContext context) {
     // ignore: no_leading_underscores_for_local_identifiers
+
     final TextEditingController _nombreCarpeta = TextEditingController(text: nombreCarpeta);
     return Align(
       alignment: Alignment.topCenter,
@@ -110,11 +114,13 @@ class CarpetaEditarState extends State<CarpetaEditar> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
+// Funcion para editar una carpeta
   updateCarpeta(String nombreCarpeta, String idCarpeta) async {
     setState(() {
       loading = true;
     });
     
+    // Se llama a la funcion del controlador para evitar la carpeta
     var response = await controller.updateCarpeta(
       nombreCarpeta: nombreCarpeta,
       idCarpeta: idCarpeta
@@ -128,6 +134,8 @@ class CarpetaEditarState extends State<CarpetaEditar> {
     }
     if (response.isRight) {
       showSystemMessage('carpeta actualizada correctamente');
+
+      // Se regresa a la ventana de HomeCarpeta
        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
        builder: (context) => folderHome()),(Route<dynamic> route) => false);
     }

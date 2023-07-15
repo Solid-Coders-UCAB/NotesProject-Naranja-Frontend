@@ -9,6 +9,7 @@ import 'package:firstapp/infrastructure/implementations/drawingRoomImp/drawing_p
 import 'package:flutter/services.dart';
 import 'package:firstapp/controllerFactory.dart';
 
+// Ventana para esbozar una nota a mano
 class DrawingRoomScreen extends StatefulWidget {
   const DrawingRoomScreen({super.key});
 
@@ -17,6 +18,7 @@ class DrawingRoomScreen extends StatefulWidget {
 }
 
 class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
+  // Paleta de colores para dibujar
   var avaiableColor = [
     Colors.black,
     Colors.red,
@@ -26,13 +28,13 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
     Colors.white,
   ];
 
+  // Se crea un controlador con la logica de la ventana Drawing Room
   DrawingRoomController Drawingcontroller = controllerFactory.createDrawingRoomController();
+
   final GlobalKey genKey = GlobalKey();
   Uint8List? bytes;
-
   var historyDrawingPoints = <DrawingPoint>[];
   var drawingPoints = <DrawingPoint>[];
-
   var selectedColor = Colors.black;
   var selectedWidth = 2.0;
 

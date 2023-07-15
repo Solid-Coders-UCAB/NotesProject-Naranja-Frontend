@@ -6,6 +6,7 @@ import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/views/folderWidgets/carpeta_nueva.dart';
 import 'notas_en_carpeta.dart';
 
+// Ventana que muestra todas las carpetas del usuario
 class folderHome extends StatefulWidget {
   
   const folderHome({super.key});
@@ -21,6 +22,8 @@ class folderHomeState extends State<folderHome> {
   bool loading = false;
   List<folder> folders = <folder>[];
   final TextEditingController buscarNota = TextEditingController(text: '');
+
+  // Se crea un controlador con la logica de la ventana HomeFolderController
   homeFolderController controller = controllerFactory.homefolderController();
 
   void changeState(List<folder> f){
@@ -64,11 +67,12 @@ class folderHomeState extends State<folderHome> {
       ),
       //Side menu------------------------------
       drawer: const NavBar(),
-
+      // Boton para crear una nota
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+          // Al tocar este boton se abre la ventana para crear una nota en la carpeta por defecto
           onPressed: () async {
            // createNote();
           },
@@ -87,54 +91,52 @@ class folderHomeState extends State<folderHome> {
         );
         
   }
-
+// Lista con los nombres de las carpetas del usuario
   Widget listaCarpetas(){
-
      return 
-                 ListView.builder(
-                          itemCount: folders.length + 1 ,
-                          itemBuilder: (context, index) {
-                            if (index == folders.length){
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => const CarpetaNueva()));
-                                },
-                                child: const Card(
-                                        child: 
-                                         Material(
-                                            child: ListTile(
-                                            title: Text("agregar nueva carpeta"),
-                                            leading: Icon(Icons.plus_one),
-                                            )
-                                          )
-                                        ),
-                              );
-                            }
-                                return GestureDetector(
-                                  onTap: () {
-                                  Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => NotasEnCarpeta(nombreCarpeta: folders[index].name, idCarpeta: folders[index].id.toString(),)));
-                                },
-                                  child: ( Card(
-                                        child: 
-                                         Material(
-                                            child: ListTile(
-                                            title: Text(folders[index].name),
-                                            leading: const Icon(Icons.folder),
-                                        ),      
-                                      )
-                                    )),
-                                ); 
-                          },
+      ListView.builder(
+        itemCount: folders.length + 1 ,
+        itemBuilder: (context, index) {
+        if (index == folders.length){
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const CarpetaNueva())
+              );
+            },
+            child: const Card(
+              child: 
+                Material(
+                  child: ListTile(
+                    title: Text("agregar nueva carpeta"),
+                    leading: Icon(Icons.plus_one),
+                  )
+              )
+            ),
+          );
+        }
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NotasEnCarpeta(nombreCarpeta: folders[index].name, idCarpeta: folders[index].id.toString(),))
+              );
+          },
+          child: ( Card(
+                  child: 
+                    Material(
+                      child: ListTile(
+                      title: Text(folders[index].name),
+                      leading: const Icon(Icons.folder),
+                      ),      
+                     )
+                  )),
+        ); 
+      },
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
      );
                 
   }
-
-
-
 
   void reset() {
     setState(() {
@@ -147,11 +149,10 @@ class folderHomeState extends State<folderHome> {
       loading = l;
     });
   }
-
 }
 
 class MyListWidget extends StatelessWidget {
-  
+
   final List<String> cosas = ['Cosas 1', 'Cosas 2', 'Cosas 3'];
 
   MyListWidget({super.key});

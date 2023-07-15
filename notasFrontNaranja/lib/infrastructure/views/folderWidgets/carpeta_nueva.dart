@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../controllers/carpetaNuevaWidgetController.dart';
 import '../systemWidgets/widgets.dart';
 
+// Ventana para crear una carpeta
 class CarpetaNueva extends StatelessWidget {
   
   const CarpetaNueva({super.key});
@@ -42,6 +43,7 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
   NuevaCarpetaState();
   bool loading = false;
 
+// Se crea el controlador con la logica de la ventana CarpetaNueva
   carpetaNuevaWidgetController controller =
       controllerFactory.createCarpetaNuevaWidgetController();
 
@@ -71,6 +73,8 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+
+                      // Boton para crear una nueva carpeta
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -111,11 +115,13 @@ void regresarHome(){
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
+// Funcion para crear una carpeta
   Future crearCarpeta(String nombreCarpeta) async {
     setState(() {
       loading = true;
     });
-    var response = await controller.createCarpeta(nombreCarpeta: nombreCarpeta);
+    // Se llama a la funcion del controlador para crear una carpeta
+    var response = await controller.createCarpeta(nombreCarpeta: nombreCarpeta); 
 
     if (response.isLeft) {
       setState(() {
@@ -129,7 +135,7 @@ void regresarHome(){
     if (response.isRight) {
 
        loading = false;
-
+    // Regresa a la ventana principal
       regresarHome();
     }
     

@@ -1,9 +1,8 @@
-// ignore_for_file: prefer_const_constructors
-
+// ignore_for_file: prefer_const_constructors, must_be_immutable
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:either_dart/either.dart';
+import 'dart:io';
+import 'dart:math';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
@@ -12,12 +11,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:file_picker/file_picker.dart';
-
-import 'package:html/parser.dart' show parse;
-
 import '../systemWidgets/widgets.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
+import 'package:path_provider/path_provider.dart';
 
-
+// Ventana para crear una nueva nota
 class HtmlEditorExampleApp extends StatelessWidget {
   
   HtmlEditorExampleApp({super.key});
@@ -31,7 +29,7 @@ class HtmlEditorExampleApp extends StatelessWidget {
         title: const Text("Nueva nota"),
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
         leading: IconButton(
-            icon: Icon(Icons.transit_enterexit_outlined),
+            icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(context);
             }),
@@ -88,21 +86,25 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
   );
  }
 
+// Cuerpo de la nota (Editor de texto)
  Widget htmlEditor(){
   return HtmlEditor(
                 controller: editorC, //required
                 htmlEditorOptions: HtmlEditorOptions(
                 initialText: initialText,
-                hint: 'escribe aqui'        
+                hint: 'Escriba aqui...'        
               ),
               htmlToolbarOptions: HtmlToolbarOptions(
               toolbarPosition: ToolbarPosition.belowEditor, //by default
-              toolbarType: ToolbarType.nativeGrid,
+              toolbarType: ToolbarType.nativeScrollable, // .nativeGrid,
               renderBorder: false,
               customToolbarButtons: [
+                // Boton para las opciones extra en la nota (voz a texto, esbozar, imagen a texto)
                 ElevatedButton(onPressed: () {
                  showBottomSheet(context: context, builder: (context) => menuOpciones());
-                }, child: const Text('mas opciones'))             
+                }, 
+                child: const Icon(Icons.add)
+                )             
               ],
               mediaUploadInterceptor: fileInterceptor
               ), //
@@ -124,23 +126,25 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
    return false; 
  }
 
+// Envia a la ventana principal luego de guardar la nueva nota
 void regresarHome(){
   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
   builder: (context) => Home()),(Route<dynamic> route) => false);
 }
 
+// Funcion para guardar una nota
 void saveNota() async {
-  
   String text = await editorC.getText();
   var controllerResponse = await controller.saveNota(titulo: tituloC.text, contenido: text);  
   if (controllerResponse.isLeft){
     showSystemMessage(controllerResponse.left.message);
   }else{
-     showSystemMessage('nota guardada satisfactoriamente');
+     showSystemMessage('Nota guardada satisfactoriamente');
      regresarHome();
   }
 }
 
+// Funcion para insertar la imagen a texto en el cuerpo de la nota
 void imageToText() async {
   var controllerResponse = await controller.showTextFromIA();
   String text = controllerResponse.right;  
@@ -154,13 +158,23 @@ void imageToText() async {
   }
 }
 
+// Funcion para insertar el voice to text en el cuerpo de la nota
 void voiceToText() async {
   String espacio = " ";
   String audio = await Navigator.push(
    context,
    MaterialPageRoute(builder: (context) =>  SpeechScreen(text: '')));                    
-  editorC.setText(await editorC.getText() + espacio + audio);
+  editorC.setText(await editorC.getText() + espacio + audio + espacio);
 }
+
+// Funcion para insertar el esbozado en el cuerpo de la nota
+ void esbozado(PlatformFile file) async {
+    String base64Data = base64.encode(file.bytes!);
+    String base64Image =
+      """<img src="data:image/${file.extension};base64,$base64Data" data-filename="${file.name}" width="300" height="300"/>""";
+    editorC.insertHtml(base64Image);
+        
+ }
 
 void showSystemMessage(String? message){
     setState(() {
@@ -170,13 +184,20 @@ void showSystemMessage(String? message){
         .showSnackBar(SnackBar(content: Text(message!)));
   }
 
+// 
+Future<String> get _localPath async {
+  final directory = await getApplicationDocumentsDirectory();
+  
+  return directory.path;
+}
+
 Widget menuOpciones() {
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           ListTile(
             leading: Icon(Icons.save),
-            title: Text('guardar nota'),
+            title: Text('Guardar nota'),
             onTap: () async {
               Navigator.pop(context);     
               saveNota();    
@@ -206,9 +227,35 @@ Widget menuOpciones() {
           ),
           ListTile(
             leading: const Icon(Icons.draw),
-            title: Text('Agregar dibujo'),
-            onTap: () {
+            title: Text('Esbozar'),
+            onTap: () async {
               Navigator.pop(context);
+
+              Uint8List? imagen = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => const DrawingRoomScreen()));
+              if (imagen != null) {
+                try {
+                  final appStorage = await _localPath;
+                  int randomNumber = Random().nextInt(10000);
+                  String imageName = 'image$randomNumber';
+                  final archivo = File('$appStorage/$imageName.png');
+                  archivo.writeAsBytes(imagen); 
+
+                  PlatformFile file = PlatformFile(
+                    name: imageName,
+                    bytes: imagen,
+                    path: archivo.path, 
+                    size: 0,
+                  );
+                  esbozado(file);
+                } catch (e) {
+                //print("error guardando imagen ${e}");
+                }
+                
+                }
+                
             },
           ),
           ListTile(

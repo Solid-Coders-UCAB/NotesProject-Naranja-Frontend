@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 
+// Widgets que se pueden reutilizar en varias interfaces
+
+// Campo para escribir texto en una sola linea
 Widget genericTextFormField(TextEditingController controllerData, String text, boolean,int maxLength) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -15,20 +18,20 @@ Widget genericTextFormField(TextEditingController controllerData, String text, b
       ),
       obscureText: boolean,
       decoration: InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 154, 181, 255),
-            width: 2,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 154, 181, 255),
-            width: 2,
-          ),
-        ),
+        //enabledBorder: OutlineInputBorder(
+        //  borderRadius: BorderRadius.circular(30),
+        //  borderSide: const BorderSide(
+        //    color: Color.fromARGB(255, 154, 18, 255),
+        //    width: 2,
+        //  ),
+        //),
+        //focusedBorder: OutlineInputBorder(
+        //  borderRadius: BorderRadius.circular(30),
+        //  borderSide: const BorderSide(
+        //    color: Color.fromARGB(255, 154, 18, 255),
+        //    width: 2,
+        //  ),
+       // ),
         labelText: text,
         labelStyle: const TextStyle(
           color: Color.fromARGB(255, 154, 181, 255), 
@@ -38,6 +41,7 @@ Widget genericTextFormField(TextEditingController controllerData, String text, b
   );
 }
 
+// Campo para escribir texto en varias lineas
 Widget maxLinesTextFormField(TextEditingController controllerData, String text, boolean,int maxLength) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
