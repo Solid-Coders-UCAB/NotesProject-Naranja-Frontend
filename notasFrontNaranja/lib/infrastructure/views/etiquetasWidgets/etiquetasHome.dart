@@ -4,6 +4,7 @@ import '../../controllers/homeEtiquetasController.dart';
 import '../systemWidgets/navigationBar.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/views/etiquetasWidgets/etiquetaNueva.dart';
+import 'package:firstapp/infrastructure/views/etiquetasWidgets/notasPorEtiqueta.dart';
 // Ventana que muestra todas las etiquetas que ha creado el usuario
 class etiquetasHome extends StatefulWidget {
   
@@ -116,9 +117,9 @@ class etiquetasHomeState extends State<etiquetasHome> {
         }
         return GestureDetector(
           onTap: () {
-           // Navigator.push(context,
-           //   MaterialPageRoute(builder: (context) => NotasEnCarpeta(nombreCarpeta: folders[index].name, idCarpeta: folders[index].id.toString(),))
-           //   );
+            Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NotasPorEtiqueta(nombreEtiqueta: etiquetas[index].nombre, idEtiqueta: etiquetas[index].id.toString(),))
+              );
           },
           child: ( Card(
                   child: 
