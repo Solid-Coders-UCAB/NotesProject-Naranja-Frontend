@@ -3,6 +3,10 @@ import 'package:firstapp/infrastructure/views/folderWidgets/editar_carpeta.dart'
 //import '../nota_nueva.dart';
 
 // ignore: must_be_immutable
+
+// Ventana para consultar las notas dentro de una carpeta
+
+// ignore: must_be_immutable
 class NotasEnCarpeta extends StatelessWidget {
   String nombreCarpeta;
   String idCarpeta;

@@ -4,10 +4,11 @@ import 'package:firstapp/infrastructure/controllers/homeController.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
 import 'package:flutter/material.dart';
 import 'nota_nueva.dart';
+import 'textEditor.dart';
 import 'notePreview.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/navigationBar.dart';
 
-// En este código está toda la interfaz de la app de notas
+// Pagina principal donde se muestran todas las notas de un usuario
 class PaginaPrincipal extends StatelessWidget {
   const PaginaPrincipal({super.key});
 
@@ -33,6 +34,8 @@ class homeState extends State<Home> {
   
   bool loading = false;
   List<Nota> notas = <Nota>[];
+
+  // Se asigna el controlador con la logica de la ventana Home
   homeController controller = controllerFactory.createHomeController();
 
   @override
@@ -62,11 +65,14 @@ class homeState extends State<Home> {
       //Side menu------------------------------
       drawer: const NavBar(),
 
+    //  Boton para crear una nota
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 99, 91, 250),
           onPressed: () async {
+
+            // Se llama a la funcion para crear nota
             createNote();
           },
           heroTag: 'addButton',
