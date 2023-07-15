@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/views/etiquetasWidgets/notaEtiquetas.dart';
