@@ -4,11 +4,10 @@ import 'package:either_dart/src/either.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/repositories/userRepository.dart';
 import 'package:firstapp/domain/user.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/HTTPrepository.dart';
 import 'package:http/http.dart';
 
-class httpUserRepository implements userRepository {
-
-  String domain = '192.168.0.103:3000';
+class httpUserRepository extends HTTPrepository implements userRepository {
   
   @override
   Future<Either<MyError, user>> deleteUser(user u) {

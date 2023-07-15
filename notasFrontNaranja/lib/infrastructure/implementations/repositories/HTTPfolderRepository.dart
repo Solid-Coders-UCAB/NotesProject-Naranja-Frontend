@@ -4,12 +4,10 @@ import 'package:either_dart/src/either.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/folder.dart';
 import 'package:firstapp/domain/repositories/folderRepository.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/HTTPrepository.dart';
 import 'package:http/http.dart';
 
-class HTTPfolderRepository implements folderRepository {
-
-  String domain = '192.168.0.103:3000';
-
+class HTTPfolderRepository extends HTTPrepository implements folderRepository {
 
   @override
   Future<Either<MyError, String>> createFolder(folder folder) async {
