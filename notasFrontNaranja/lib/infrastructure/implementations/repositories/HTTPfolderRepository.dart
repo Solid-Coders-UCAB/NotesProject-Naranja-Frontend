@@ -8,7 +8,7 @@ import 'package:http/http.dart';
 
 class HTTPfolderRepository implements folderRepository {
 
-  String domain = '192.168.1.2:3000';
+  String domain = '192.168.0.103:3000';
 
 
   @override
@@ -16,6 +16,8 @@ class HTTPfolderRepository implements folderRepository {
     
     var body = jsonEncode({
     "nombre": folder.name,
+    "predeterminada": false,
+    "idUsuario": folder.idUsuario
   });
 
   try{
@@ -87,7 +89,9 @@ class HTTPfolderRepository implements folderRepository {
     
     var body = jsonEncode({
     "nombre": folder.name,
-    "idCarpeta": folder.id.toString()
+    "idCarpeta": folder.id.toString(),
+    "predeterminada": false,
+    "idUsuario": folder.idUsuario
   });
 
   try{

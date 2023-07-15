@@ -33,6 +33,8 @@ import 'package:firstapp/infrastructure/controllers/editarCarpetaWidgetControlle
 import 'package:firstapp/infrastructure/controllers/homeEtiquetasController.dart';
 import 'package:firstapp/application/getAllEtiquetasFromServerService.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPetiquetasRepository.dart';
+import 'package:firstapp/infrastructure/controllers/etiquetaNuevaWidgetController.dart';
+import 'package:firstapp/application/createEtiquetaInServerService.dart';
 
 //fabrica de controladores
 
@@ -125,5 +127,13 @@ class controllerFactory {
     return homeEtiquetasController(
             getAllEtiquetasService: getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(),
                                                                     localUserRepo: localUserRepository()));
+  }
+
+    static etiquetaNuevaWidgetController createEtiquetaNuevaWidgetController() {
+    return etiquetaNuevaWidgetController(
+        createEtiquetaService:
+            createEtiquetaInServerService(etiquetaRepo: HTTPetiquetasRepository(),
+                                        localUserRepo: localUserRepository())
+        );
   }
 }

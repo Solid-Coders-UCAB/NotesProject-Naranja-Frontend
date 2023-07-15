@@ -3,7 +3,7 @@ import '../../../domain/etiqueta.dart';
 import '../../controllers/homeEtiquetasController.dart';
 import '../systemWidgets/navigationBar.dart';
 import 'package:firstapp/controllerFactory.dart';
-
+import 'package:firstapp/infrastructure/views/etiquetasWidgets/etiquetaNueva.dart';
 // Ventana que muestra todas las etiquetas que ha creado el usuario
 class etiquetasHome extends StatefulWidget {
   
@@ -99,9 +99,9 @@ class etiquetasHomeState extends State<etiquetasHome> {
         if (index == etiquetas.length){
           return GestureDetector(
             onTap: () {
-             // Navigator.push(context,
-             //   MaterialPageRoute(builder: (context) => const EtiquetaNueva())
-              //);
+              Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const EtiquetaNueva())
+              );
             },
             child: const Card(
               child: 
