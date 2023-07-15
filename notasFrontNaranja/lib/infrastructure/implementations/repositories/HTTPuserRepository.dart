@@ -8,7 +8,7 @@ import 'package:http/http.dart';
 
 class httpUserRepository implements userRepository {
 
-  String domain = '192.168.0.103:3000';
+  String domain = '192.168.1.2:3000';
   
   @override
   Future<Either<MyError, user>> deleteUser(user u) {
@@ -24,27 +24,31 @@ class httpUserRepository implements userRepository {
 
   @override
   Future<Either<MyError, user>> saveUser(user u) async {
+   Response res; 
    var body = jsonEncode({
+    "id": u.id,
     "nombre": u.nombre,
     "correo": u.correo,
     "clave": u.clave,
-    "fechaNacimiento": u.fechaNacimiento.toString()
+    "fechaNacimiento": u.fechaNacimiento.toString(),
+    "suscripcion": u.isSuscribed
    });
   try{
-  final Response response = await post(Uri.parse('http://$domain/usuario/create'),
+    res = await post(Uri.parse('http://$domain/usuario/create'),
       body: body,
       headers: {
         "Accept": "application/json",
         "content-type": "application/json"
       });
-      if (response.statusCode == 200){
-        return Right(u);
-      }else{
-        return Left(MyError(key: AppError.NotFound,message: response.body));
-      }
     }catch(e){
       return Left(MyError(key: AppError.NotFound,message: '$e'));
     }  
+
+      if (res.statusCode == 200){
+        return Right(u);
+      }else{
+        return Left(MyError(key: AppError.NotFound,message: res.body));
+      }
   }
 
   @override
@@ -70,7 +74,9 @@ class httpUserRepository implements userRepository {
 
   if (res.statusCode == 200){
    var jsonData = json.decode(res.body);
-   var u = user(id: jsonData['id']['UUID']);
+   var u = user(id: jsonData['id']['UUID'],
+                isSuscribed: jsonData['suscripcion']
+   );
    u.clave = jsonData['clave']['clave'];
    u.correo = jsonData['correo']['correo'];   
    u.fechaNacimiento = jsonData['fechaNacimiento']['fechaNacimiento']; 

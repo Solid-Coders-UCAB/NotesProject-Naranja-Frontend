@@ -69,6 +69,7 @@ class _InicioState extends State<Inicio> {
 Future<void> iniciar() async {
     var user = await localUserRepository().getUser();
     if (user.isLeft){
+      print(user.left.message);
      var res = await createUserService(serverRepo: httpUserRepository(), localRepo: localUserRepository()).execute(
               cmdCreateUser(nombre: 'userTelefono', correo: 'telefono@gmail.com', clave: '23041614d', fechaNacimiento: DateTime.now())
             );

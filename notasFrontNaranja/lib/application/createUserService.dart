@@ -17,7 +17,7 @@ class createUserService implements service<cmdCreateUser,cmdCreateUser>{
 
   @override
   Future<Either<MyError, cmdCreateUser>> execute(params) async  {
-    var u = user.create(i: '', nombre: params.nombre, correo: params.correo, clave: params.clave, fechaNacimiento: params.fechaNacimiento);
+    var u = user.create(i: '', isSuscribed: params.isSuscribed,nombre: params.nombre, correo: params.correo, clave: params.clave, fechaNacimiento: params.fechaNacimiento);
       if (u.isLeft){
         return Left(u.left);
       }

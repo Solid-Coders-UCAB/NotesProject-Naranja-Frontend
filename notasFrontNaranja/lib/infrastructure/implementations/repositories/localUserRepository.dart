@@ -63,7 +63,7 @@ Future<Database> openBD() async {
     List<Map> users;
     try{
       users = await database.rawQuery('SELECT * FROM User');
-      return Right( user(id: users.first['id']));
+      return Right( user(id: users.first['id'],isSuscribed: false));
     }catch(e){
       return Left(MyError(key: AppError.NotFound,message: e.toString()));
     }
