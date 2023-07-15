@@ -6,7 +6,6 @@ import 'dart:typed_data';
 import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/etiqueta.dart';
-import 'package:firstapp/domain/folder.dart';
 import 'package:html/parser.dart';
 
 class Nota {
@@ -16,7 +15,7 @@ class Nota {
   int? latitud;
   String? estado;
   String titulo;
-  String? contenido;
+  String contenido;
   DateTime n_date;
   DateTime? n_edit_date;
   String id;
@@ -27,7 +26,7 @@ class Nota {
     this.imagenes,
     this.n_edit_date,
     required this.n_date,
-    this.contenido,
+    required this.contenido,
     required this.titulo,
     required this.id,
     this.longitud,

@@ -122,6 +122,7 @@ class recycleBinHomeState extends State<recycleBinHome> {
             title: Text('Restaurar'),
             onTap: () {
               Navigator.pop(context);
+              restaurarOnPressed(notas[index]);
             },
           ),
         ],
@@ -135,6 +136,9 @@ class recycleBinHomeState extends State<recycleBinHome> {
 
   void eliminarPermanentementeOnPressed(Nota note){
     controller.deleteNote(this,note);
+  }
+  void restaurarOnPressed(Nota note){
+    controller.restaurarNote(this, note);
   }
 
   Widget botonesNotePreview(){

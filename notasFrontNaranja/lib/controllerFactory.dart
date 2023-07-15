@@ -119,7 +119,9 @@ class controllerFactory {
                 localUserRepo: localUserRepository()),
         deleteNoteFromServerService: 
                 deleteNoteFromServerService(
-                  noteRepo: httpNoteRepository())
+                  noteRepo: httpNoteRepository()),
+        updateNoteFromServer: 
+                updateNoteInServerService(noteRepo: httpNoteRepository())          
         );
   }
 
