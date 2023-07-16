@@ -111,5 +111,29 @@ class HTTPetiquetasRepository extends HTTPrepository implements etiquetaReposito
   }  
 
   }
+
+@override
+Future<Either<MyError, String>> deleteEtiqueta(String idEtiqueta) async {    
+     var body = jsonEncode({
+        "idEtiqueta": idEtiqueta,
+      });
+  Response r1;
+  try{
+   r1 = await delete(Uri.parse('http://$domain/etiqueta/delete'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+  }catch(e){
+    return Left(MyError(key: AppError.NotFound,
+                                  message: "$e"));
+  }
+    if (r1.statusCode != 200){
+      return Left(MyError(key: AppError.NotFound,
+                                  message: r1.body));
+    }
+  return const Right('Etiqueta eliminada exitosamente');     
+}
   
 }

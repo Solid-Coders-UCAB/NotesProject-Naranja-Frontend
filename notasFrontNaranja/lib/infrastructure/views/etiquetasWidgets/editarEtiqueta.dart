@@ -76,8 +76,10 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
                   genericTextFormField(_nombreEtiqueta, "Nombre de la etiqueta", false, 40),
     
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                    // Boton para cambiar el nombre de la etiqueta
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -87,7 +89,7 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
                           ),
                           onPressed: () {
                             if (_nombreEtiqueta.text != '') {
-                              updateCarpeta(_nombreEtiqueta.text, idEtiqueta);
+                              updateEtiqueta(_nombreEtiqueta.text, idEtiqueta);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -96,6 +98,21 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
                             }
                           },
                           child: const Text("Cambiar nombre")),
+                      // Boton para eliminar la etiqueta
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25)),
+                            backgroundColor:
+                                const Color.fromARGB(255, 99, 91, 250),
+                          ),
+                          onPressed: () {
+                            deleteEtiqueta(idEtiqueta);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Etiqueta eliminada")));
+                          },
+                          child: const Text("Eliminar")),
                       const SizedBox(
                         width: 15,
                       ),
@@ -114,7 +131,7 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
   }
 
 // Funcion para editar una carpeta
-  updateCarpeta(String nombreEtiqueta, String idEtiqueta) async {
+  updateEtiqueta(String nombreEtiqueta, String idEtiqueta) async {
     setState(() {
       loading = true;
     });
@@ -133,6 +150,31 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
     }
     if (response.isRight) {
       showSystemMessage('Etiqueta actualizada correctamente');
+
+      // Se regresa a la ventana de HomeEtiqueta
+       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+       builder: (context) => etiquetasHome()),(Route<dynamic> route) => false);
+    }
+  }
+
+  deleteEtiqueta(String idEtiqueta) async {
+    setState(() {
+      loading = true;
+    });
+    
+    // Se llama a la funcion del controlador para eliminar la etiqueta
+    var response = await controller.deleteEtiqueta(
+      idEtiqueta: idEtiqueta
+      );
+
+    if (response.isLeft) {
+      String text = '';
+      text = response.left.message!;
+      loading = false;
+      showSystemMessage(text);   
+    }
+    if (response.isRight) {
+      showSystemMessage('Etiqueta eliminada correctamente');
 
       // Se regresa a la ventana de HomeEtiqueta
        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
