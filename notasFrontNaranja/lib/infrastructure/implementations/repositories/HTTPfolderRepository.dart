@@ -127,4 +127,28 @@ class HTTPfolderRepository extends HTTPrepository implements folderRepository {
     }
     return const Left(MyError(key: AppError.NotFound,message: 'carpeta no encontrada'));  
   }
+
+@override
+Future<Either<MyError, String>> deleteCarpeta(String idCarpeta) async {    
+     var body = jsonEncode({
+        "idCarpeta": idCarpeta,
+      });
+  Response r1;
+  try{
+   r1 = await delete(Uri.parse('http://$domain/carpeta/delete'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+  }catch(e){
+    return Left(MyError(key: AppError.NotFound,
+                                  message: "$e"));
+  }
+    if (r1.statusCode != 200){
+      return Left(MyError(key: AppError.NotFound,
+                                  message: r1.body));
+    }
+  return const Right('Carpeta eliminada exitosamente');     
+}
 }

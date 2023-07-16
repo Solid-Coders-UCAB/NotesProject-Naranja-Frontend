@@ -77,8 +77,10 @@ class CarpetaEditarState extends State<CarpetaEditar> {
                   genericTextFormField(_nombreCarpeta, "Nombre de la carpeta", false, 40),
     
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                    // Cambiar el nombre de la carpeta
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -97,6 +99,21 @@ class CarpetaEditarState extends State<CarpetaEditar> {
                             }
                           },
                           child: const Text("Cambiar nombre")),
+                      // Boton para eliminar la carpeta
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25)),
+                            backgroundColor:
+                                const Color.fromARGB(255, 99, 91, 250),
+                          ),
+                          onPressed: () {
+                            deleteCarpeta(idCarpeta);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Carpeta eliminada")));
+                          },
+                          child: const Text("Eliminar")),
                       const SizedBox(
                         width: 15,
                       ),
@@ -136,6 +153,31 @@ class CarpetaEditarState extends State<CarpetaEditar> {
       showSystemMessage('carpeta actualizada correctamente');
 
       // Se regresa a la ventana de HomeCarpeta
+       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+       builder: (context) => folderHome()),(Route<dynamic> route) => false);
+    }
+  }
+
+  deleteCarpeta(String idCarpeta) async {
+    setState(() {
+      loading = true;
+    });
+    
+    // Se llama a la funcion del controlador para eliminar la etiqueta
+    var response = await controller.deleteCarpeta(
+      idCarpeta: idCarpeta
+      );
+
+    if (response.isLeft) {
+      String text = '';
+      text = response.left.message!;
+      loading = false;
+      showSystemMessage(text);   
+    }
+    if (response.isRight) {
+      showSystemMessage('Carpeta eliminada correctamente');
+
+      // Se regresa a la ventana de HomeEtiqueta
        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
        builder: (context) => folderHome()),(Route<dynamic> route) => false);
     }

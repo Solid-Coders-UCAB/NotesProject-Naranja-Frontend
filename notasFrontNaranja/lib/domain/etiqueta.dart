@@ -7,7 +7,7 @@ class etiqueta {
   String nombre;
   String? id;
   String idUsuario;
-  etiqueta({required this.nombre, required this.idUsuario, String? id});
+  etiqueta({required this.nombre, required this.idUsuario, this.id});
 
     static Either<MyError, etiqueta> create({
     String? id,
