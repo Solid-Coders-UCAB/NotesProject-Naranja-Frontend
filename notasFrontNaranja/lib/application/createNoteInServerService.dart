@@ -51,7 +51,8 @@ class createNoteInServerService implements service<CreatenoteParams,String>{
       longitud: params.getLongitud,
       latitud: params.getLatitud,
       imagenes: params.imagenes,
-      carpeta: params.folderId, 
+      carpeta: params.folderId,
+      etiquetas: params.etiquetas, 
       id: ''
     );
 

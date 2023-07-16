@@ -1,22 +1,60 @@
 
+// ignore_for_file: no_logic_in_create_state
+
 import 'dart:typed_data';
+import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/infrastructure/controllers/notePreviewController.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/editarNotaEditor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 
+import '../../../domain/etiqueta.dart';
 import '../../../domain/nota.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 
-class notePreviewWidget extends StatelessWidget{
+class notePreviewWidget extends StatefulWidget{
 
   final Nota nota;
   final homeState home;
   const notePreviewWidget({super.key,required this.nota, required this.home});
+
+    @override
+    State<notePreviewWidget> createState() => notePreviewWidgetState(nota: nota);
+
+}
+
+class notePreviewWidgetState extends State<notePreviewWidget> {
+
+  Nota nota;
+  notePreviewController controller = controllerFactory.createNotePreviewController();
+  notePreviewWidgetState({required this.nota});
+  List<etiqueta> tags = [];
+  bool loadingTags = false;
+
+  @override
+  void initState() {
+    super.initState();
+     setState(() {
+       loadingTags = true;
+     });
+     init();
+  }
+
+  void init() async{
+   var controllerResponse =  await controller.getAllTagsNote(nota);
+    if (controllerResponse.isRight){
+      setState(() {
+        loadingTags = false;
+      });
+      tags = controllerResponse.right.etiquetas!;
+    }else{
+      print(controllerResponse.left.message);
+    }
      
+  } 
+  
   @override
   Widget build(BuildContext context) {
-
-
     return(Card(
       child: 
       Material(
@@ -33,25 +71,26 @@ class notePreviewWidget extends StatelessWidget{
   }
 
   Widget subtituloNota(){
-     List<String> tagsList = ['apple', 'banana', 'orange', 'kiwi'];
-    List<String> selectedTags = [];
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text("ultima actualizacion: ${nota.getEditDate}"
           ),
+          loadingTags == false ?
           Tags(  
-            itemCount: tagsList.length, 
+            itemCount: tags.length, 
             itemBuilder: (int index){ 
               return Tooltip(
-                message: tagsList[index],
+                message: tags[index].nombre,
                 child: ItemTags(
-                  title: tagsList[index], index: index,
+                  title: tags[index].nombre, index: index,
                   pressEnabled: true,
                )   
              );
             } 
           )
+          :
+          const Text('cargando etiquetas...')
         ] 
        );
   }
@@ -74,4 +113,6 @@ class notePreviewWidget extends StatelessWidget{
   }
     
 }
+
+
 

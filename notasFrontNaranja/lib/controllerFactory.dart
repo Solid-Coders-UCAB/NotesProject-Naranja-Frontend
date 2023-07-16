@@ -2,6 +2,7 @@ import 'package:firstapp/application/connectionCheckerDecorator.dart';
 import 'package:firstapp/application/createNoteInServerService.dart';
 import 'package:firstapp/application/deleteNoteFromServerService.dart';
 import 'package:firstapp/application/getAllFoldersFromServerService.dart';
+import 'package:firstapp/application/getAllTagsFromNote.dart';
 import 'package:firstapp/application/getImageFromCameraService.dart';
 import 'package:firstapp/application/getImageFromGalleryService.dart';
 import 'package:firstapp/application/getUserCurrentLocation.dart';
@@ -14,6 +15,7 @@ import 'package:firstapp/infrastructure/controllers/homeController.dart';
 import 'package:firstapp/infrastructure/controllers/imageToTextWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/editarNotaWidgetController.dart';
+import 'package:firstapp/infrastructure/controllers/notePreviewController.dart';
 import 'package:firstapp/infrastructure/implementations/getLocationImp.dart';
 import 'package:firstapp/infrastructure/controllers/recycleBinHomeController.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPfolderRepository.dart';
@@ -67,7 +69,9 @@ class controllerFactory {
                                           folderRepo: HTTPfolderRepository(),
                                            localUserRepo: localUserRepository()),
         locationService:
-            GetUserCurrentLocationService(location: GetLocationImp()) );
+            GetUserCurrentLocationService(location: GetLocationImp()),
+        getAllEtiquetasService: 
+            getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(), localUserRepo: localUserRepository()) );
   }
 
 // Controlador para el widget de esbozado DrawingRoom
@@ -153,5 +157,11 @@ class controllerFactory {
             deleteEtiquetaService: deleteEtiquetaInServerService(etiquetaRepo: HTTPetiquetasRepository(), 
                                                                 localUserRepo: localUserRepository())
           );
-  }
+   }
+
+   static notePreviewController createNotePreviewController(){
+    return notePreviewController(getAllTagsFromNote: 
+                                    getAllTagsFromNoteService(tagRepo: HTTPetiquetasRepository())
+                                );
+   }
 }

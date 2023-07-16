@@ -1,6 +1,8 @@
 
 // ignore_for_file: camel_case_types
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import "package:flutter_tags_x/flutter_tags_x.dart";
@@ -41,18 +43,30 @@ class etiquetasNotaState extends State<etiquetasNota> {
 
   @override
   Widget build(BuildContext context) {
-    return Tags(  
-      itemCount: tagsList.length, 
-      itemBuilder: (int index){ 
-          return Tooltip(
-          message: tagsList[index],
-          child:ItemTags(
-            title: tagsList[index], index: index,
-            pressEnabled: false,
+    return 
+      ListTile(
+       title: const Text("etiquetas disponibles"), 
+       subtitle: Tags(  
+              direction: Axis.horizontal,
+              itemCount: tagsList.length, 
+              itemBuilder: (int index){ 
+              return Tooltip(
+                message: tagsList[index],
+                child: ItemTags(
+                  textActiveColor: Colors.black,
+                  color:  Colors.blueGrey,
+                  activeColor: Colors.white,
+                  title: tagsList[index], index: index,
+                  pressEnabled: true,
+                  onPressed: (item) {
+                    selectedTags.add(item.title!);
+                    print(selectedTags.first);
+                  },
+               )   
+             );
+            } 
           )
-          );
-      },
-    );
+       ) ;
 }
 
 }

@@ -10,4 +10,7 @@ abstract class etiquetaRepository {
     Future<Either<MyError, String>> updateEtiqueta(etiqueta etiqueta);
     Future<Either<MyError, List<etiqueta>>> getAllEtiquetas(String idUsuario);
     Future<Either<MyError, String>> deleteEtiqueta(String idEtiqueta);
+    Future<Either<MyError, etiqueta>> getEtiquetaById(String idEtiqueta);
+
+
 }

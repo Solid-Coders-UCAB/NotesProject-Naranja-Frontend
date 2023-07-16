@@ -2,6 +2,8 @@
 
 import 'dart:typed_data';
 
+import '../../domain/etiqueta.dart';
+
 class CreatenoteParams {
   
   int? longitud;
@@ -10,13 +12,15 @@ class CreatenoteParams {
   String contenido;
   List<Uint8List>? imagenes;
   String? folderId;
+  List<etiqueta>? etiquetas;
   
   CreatenoteParams({
     required this.contenido,
     required this.titulo,
     this.longitud,
     this.latitud,
-    this.imagenes
+    this.imagenes,
+    this.etiquetas
   });
 
 

@@ -11,9 +11,11 @@ import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart';
+import '../../../domain/etiqueta.dart';
 import '../systemWidgets/widgets.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
 import 'package:path_provider/path_provider.dart';
@@ -60,7 +62,27 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
   final HtmlEditorController editorC = HtmlEditorController();
   final TextEditingController tituloC = TextEditingController();
 
+  List<etiqueta> tagsList = [];
+  List<etiqueta> selectedTags = [];
 
+  @override
+  void initState() {
+    super.initState();
+      setState(() {
+        loading = true;
+      });
+    init();
+  }
+  void init() async {
+    var controllerResponse = await controller.getAllEtiquetas();
+      if (controllerResponse.isLeft){
+           showSystemMessage(controllerResponse.left.message);
+      }
+      setState(() {
+        loading = false;
+      });
+     tagsList = controllerResponse.right;     
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +160,7 @@ void regresarHome(){
 // Funcion para guardar una nota
 void saveNota() async {
   String text = await editorC.getText();
-  var controllerResponse = await controller.saveNota(titulo: tituloC.text, contenido: text);  
+  var controllerResponse = await controller.saveNota(titulo: tituloC.text, contenido: text,etiquetas: selectedTags);  
   if (controllerResponse.isLeft){
     showSystemMessage(controllerResponse.left.message);
   }else{
@@ -195,8 +217,9 @@ Future<String> get _localPath async {
 }
 
 Widget menuOpciones() {
-    return Column(
-        mainAxisSize: MainAxisSize.min,
+    return ListView(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
         children: <Widget>[
           ListTile(
             leading: Icon(Icons.save),
@@ -217,10 +240,9 @@ Widget menuOpciones() {
             leading: Icon(Icons.new_label),
             title: Text('etiquetas'),
             onTap: () async {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                  builder: (context) => notaEtiquetas()));
+              Navigator.pop(context);
+              selectedTags = [];
+              showBottomSheet(context: context, builder: (context) => menuEtiquetas());
             },
           ),
           ListTile(
@@ -280,6 +302,48 @@ Widget menuOpciones() {
             },
           ),
         ],
+      );
+  }
+
+  Widget menuEtiquetas() {
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            leading: const Icon(Icons.exit_to_app_rounded),
+            title: Text('Salir'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),  
+          ListTile(
+            title: const Text("Etiquetas disponibles:"),
+            subtitle: Tags(  
+              direction: Axis.horizontal,
+              itemCount: tagsList.length, 
+              itemBuilder: (int index){ 
+              return Tooltip(
+                message: tagsList[index].nombre,
+                child: ItemTags(
+                  textStyle: const TextStyle(fontSize: 20),
+                  textActiveColor: Colors.black,
+                  color:  Colors.blueGrey,
+                  activeColor: Colors.white,
+                  title: tagsList[index].nombre, index: index,
+                  pressEnabled: true,
+                  onPressed: (item) {
+                    if (item.active! == false){
+                      selectedTags.add(tagsList[index]);
+                    }else{
+                      selectedTags.removeWhere((element) => tagsList[index].id == element.id);
+                    }
+                  },
+               )   
+             );
+            } 
+          )
+         ) 
+       ],
       );
   }
 

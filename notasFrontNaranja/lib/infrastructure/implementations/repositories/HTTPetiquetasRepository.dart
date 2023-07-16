@@ -135,5 +135,36 @@ Future<Either<MyError, String>> deleteEtiqueta(String idEtiqueta) async {
     }
   return const Right('Etiqueta eliminada exitosamente');     
 }
+
+  @override
+  Future<Either<MyError, etiqueta>> getEtiquetaById(String idEtiqueta) async {
+    var body = jsonEncode({
+     "idEtiqueta": idEtiqueta,
+    });
+
+  try{
+
+    final Response response = await post(Uri.parse('http://$domain/etiqueta/findById'),
+
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+
+      if (response.statusCode == 200){
+        var jsonData = jsonDecode(response.body);
+        etiqueta eti = etiqueta(nombre: jsonData['nombre']['nombre'], idUsuario: '',id: idEtiqueta);
+        print(eti.nombre);
+        return Right(eti);
+      }else{
+        return Left(MyError(key: AppError.NotFound,message: response.body));
+      }
+
+  }catch(e){
+      return Left(MyError(key: AppError.NotFound,message: '$e'));
+  } 
+
+  }
   
 }

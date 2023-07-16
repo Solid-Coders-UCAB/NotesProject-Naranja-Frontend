@@ -8,6 +8,8 @@ import 'package:firstapp/domain/repositories/noteRepository.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPrepository.dart';
 import 'package:http/http.dart';
 
+import '../../../domain/etiqueta.dart';
+
 class httpNoteRepository extends HTTPrepository implements noteRepository{
   
   @override
@@ -19,7 +21,8 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
       'estado':note.getEstado,
       'fechaModificacion': note.getEditDate.toString(),
       'fechaCreacion': note.getDate.toString(),
-      'idCarpeta': note.idCarpeta
+      'idCarpeta': note.idCarpeta,
+      'etiquetas': note.getEtiquetasIds()
     });
 
   try{
@@ -48,6 +51,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
   Future<Either<MyError, List<Nota>>> getALLnotes(String userId) async {
 
     List<Nota> notas = [];
+    List<etiqueta> etiquetas = [];
     Response response;
     var body = jsonEncode({
       'idUsuario': userId
@@ -72,20 +76,18 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
 
       for (var jsonNote in jsonData){
 
-      /* for (var jsonImage in jsonNote['cuerpo']['imagen']){
-        List<dynamic> bufferDynamic = jsonImage["data"];
-        Uint8List buffer = Uint8List.fromList(bufferDynamic.cast<int>());
-        images.add(buffer);
-       }
-      */ 
-
+          for (var eti in jsonNote['etiquetas']) {
+            etiquetas.add( etiqueta(nombre: '', idUsuario: '',id: eti['id']) );
+          }
+       
        Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
                      titulo: jsonNote['titulo']['titulo'],
                      contenido: jsonNote['cuerpo']['cuerpo'],
                      n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
                      n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
                      estado: jsonNote['estado'], 
-                     carpeta: jsonNote['idCarpeta']['UUID']                            
+                     carpeta: jsonNote['idCarpeta']['UUID'],
+                     etiquetas: etiquetas                            
                ).right;
 
         var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
@@ -97,6 +99,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
             nota.longitud = null;
         }
         notas.add(nota);
+        etiquetas = [];
       } 
       return Right(notas);
     }
