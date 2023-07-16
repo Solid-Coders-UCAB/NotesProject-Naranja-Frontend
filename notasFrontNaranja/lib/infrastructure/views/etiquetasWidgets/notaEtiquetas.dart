@@ -3,6 +3,8 @@
 
 import 'package:flutter/material.dart';
 
+import "package:flutter_tags_x/flutter_tags_x.dart";
+
 class notaEtiquetas extends StatelessWidget {
 
   const notaEtiquetas({super.key});
@@ -33,22 +35,28 @@ class etiquetasNota extends StatefulWidget {
 }
 
 class etiquetasNotaState extends State<etiquetasNota> {
-  
-  
+
+ List<String> tagsList = ['apple', 'banana', 'orange', 'kiwi', 'Mondongo'];
+  List<String> selectedTags = [];
+
   @override
   Widget build(BuildContext context) {
-    return const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.save),
-            title: Text('ETIQUETAS AGREGADAS'),
-            subtitle: Card(),
+    return Tags(  
+      itemCount: tagsList.length, 
+      itemBuilder: (int index){ 
+          return Tooltip(
+          message: tagsList[index],
+          child:ItemTags(
+            title: tagsList[index], index: index,
+            pressEnabled: false,
           )
-        ]
-    );  
-  }
-  
+          );
+      },
+    );
 }
+
+}
+  
+
 
 

@@ -67,6 +67,7 @@ class _InicioState extends State<Inicio> {
 }
 
 Future<void> iniciar() async {
+  
     var user = await localUserRepository().getUser();
     if (user.isLeft){
       print(user.left.message);
@@ -77,6 +78,7 @@ Future<void> iniciar() async {
           print(res.left.message);
       }
     }
+    
      Navigator.pushReplacement(
             context,
             MaterialPageRoute(

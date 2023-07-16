@@ -19,7 +19,7 @@ class Nota {
   DateTime n_date;
   DateTime? n_edit_date;
   String id;
-  List<etiqueta>? etiquetas;
+  List<String>? etiquetas;
   String idCarpeta;
 
   Nota({

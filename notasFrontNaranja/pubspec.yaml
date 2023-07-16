@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter_tags_x:  # last version
   sqflite_common_ffi: any
   sqflite:
   html: ^0.15.4
