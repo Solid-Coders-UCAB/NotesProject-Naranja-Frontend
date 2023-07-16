@@ -35,6 +35,8 @@ import 'package:firstapp/application/getAllEtiquetasFromServerService.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPetiquetasRepository.dart';
 import 'package:firstapp/infrastructure/controllers/etiquetaNuevaWidgetController.dart';
 import 'package:firstapp/application/createEtiquetaInServerService.dart';
+import 'package:firstapp/infrastructure/controllers/editarEtiquetaWidgetController.dart';
+import 'package:firstapp/application/updateEtiquetaInServerService.dart';
 
 //fabrica de controladores
 
@@ -135,5 +137,12 @@ class controllerFactory {
             createEtiquetaInServerService(etiquetaRepo: HTTPetiquetasRepository(),
                                         localUserRepo: localUserRepository())
         );
+  }
+
+    static editarEtiquetaWidgetController createEditarEtiquetaWidgetController() {
+    return editarEtiquetaWidgetController(
+        updateEtiquetaService:
+            updateEtiquetaInServerService(etiquetaRepo: HTTPetiquetasRepository(),
+                                        localUserRepo: localUserRepository()));
   }
 }

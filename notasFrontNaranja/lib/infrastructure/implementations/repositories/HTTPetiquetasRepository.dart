@@ -64,19 +64,51 @@ class HTTPetiquetasRepository extends HTTPrepository implements etiquetaReposito
    var jsonData = json.decode(response1.body);    
 
     for (var jsonFolder in jsonData){
-      var f = etiqueta.create(nombre: jsonFolder['nombre']['nombre'],
-                    idUsuario:   jsonFolder['usuario']['UUID'],
-                    id: jsonFolder['id']['id']
+      var f = etiqueta.create(id: jsonFolder['id']['id'],
+                              nombre: jsonFolder['nombre']['nombre'],
+                              idUsuario:   jsonFolder['usuario']['UUID'] 
                     );
 
       etiquetas.add(f.right);              
     }
-
+    
     return Right(etiquetas);
 
   }else{
    return Left(MyError(key: AppError.NotFound,message: response1.body));
   }
+
+  }
+
+  @override
+  Future<Either<MyError, String>> updateEtiqueta(etiqueta etiqueta) async {
+    
+    var body = jsonEncode({
+    "idEtiqueta": etiqueta.id.toString(),
+    "nombreEtiqueta": etiqueta.nombre,
+    "idUsuario": etiqueta.idUsuario
+  });
+  print(etiqueta.id);
+  print(etiqueta.idUsuario);
+  try{
+
+  final Response response = await put(Uri.parse('http://$domain/etiqueta/modificate'),
+
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+
+      if (response.statusCode == 200){
+        return const Right('Etiqueta actualizada exitosamente');
+      }else{
+        return Left(MyError(key: AppError.NotFound,message: response.body));
+      }
+
+  }catch(e){
+      return Left(MyError(key: AppError.NotFound,message: '$e'));
+  }  
 
   }
   

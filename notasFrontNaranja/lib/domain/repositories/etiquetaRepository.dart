@@ -7,7 +7,7 @@ import '../errores.dart';
 abstract class etiquetaRepository {
     
     Future<Either<MyError, String>> createEtiqueta(etiqueta etiqueta);
-    //Future<Either<MyError, String>> updateEtiqueta(etiqueta folder);
+    Future<Either<MyError, String>> updateEtiqueta(etiqueta etiqueta);
     Future<Either<MyError, List<etiqueta>>> getAllEtiquetas(String idUsuario);
   
 }

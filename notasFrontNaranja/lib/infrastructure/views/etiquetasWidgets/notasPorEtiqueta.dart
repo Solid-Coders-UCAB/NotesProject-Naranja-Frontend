@@ -30,8 +30,8 @@ class NotasPorEtiqueta extends StatelessWidget {
                               const Color.fromARGB(255, 99, 91, 250),
                         ),
                         onPressed: () {
-                        //  Navigator.push(context,
-                        //                        MaterialPageRoute(builder: (context) => EditarCarpeta(nombreCarpeta: nombreCarpeta, idCarpeta: idCarpeta)));
+                          Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => EditarEtiqueta(nombreEtiqueta: nombreEtiqueta, idEtiqueta: idEtiqueta)));
                         },
                         child: const Text("Editar")
                         ),
