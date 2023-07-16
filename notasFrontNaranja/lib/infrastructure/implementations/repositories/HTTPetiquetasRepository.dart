@@ -64,14 +64,14 @@ class HTTPetiquetasRepository extends HTTPrepository implements etiquetaReposito
    var jsonData = json.decode(response1.body);    
 
     for (var jsonFolder in jsonData){
-      var f = etiqueta.create(nombre: jsonFolder['nombre']['nombre'],
-                    idUsuario:   jsonFolder['usuario']['UUID'],
-                    id: jsonFolder['id']['id']
+      var f = etiqueta.create(id: jsonFolder['id']['id'],
+                              nombre: jsonFolder['nombre']['nombre'],
+                              idUsuario:   jsonFolder['usuario']['UUID'] 
                     );
 
       etiquetas.add(f.right);              
     }
-
+    
     return Right(etiquetas);
 
   }else{
@@ -79,5 +79,61 @@ class HTTPetiquetasRepository extends HTTPrepository implements etiquetaReposito
   }
 
   }
+
+  @override
+  Future<Either<MyError, String>> updateEtiqueta(etiqueta etiqueta) async {
+    
+    var body = jsonEncode({
+    "idEtiqueta": etiqueta.id.toString(),
+    "nombreEtiqueta": etiqueta.nombre,
+    "idUsuario": etiqueta.idUsuario
+  });
+  print(etiqueta.id);
+  print(etiqueta.idUsuario);
+  try{
+
+  final Response response = await put(Uri.parse('http://$domain/etiqueta/modificate'),
+
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+
+      if (response.statusCode == 200){
+        return const Right('Etiqueta actualizada exitosamente');
+      }else{
+        return Left(MyError(key: AppError.NotFound,message: response.body));
+      }
+
+  }catch(e){
+      return Left(MyError(key: AppError.NotFound,message: '$e'));
+  }  
+
+  }
+
+@override
+Future<Either<MyError, String>> deleteEtiqueta(String idEtiqueta) async {    
+     var body = jsonEncode({
+        "idEtiqueta": idEtiqueta,
+      });
+  Response r1;
+  try{
+   r1 = await delete(Uri.parse('http://$domain/etiqueta/delete'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+  }catch(e){
+    return Left(MyError(key: AppError.NotFound,
+                                  message: "$e"));
+  }
+    if (r1.statusCode != 200){
+      return Left(MyError(key: AppError.NotFound,
+                                  message: r1.body));
+    }
+  return const Right('Etiqueta eliminada exitosamente');     
+}
   
 }

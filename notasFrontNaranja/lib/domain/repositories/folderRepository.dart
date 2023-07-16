@@ -9,6 +9,5 @@ abstract class folderRepository {
     Future<Either<MyError, String>> updateFolder(folder folder);
     Future<Either<MyError, List<folder>>> getALLfolders(String userId);
     Future<Either<MyError, folder>> getDefaultFolder(String userId);
-    
-
+    Future<Either<MyError, String>> deleteCarpeta(String idCarpeta);
 }

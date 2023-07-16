@@ -35,7 +35,10 @@ import 'package:firstapp/application/getAllEtiquetasFromServerService.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPetiquetasRepository.dart';
 import 'package:firstapp/infrastructure/controllers/etiquetaNuevaWidgetController.dart';
 import 'package:firstapp/application/createEtiquetaInServerService.dart';
-
+import 'package:firstapp/infrastructure/controllers/editarEtiquetaWidgetController.dart';
+import 'package:firstapp/application/updateEtiquetaInServerService.dart';
+import 'package:firstapp/application/deleteEtiquetaService.dart';
+import 'package:firstapp/application/deleteCarpetaService.dart';
 //fabrica de controladores
 
 class controllerFactory {
@@ -106,9 +109,12 @@ class controllerFactory {
 
   static editarCarpetaWidgetController createEditarCarpetaWidgetController() {
     return editarCarpetaWidgetController(
-        updateCarpetaService:
+            updateCarpetaService:
             updateFolderInServerService(folderRepo: HTTPfolderRepository(),
-                                        localUserRepo: localUserRepository()));
+                                        localUserRepo: localUserRepository()),
+            deleteCarpetaService: deleteCarpetaInServerService(folderRepo: HTTPfolderRepository(), 
+                                                              localUserRepo: localUserRepository())
+        );
   }
 
   static recycleBinHomeController recycleBinhomeController() {
@@ -137,5 +143,15 @@ class controllerFactory {
             createEtiquetaInServerService(etiquetaRepo: HTTPetiquetasRepository(),
                                         localUserRepo: localUserRepository())
         );
+  }
+
+    static editarEtiquetaWidgetController createEditarEtiquetaWidgetController() {
+    return editarEtiquetaWidgetController(
+            updateEtiquetaService:
+            updateEtiquetaInServerService(etiquetaRepo: HTTPetiquetasRepository(),
+                                        localUserRepo: localUserRepository()),
+            deleteEtiquetaService: deleteEtiquetaInServerService(etiquetaRepo: HTTPetiquetasRepository(), 
+                                                                localUserRepo: localUserRepository())
+          );
   }
 }
