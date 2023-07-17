@@ -2,6 +2,8 @@
 
 import 'dart:typed_data';
 
+import 'package:firstapp/domain/etiqueta.dart';
+
 class UpdateNoteParams {
   String idNota;
   int? longitud;
@@ -12,6 +14,7 @@ class UpdateNoteParams {
   DateTime n_date;
   String estado;
   String idCarpeta;
+  List<etiqueta>? etiquetas;
   
   UpdateNoteParams({
     required this.estado,
@@ -22,7 +25,8 @@ class UpdateNoteParams {
     this.latitud,
     this.imagenes,
     required this.n_date,
-    required this.idCarpeta
+    required this.idCarpeta,
+    this.etiquetas
   });
 
   get getIdNota => idNota;
