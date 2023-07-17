@@ -47,7 +47,7 @@ class homeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+        backgroundColor: const Color.fromARGB(255, 30, 103, 240),
         title: const Text("Notas"),
         leading: Builder(
           builder: (BuildContext context) {
@@ -68,7 +68,7 @@ class homeState extends State<Home> {
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
-          backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+          backgroundColor: const Color.fromARGB(255, 30, 103, 240),
           onPressed: () async {
             // Se llama a la funcion para crear nota
             createNote();
