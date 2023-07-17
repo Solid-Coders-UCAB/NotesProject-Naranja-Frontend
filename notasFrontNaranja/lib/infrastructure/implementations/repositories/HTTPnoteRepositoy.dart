@@ -111,6 +111,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
 
 @override
 Future<Either<MyError, String>> updateNota(Nota note) async {
+  
     var body = jsonEncode({
       "idNota": note.id,
       "titulo": note.getTitulo,

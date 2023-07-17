@@ -98,6 +98,7 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
     if (folderRes.isRight){
       folders = folderRes.right;
       selectedFolder = folders.firstWhere((element) => element.id == nota.idCarpeta);
+      print(selectedFolder!.name);
     }
     
     setState(() {loading = false; });
@@ -180,8 +181,10 @@ void editarNota() async {
   setState(() {
     loading = true;
   });
-  var controllerResponse = await controller.updateNota(
-    titulo: tituloC.text, contenido: text, idCarpeta: nota.idCarpeta, idNota: nota.id, n_date: nota.n_date, etiquetas: selectedTags ); 
+  var controllerResponse = await controller.updateNota(    
+    titulo: tituloC.text, contenido: text, idCarpeta: (selectedFolder == null) ? nota.idCarpeta : selectedFolder!.id!, 
+    idNota: nota.id, n_date: nota.n_date, etiquetas: selectedTags ); 
+
   if (controllerResponse.isLeft){
     showSystemMessage(controllerResponse.left.message);
   }else{
@@ -193,7 +196,8 @@ void editarNota() async {
 void eliminarNota() async {
   String text = await editorC.getText();
     controller.eliminarNotaAction1( widget: this,
-    titulo: tituloC.text, contenido: text, idCarpeta: nota.idCarpeta, id: nota.id, n_date: nota.n_date, etiquetas: selectedTags); 
+    titulo: tituloC.text, contenido: text, idCarpeta: (selectedFolder == null) ? nota.idCarpeta : selectedFolder!.id!, 
+    id: nota.id, n_date: nota.n_date, etiquetas: selectedTags); 
 }
 void imageToText() async {
   var controllerResponse = await controller.showTextFromIA();
@@ -201,10 +205,7 @@ void imageToText() async {
   if (controllerResponse.isLeft){
     showSystemMessage(controllerResponse.left.message);
   }else{
-    print(text);
      editorC.setText(await editorC.getText()+text);
-    print(await editorC.getText());
-
   }
 }
 
