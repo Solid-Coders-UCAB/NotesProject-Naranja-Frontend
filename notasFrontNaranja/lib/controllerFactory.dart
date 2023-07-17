@@ -71,7 +71,9 @@ class controllerFactory {
         locationService:
             GetUserCurrentLocationService(location: GetLocationImp()),
         getAllEtiquetasService: 
-            getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(), localUserRepo: localUserRepository()) );
+            getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(), localUserRepo: localUserRepository()),
+         getAllFoldersService: 
+            getAllFoldersFromServerService(folderRepo: HTTPfolderRepository(), localUserRepo: localUserRepository())    );
   }
 
 // Controlador para el widget de esbozado DrawingRoom

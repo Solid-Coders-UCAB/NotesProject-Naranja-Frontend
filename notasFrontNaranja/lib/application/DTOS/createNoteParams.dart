@@ -20,7 +20,8 @@ class CreatenoteParams {
     this.longitud,
     this.latitud,
     this.imagenes,
-    this.etiquetas
+    this.etiquetas,
+    this.folderId
   });
 
 
