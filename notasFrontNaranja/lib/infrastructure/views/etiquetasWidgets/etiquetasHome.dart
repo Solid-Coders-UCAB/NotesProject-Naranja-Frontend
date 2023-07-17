@@ -5,6 +5,8 @@ import '../systemWidgets/navigationBar.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/views/etiquetasWidgets/etiquetaNueva.dart';
 import 'package:firstapp/infrastructure/views/etiquetasWidgets/notasPorEtiqueta.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
+
 // Ventana que muestra todas las etiquetas que ha creado el usuario
 class etiquetasHome extends StatefulWidget {
   
@@ -73,7 +75,8 @@ class etiquetasHomeState extends State<etiquetasHome> {
           backgroundColor: const Color.fromARGB(255, 99, 91, 250),
           // Al tocar este boton se abre la ventana para crear una nota en la carpeta por defecto
           onPressed: () async {
-           // createNote();
+           Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HtmlEditorExampleApp()));
           },
           heroTag: 'addButton',
           child: const Icon(Icons.add),
