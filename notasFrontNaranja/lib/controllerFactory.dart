@@ -43,6 +43,8 @@ import 'package:firstapp/application/deleteEtiquetaService.dart';
 import 'package:firstapp/application/deleteCarpetaService.dart';
 import 'package:firstapp/application/getNotesByFolderService.dart';
 import 'package:firstapp/infrastructure/controllers/notasEnCarpetaController.dart';
+import 'package:firstapp/application/getNotesByEtiquetaService.dart';
+import 'package:firstapp/infrastructure/controllers/notasPorEtiquetaController.dart';
 
 //fabrica de controladores
 
@@ -102,7 +104,9 @@ class controllerFactory {
             updateNoteInServerService(noteRepo: httpNoteRepository()),
         getAllEtiquetasService: 
             getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(), 
-                                             localUserRepo: localUserRepository())
+                                             localUserRepo: localUserRepository()),
+        getAllFoldersService: 
+            getAllFoldersFromServerService(folderRepo: HTTPfolderRepository(), localUserRepo: localUserRepository())
         
         );
   }
@@ -179,6 +183,13 @@ class controllerFactory {
     return notasEnCarpetaController(
             notesByFolderService: getNotesByFolderService(
             folderRepo: HTTPfolderRepository(),
+            localUserRepo: localUserRepository()));
+  }
+
+  static notasPorEtiquetaController createnotasPorEtiquetaController() {
+    return notasPorEtiquetaController(
+            notesByEtiquetaService: getNotesByEtiquetaService(
+            etiquetaRepo: HTTPetiquetasRepository(),
             localUserRepo: localUserRepository()));
   }
 }

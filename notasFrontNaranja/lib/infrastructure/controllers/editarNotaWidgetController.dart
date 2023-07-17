@@ -10,6 +10,7 @@ import 'package:firstapp/application/DTOS/updateNoteParams.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/editar_nota.dart';
 
 import '../../domain/etiqueta.dart';
+import '../../domain/folder.dart';
 import '../views/noteWidgets/editarNotaEditor.dart';
 
 class editarNotaWidgetController {
@@ -19,11 +20,13 @@ class editarNotaWidgetController {
   service<void,File> galleryService;
   service<UpdateNoteParams,String> updateNotaService;
   service<void,List<etiqueta>> getAllEtiquetasService;
+  service<void,List<folder>> getAllFoldersService;
 
   editarNotaWidgetController(
     {required this.imageToText, 
     required this.imageService, required this.galleryService, 
-    required this.updateNotaService, required this.getAllEtiquetasService });
+    required this.updateNotaService, required this.getAllEtiquetasService,
+    required this.getAllFoldersService });
 
   Future<Either<MyError,String>> updateNota(
     {required String titulo, 
@@ -146,5 +149,9 @@ class editarNotaWidgetController {
 
   Future<Either<MyError, List<etiqueta>>> getAllEtiquetas() async {
     return await getAllEtiquetasService.execute(null); 
+  }
+
+  Future<Either<MyError, List<folder>>> getAllFolders() async {
+    return await getAllFoldersService.execute(null);
   }
 }

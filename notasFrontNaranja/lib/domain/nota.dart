@@ -92,9 +92,11 @@ class Nota {
 
   List<String> getEtiquetasIds(){
     List<String> ids = [];
+    if (etiquetas != null){
       for (var etiqueta in etiquetas!) {
         ids.add(etiqueta.id!);
       }
+    } 
      return ids; 
   }
   
