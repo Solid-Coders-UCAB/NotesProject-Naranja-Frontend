@@ -8,6 +8,7 @@ import 'DTOS/cmdDeleteNote.dart';
 class deleteNoteFromServerService extends service<cmdDeleteNote,cmdDeleteNote>{
 
   noteRepository noteRepo;
+  
 
   deleteNoteFromServerService({required this.noteRepo});
   

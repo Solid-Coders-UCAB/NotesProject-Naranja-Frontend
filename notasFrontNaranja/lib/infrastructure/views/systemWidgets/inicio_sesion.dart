@@ -78,6 +78,7 @@ class _InicioState extends State<Inicio> {
         print(res.left.message);
       }
     }
+
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => Home()));
   }

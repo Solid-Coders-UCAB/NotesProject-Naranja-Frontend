@@ -1,6 +1,6 @@
 enum AppError {
   NotFound,
-  // some errors codes
+  EmpyOrNullTag
 }
 
 class MyError {

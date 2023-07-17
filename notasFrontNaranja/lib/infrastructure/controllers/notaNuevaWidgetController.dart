@@ -8,36 +8,43 @@ import 'package:firstapp/application/DTOS/createNoteParams.dart';
 import 'package:firstapp/application/DTOS/imageToTextParams.dart';
 import 'package:firstapp/domain/location.dart';
 
+import '../../domain/etiqueta.dart';
+
 class notaNuevaWidgetController {
   service<imageToTextParams, String> imageToText;
   service<void, File> imageService;
   service<void, File> galleryService;
   service<CreatenoteParams, String> createNotaService;
   service<void, Location> locationService;
+  service<void,List<etiqueta>> getAllEtiquetasService;
 
   notaNuevaWidgetController(
       {required this.imageToText,
       required this.imageService,
       required this.galleryService,
       required this.createNotaService,
-      required this.locationService});
+      required this.locationService,
+      required this.getAllEtiquetasService});
 
   Future<Either<MyError, String>> saveNota(
       {required String titulo,
       required String contenido,
       int? longitud,
       int? latitud,
+      List<etiqueta>? etiquetas,
       List<Uint8List>? imagenes}) async {
     
     longitud ??= 0;
     latitud ??= 0;
+    etiquetas ??= [];
 
     var params = CreatenoteParams(
         titulo: titulo,
         contenido: contenido,
         imagenes: imagenes,
         longitud: longitud,
-        latitud: latitud);
+        latitud: latitud,
+        etiquetas: etiquetas);
 
         print(params.contenido);
 
@@ -90,5 +97,13 @@ class notaNuevaWidgetController {
     }
     Location location = locationResponse.right;
     return Right(location);
+  }
+
+  Future<Either<MyError, List<etiqueta>>> getAllEtiquetas() async {
+    var serviceResponse = await getAllEtiquetasService.execute(null); 
+      if (serviceResponse.isLeft){
+        return Left(serviceResponse.left);        
+      }
+     return Right(serviceResponse.right); 
   }
 }
