@@ -6,7 +6,6 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
-import 'package:firstapp/infrastructure/views/etiquetasWidgets/notaEtiquetas.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 
@@ -14,8 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:http/http.dart';
 import '../../../domain/etiqueta.dart';
+import '../../../domain/folder.dart';
 import '../systemWidgets/widgets.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
 import 'package:path_provider/path_provider.dart';
@@ -64,6 +63,8 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
 
   List<etiqueta> tagsList = [];
   List<etiqueta> selectedTags = [];
+  List<folder> folders = [];
+  folder? selectedFolder;
 
   @override
   void initState() {
@@ -77,11 +78,18 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
     var controllerResponse = await controller.getAllEtiquetas();
       if (controllerResponse.isLeft){
            showSystemMessage(controllerResponse.left.message);
+      }else{
+        tagsList = controllerResponse.right; 
+      } 
+    /////
+    var getFoldersRes = await controller.getAllFolders();
+      if (getFoldersRes.isLeft){
+        showSystemMessage(getFoldersRes.left.message);
       }
       setState(() {
         loading = false;
       });
-     tagsList = controllerResponse.right;     
+     folders = getFoldersRes.right;
   }
 
   @override
@@ -159,8 +167,12 @@ void regresarHome(){
 
 // Funcion para guardar una nota
 void saveNota() async {
+  String? folderId;
   String text = await editorC.getText();
-  var controllerResponse = await controller.saveNota(titulo: tituloC.text, contenido: text,etiquetas: selectedTags);  
+    if (selectedFolder != null){
+      folderId = selectedFolder!.id;
+    }
+  var controllerResponse = await controller.saveNota(titulo: tituloC.text, contenido: text,etiquetas: selectedTags,folderId: folderId);  
   if (controllerResponse.isLeft){
     showSystemMessage(controllerResponse.left.message);
   }else{
@@ -243,6 +255,14 @@ Widget menuOpciones() {
               Navigator.pop(context);
               selectedTags = [];
               showBottomSheet(context: context, builder: (context) => menuEtiquetas());
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.folder_copy_sharp),
+            title: Text('agregar a carpeta'),
+            onTap: () async {
+              Navigator.pop(context);
+              showBottomSheet(context: context, builder: (context) => folderList());
             },
           ),
           ListTile(
@@ -347,5 +367,32 @@ Widget menuOpciones() {
       );
   }
 
-}
+  Widget folderList(){
+    return 
+        ListView.builder(
+          itemCount: folders.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+                      title: 
+                      (selectedFolder != null)  
+                      ?
+                      (selectedFolder!.id == folders[index].id ) ? Text('${folders[index].name} (seleccionada)') : Text(folders[index].name) 
+                      : 
+                       Text(folders[index].name) 
+                      ,
+                      leading: const Icon(Icons.folder),
+                      onTap: () {
+                        selectedFolder = folders[index];
+                        Navigator.pop(context);
+                      },
+                      );
+                   }        
+              
+          ); 
+    }
+          
+} 
+
+
+
 

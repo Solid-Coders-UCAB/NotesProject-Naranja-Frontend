@@ -9,6 +9,7 @@ import 'package:firstapp/application/DTOS/imageToTextParams.dart';
 import 'package:firstapp/domain/location.dart';
 
 import '../../domain/etiqueta.dart';
+import '../../domain/folder.dart';
 
 class notaNuevaWidgetController {
   service<imageToTextParams, String> imageToText;
@@ -17,6 +18,7 @@ class notaNuevaWidgetController {
   service<CreatenoteParams, String> createNotaService;
   service<void, Location> locationService;
   service<void,List<etiqueta>> getAllEtiquetasService;
+  service<void,List<folder>> getAllFoldersService;
 
   notaNuevaWidgetController(
       {required this.imageToText,
@@ -24,11 +26,13 @@ class notaNuevaWidgetController {
       required this.galleryService,
       required this.createNotaService,
       required this.locationService,
-      required this.getAllEtiquetasService});
+      required this.getAllEtiquetasService,
+      required this.getAllFoldersService});
 
   Future<Either<MyError, String>> saveNota(
       {required String titulo,
       required String contenido,
+      String? folderId,
       int? longitud,
       int? latitud,
       List<etiqueta>? etiquetas,
@@ -44,6 +48,7 @@ class notaNuevaWidgetController {
         imagenes: imagenes,
         longitud: longitud,
         latitud: latitud,
+        folderId: folderId,
         etiquetas: etiquetas);
 
         print(params.contenido);
@@ -106,4 +111,9 @@ class notaNuevaWidgetController {
       }
      return Right(serviceResponse.right); 
   }
+
+  Future<Either<MyError, List<folder>>> getAllFolders() async {
+    return await getAllFoldersService.execute(null);
+  }
+
 }
