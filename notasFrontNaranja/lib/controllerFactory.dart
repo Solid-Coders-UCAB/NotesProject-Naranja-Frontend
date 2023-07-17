@@ -41,6 +41,9 @@ import 'package:firstapp/infrastructure/controllers/editarEtiquetaWidgetControll
 import 'package:firstapp/application/updateEtiquetaInServerService.dart';
 import 'package:firstapp/application/deleteEtiquetaService.dart';
 import 'package:firstapp/application/deleteCarpetaService.dart';
+import 'package:firstapp/application/getNotesByFolderService.dart';
+import 'package:firstapp/infrastructure/controllers/notasEnCarpetaController.dart';
+
 //fabrica de controladores
 
 class controllerFactory {
@@ -164,4 +167,11 @@ class controllerFactory {
                                     getAllTagsFromNoteService(tagRepo: HTTPetiquetasRepository())
                                 );
    }
+
+  static notasEnCarpetaController createnotasEnCarpetaController() {
+    return notasEnCarpetaController(
+            notesByFolderService: getNotesByFolderService(
+            folderRepo: HTTPfolderRepository(),
+            localUserRepo: localUserRepository()));
+  }
 }

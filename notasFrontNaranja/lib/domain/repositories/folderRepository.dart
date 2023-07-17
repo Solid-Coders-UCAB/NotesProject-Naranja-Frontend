@@ -1,5 +1,6 @@
 import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/folder.dart';
+import 'package:firstapp/domain/nota.dart';
 
 import '../errores.dart';
 
@@ -10,4 +11,5 @@ abstract class folderRepository {
     Future<Either<MyError, List<folder>>> getALLfolders(String userId);
     Future<Either<MyError, folder>> getDefaultFolder(String userId);
     Future<Either<MyError, String>> deleteCarpeta(String idCarpeta);
+    Future<Either<MyError, List<Nota>>> getNotesByFolder(String idCarpeta);
 }
