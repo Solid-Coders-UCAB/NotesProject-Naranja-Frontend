@@ -27,6 +27,7 @@ class getAllFoldersFromServerService implements service<void,List<folder>>{
     var repoResponse = await folderRepo.getALLfolders(localres.right.id);
       
       if (repoResponse.isRight){
+        print(repoResponse.right.length);
         return Right(repoResponse.right);
       }
 
