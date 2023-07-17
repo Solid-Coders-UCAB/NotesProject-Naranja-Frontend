@@ -6,7 +6,6 @@ import '../systemWidgets/widgets.dart';
 
 // Ventana para crear una carpeta
 class CarpetaNueva extends StatelessWidget {
-  
   const CarpetaNueva({super.key});
 
   @override
@@ -14,23 +13,20 @@ class CarpetaNueva extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Nueva Carpeta"),
-        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
-        leading: 
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {Navigator.pop(context); }
-            ),
+        backgroundColor: const Color.fromARGB(255, 30, 103, 240),
+        leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
       ),
-      body: const Center(
-        child: NuevaCarpeta()
-      ),
+      body: const Center(child: NuevaCarpeta()),
     );
   }
 }
 
 // ignore: must_be_immutable
 class NuevaCarpeta extends StatefulWidget {
-
   const NuevaCarpeta({super.key});
 
   @override
@@ -38,8 +34,6 @@ class NuevaCarpeta extends StatefulWidget {
 }
 
 class NuevaCarpetaState extends State<NuevaCarpeta> {
-
-
   NuevaCarpetaState();
   bool loading = false;
 
@@ -68,19 +62,18 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  genericTextFormField(_nombreCarpeta, "Nombre de la carpeta", false, 40),
-    
+                  genericTextFormField(
+                      _nombreCarpeta, "Nombre de la carpeta", false, 40),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-
                       // Boton para crear una nueva carpeta
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25)),
                             backgroundColor:
-                                const Color.fromARGB(255, 99, 91, 250),
+                                const Color.fromARGB(255, 30, 103, 240),
                           ),
                           onPressed: () {
                             if (_nombreCarpeta.text != '') {
@@ -99,17 +92,18 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
                     ],
                   ),
                 ],
-              )
-              ),
+              )),
       ),
     );
   }
 
-void regresarHome(){
+  void regresarHome() {
     //home.showNotes();
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                 builder: (context) => folderHome()),(Route<dynamic> route) => false);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => folderHome()),
+        (Route<dynamic> route) => false);
   }
+
   showSystemMessage(String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
@@ -121,7 +115,7 @@ void regresarHome(){
       loading = true;
     });
     // Se llama a la funcion del controlador para crear una carpeta
-    var response = await controller.createCarpeta(nombreCarpeta: nombreCarpeta); 
+    var response = await controller.createCarpeta(nombreCarpeta: nombreCarpeta);
 
     if (response.isLeft) {
       setState(() {
@@ -133,14 +127,9 @@ void regresarHome(){
     }
 
     if (response.isRight) {
-
-       loading = false;
-    // Regresa a la ventana principal
+      loading = false;
+      // Regresa a la ventana principal
       regresarHome();
     }
-    
   }
-
-  
-
 }

@@ -16,54 +16,54 @@ import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
 class NotasEnCarpeta extends StatelessWidget {
   String nombreCarpeta;
   String idCarpeta;
-  NotasEnCarpeta({super.key, required this.nombreCarpeta, required this.idCarpeta});
+  NotasEnCarpeta(
+      {super.key, required this.nombreCarpeta, required this.idCarpeta});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(nombreCarpeta),
-        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
-        leading: 
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {Navigator.pop(context); }
-            ),
+        backgroundColor: const Color.fromARGB(255, 30, 103, 240),
+        leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
         actions: <Widget>[
           ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 99, 91, 250),
-                        ),
-                        onPressed: () {
-                          Navigator.push(context,
-                                                MaterialPageRoute(builder: (context) => EditarCarpeta(nombreCarpeta: nombreCarpeta, idCarpeta: idCarpeta)));
-                        },
-                        child: const Text("Editar")
-                        ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 30, 103, 240),
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditarCarpeta(
+                            nombreCarpeta: nombreCarpeta,
+                            idCarpeta: idCarpeta)));
+              },
+              child: const Text("Editar")),
         ],
       ),
 // Boton pars crear una nueva nota
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
-          backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+          backgroundColor: const Color.fromARGB(255, 30, 103, 240),
           onPressed: () async {
             Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HtmlEditorExampleApp()));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => HtmlEditorExampleApp()));
           },
           heroTag: 'addButton',
           child: const Icon(Icons.add),
         ),
       ),
 
-      body: Center(
-        child: NotasCarpeta(idCarpeta: idCarpeta)
-      ),
+      body: Center(child: NotasCarpeta(idCarpeta: idCarpeta)),
     );
-  
-
-    
   }
 }
 
@@ -83,7 +83,8 @@ class NotasCarpetaState extends State<NotasCarpeta> {
   NotasCarpetaState({required this.idCarpeta});
 
   // Se asigna el controlador con la logica de la ventana notas en carpeta
-  notasEnCarpetaController controller = controllerFactory.createnotasEnCarpetaController();
+  notasEnCarpetaController controller =
+      controllerFactory.createnotasEnCarpetaController();
 
   @override
   void initState() {
@@ -96,19 +97,18 @@ class NotasCarpetaState extends State<NotasCarpeta> {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
-        child : loading == true
-          ? const Center(
-              child: SizedBox(
-                  width: 30, height: 30, child: CircularProgressIndicator()))
-          :
-        ListView.builder(
-              itemCount: notas.length,
-              itemBuilder: (context, index) {
-                return notePreview(notas[index]);
-              },
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-            ),
+        child: loading == true
+            ? const Center(
+                child: SizedBox(
+                    width: 30, height: 30, child: CircularProgressIndicator()))
+            : ListView.builder(
+                itemCount: notas.length,
+                itemBuilder: (context, index) {
+                  return notePreview(notas[index]);
+                },
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+              ),
       ),
     );
   }
@@ -119,21 +119,19 @@ class NotasCarpetaState extends State<NotasCarpeta> {
     });
   }
 
-  void showNotes(String idCarpeta) async { 
+  void showNotes(String idCarpeta) async {
     controller.getNotesByFolder(this, idCarpeta);
   }
 
   Widget notePreview(Nota note) {
-    return (noteFolderPreviewWidget(
-        nota: note, home: this));
+    return (noteFolderPreviewWidget(nota: note, home: this));
   }
 
-  void showSystemMessage(String? message){
+  void showSystemMessage(String? message) {
     setState(() {
       loading = false;
     });
-     ScaffoldMessenger.of(context)
+    ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message!)));
   }
-
 }
