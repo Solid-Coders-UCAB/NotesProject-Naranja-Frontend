@@ -7,7 +7,6 @@ import 'dart:typed_data';
 import 'dart:math';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/editarNotaWidgetController.dart';
-import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +15,7 @@ import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:file_picker/file_picker.dart';
 
 import '../../../domain/etiqueta.dart';
+import '../../../domain/folder.dart';
 import '../../../domain/nota.dart';
 import '../systemWidgets/widgets.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
@@ -67,6 +67,9 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
   List<etiqueta> tagsList = [];
   List<etiqueta> selectedTags = [];
   List<etiqueta> oldTags = [];
+
+  List<folder> folders = [];
+  folder? selectedFolder;
   
   HtmlEditorEditExampleState({required this.nota});
 
@@ -80,13 +83,24 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
   }
   void init() async {
     var controllerResponse = await controller.getAllEtiquetas();
-      if (controllerResponse.isLeft){
-           showSystemMessage(controllerResponse.left.message);
-      }
-      setState(() {
-        loading = false;
-      });
-     tagsList = controllerResponse.right;     
+    if (controllerResponse.isRight){
+         tagsList = controllerResponse.right;
+        if (nota.etiquetas != null){ 
+         if (nota.etiquetas!.isNotEmpty){
+         for (var tag in tagsList) {
+          selectedTags.add(nota.etiquetas!.firstWhere((element) => element.id == tag.id));
+         } 
+         }
+        }
+    }
+    //
+    var folderRes = await controller.getAllFolders();
+    if (folderRes.isRight){
+      folders = folderRes.right;
+      selectedFolder = folders.firstWhere((element) => element.id == nota.idCarpeta);
+    }
+    
+    setState(() {loading = false; });
   }
 
 
@@ -177,12 +191,10 @@ void editarNota() async {
 }
 
 void eliminarNota() async {
-  
   String text = await editorC.getText();
     controller.eliminarNotaAction1( widget: this,
-    titulo: tituloC.text, contenido: text, idCarpeta: nota.idCarpeta, id: nota.id, n_date: nota.n_date); 
+    titulo: tituloC.text, contenido: text, idCarpeta: nota.idCarpeta, id: nota.id, n_date: nota.n_date, etiquetas: selectedTags); 
 }
-
 void imageToText() async {
   var controllerResponse = await controller.showTextFromIA();
   String text = controllerResponse.right;  
@@ -226,8 +238,9 @@ void showSystemMessage(String? message){
   }
 
 Widget menuOpciones() {
-    return Column(
-        mainAxisSize: MainAxisSize.min,
+    return ListView(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
         children: <Widget>[
           ListTile(
             leading: Icon(Icons.save),
@@ -259,6 +272,14 @@ Widget menuOpciones() {
               Navigator.pop(context);
               selectedTags = [];
               showBottomSheet(context: context, builder: (context) => menuEtiquetas());
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.folder_copy_sharp),
+            title: Text('agregar a carpeta'),
+            onTap: () async {
+              Navigator.pop(context);
+              showBottomSheet(context: context, builder: (context) => folderList());
             },
           ),
           ListTile(
@@ -361,6 +382,30 @@ Widget menuOpciones() {
          ) 
        ],
       );
-}
+  }
 
+  Widget folderList(){
+    return 
+        ListView.builder(
+          itemCount: folders.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+                      title: 
+                      (selectedFolder != null)  
+                      ?
+                      (selectedFolder!.id == folders[index].id ) ? Text('${folders[index].name} (seleccionada)') : Text(folders[index].name) 
+                      : 
+                       Text(folders[index].name) 
+                      ,
+                      leading: const Icon(Icons.folder),
+                      onTap: () {
+                        selectedFolder = folders[index];
+                        Navigator.pop(context);
+                      },
+                      );
+                   }        
+              
+          ); 
+
+  }
 }
