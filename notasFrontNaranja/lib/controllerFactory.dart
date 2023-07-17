@@ -94,7 +94,12 @@ class controllerFactory {
         galleryService:
             getImageFromGalleryService(picker: imagePickerGalleryImp()),
         updateNotaService:
-            updateNoteInServerService(noteRepo: httpNoteRepository()));
+            updateNoteInServerService(noteRepo: httpNoteRepository()),
+        getAllEtiquetasService: 
+            getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(), 
+                                             localUserRepo: localUserRepository())
+        
+        );
   }
 
   static homeFolderController homefolderController() {

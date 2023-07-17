@@ -11,9 +11,11 @@ import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.da
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../../../domain/etiqueta.dart';
 import '../../../domain/nota.dart';
 import '../systemWidgets/widgets.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
@@ -61,8 +63,31 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
 
   final HtmlEditorController editorC = HtmlEditorController();
   final TextEditingController tituloC = TextEditingController();
+
+  List<etiqueta> tagsList = [];
+  List<etiqueta> selectedTags = [];
+  List<etiqueta> oldTags = [];
   
   HtmlEditorEditExampleState({required this.nota});
+
+  @override
+  void initState() {
+    super.initState();
+      setState(() {
+        loading = true;
+      });
+    init();
+  }
+  void init() async {
+    var controllerResponse = await controller.getAllEtiquetas();
+      if (controllerResponse.isLeft){
+           showSystemMessage(controllerResponse.left.message);
+      }
+      setState(() {
+        loading = false;
+      });
+     tagsList = controllerResponse.right;     
+  }
 
 
 
@@ -142,7 +167,7 @@ void editarNota() async {
     loading = true;
   });
   var controllerResponse = await controller.updateNota(
-    titulo: tituloC.text, contenido: text, idCarpeta: nota.idCarpeta, idNota: nota.id, n_date: nota.n_date); 
+    titulo: tituloC.text, contenido: text, idCarpeta: nota.idCarpeta, idNota: nota.id, n_date: nota.n_date, etiquetas: selectedTags ); 
   if (controllerResponse.isLeft){
     showSystemMessage(controllerResponse.left.message);
   }else{
@@ -227,6 +252,15 @@ Widget menuOpciones() {
               Navigator.pop(context);
             },
           ),
+           ListTile(
+            leading: const Icon(Icons.tag),
+            title: Text('Etiquetas'),
+            onTap: () {
+              Navigator.pop(context);
+              selectedTags = [];
+              showBottomSheet(context: context, builder: (context) => menuEtiquetas());
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.map),
             title: Text('Agregar ubicacion'),
@@ -286,5 +320,47 @@ Widget menuOpciones() {
         ],
       );
   }
+
+  Widget menuEtiquetas() {
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            leading: const Icon(Icons.exit_to_app_rounded),
+            title: Text('Salir'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),  
+          ListTile(
+            title: const Text("Etiquetas disponibles:"),
+            subtitle: Tags(  
+              direction: Axis.horizontal,
+              itemCount: tagsList.length, 
+              itemBuilder: (int index){ 
+              return Tooltip(
+                message: tagsList[index].nombre,
+                child: ItemTags(
+                  textStyle: const TextStyle(fontSize: 20),
+                  textActiveColor: Colors.black,
+                  color:  Colors.blueGrey,
+                  activeColor: Colors.white,
+                  title: tagsList[index].nombre, index: index,
+                  pressEnabled: true,
+                  onPressed: (item) {
+                    if (item.active! == false){
+                      selectedTags.add(tagsList[index]);
+                    }else{
+                      selectedTags.removeWhere((element) => tagsList[index].id == element.id);
+                    }
+                  },
+               )   
+             );
+            } 
+          )
+         ) 
+       ],
+      );
+}
 
 }

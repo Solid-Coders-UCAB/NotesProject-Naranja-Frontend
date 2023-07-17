@@ -9,6 +9,7 @@ import 'package:firstapp/application/DTOS/imageToTextParams.dart';
 import 'package:firstapp/application/DTOS/updateNoteParams.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/editar_nota.dart';
 
+import '../../domain/etiqueta.dart';
 import '../views/noteWidgets/editarNotaEditor.dart';
 
 class editarNotaWidgetController {
@@ -17,14 +18,17 @@ class editarNotaWidgetController {
   service<void,File> imageService;
   service<void,File> galleryService;
   service<UpdateNoteParams,String> updateNotaService;
+  service<void,List<etiqueta>> getAllEtiquetasService;
 
   editarNotaWidgetController(
-    {required this.imageToText, required this.imageService, required this.galleryService, required this.updateNotaService });
+    {required this.imageToText, 
+    required this.imageService, required this.galleryService, 
+    required this.updateNotaService, required this.getAllEtiquetasService });
 
   Future<Either<MyError,String>> updateNota(
     {required String titulo, 
      required String contenido,int? longitud,int? latitud, List<Uint8List>? imagenes, 
-     required String idNota, required DateTime n_date, required String idCarpeta} ) async {
+     required String idNota, required DateTime n_date, required String idCarpeta, List<etiqueta>? etiquetas} ) async {
     longitud??=0;
     latitud??=0;
 
@@ -37,6 +41,7 @@ class editarNotaWidgetController {
       longitud: longitud,
       latitud: latitud, 
       n_date: n_date,
+      etiquetas: etiquetas,
       idCarpeta: idCarpeta));
 
       if (serviceResponse.isLeft){
@@ -109,7 +114,8 @@ class editarNotaWidgetController {
   void eliminarNotaAction1({ required HtmlEditorEditExampleState widget, required String id,
     required String titulo, 
     required String contenido,int? longitud,
-    int? latitud, List<Uint8List>? imagenes,required n_date,required String idCarpeta}) async {
+    int? latitud, List<Uint8List>? imagenes,required n_date,
+    required String idCarpeta, List<etiqueta>? etiquetas }) async {
       
      widget.setState(() {
        widget.loading = true;
@@ -124,6 +130,7 @@ class editarNotaWidgetController {
       longitud: longitud,
       latitud: latitud, 
       n_date: n_date,
+      etiquetas: etiquetas,
       idCarpeta: idCarpeta));
 
       if (serviceResponse.isLeft){
@@ -134,8 +141,10 @@ class editarNotaWidgetController {
       }else{
        widget.showSystemMessage("nota eliminada satisfactoriamente");
        widget.regresarHome();
-      }
-
-      
+      }      
    }
+
+  Future<Either<MyError, List<etiqueta>>> getAllEtiquetas() async {
+    return await getAllEtiquetasService.execute(null); 
+  }
 }

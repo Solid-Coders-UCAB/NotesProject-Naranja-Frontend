@@ -120,7 +120,8 @@ Future<Either<MyError, String>> updateNota(Nota note) async {
       'fechaCreacion': note.getDate.toString(),
       'idCarpeta': note.idCarpeta,
       'latitud': note.latitud,
-      'longitud': note.longitud
+      'longitud': note.longitud,
+      'etiquetas': note.getEtiquetasIds()
     });
   try{
   final Response response = await put(Uri.parse('http://$domain/nota/modificate'),
