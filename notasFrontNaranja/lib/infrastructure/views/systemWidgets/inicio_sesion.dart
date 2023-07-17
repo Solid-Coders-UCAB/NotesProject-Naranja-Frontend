@@ -1,3 +1,4 @@
+import 'package:firstapp/infrastructure/views/systemWidgets/register.dart';
 import 'package:flutter/material.dart';
 import '../../../application/DTOS/cmdCreateUser.dart';
 import '../../../application/createUserService.dart';
@@ -110,7 +111,7 @@ class _InicioState extends State<Inicio> {
                   child: Column(children: <Widget>[
                     textLabel("Iniciar sesión", 30),
                     genericSizedBox(20),
-                    genericTextFormField(userText, "Usuario", false, 20),
+                    genericTextFormField(userText, "Correo", false, 50),
                     genericSizedBox(25),
                     genericTextFormField(userPass, "Contraseña", true, 20),
                     genericSizedBox(25),
@@ -122,10 +123,10 @@ class _InicioState extends State<Inicio> {
                         textLabel("¿No tienes una cuenta?", 15),
                         TextButton(
                             onPressed: () {
-                              // Navigator.push(
-                              //    context,
-                              //    MaterialPageRoute(
-                              //     builder: (context) => const Registro()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Registro()));
                             },
                             child: const Text(
                               "Crear cuenta",

@@ -86,7 +86,10 @@ Widget genericSizedBox(double size) {
 }
 
 Widget iconApp(double sizeIcon) {
-  return Image.asset('assets/images/LogoSolo 1.png');
+  return Image.asset(
+    'assets/images/LogoSolo 1.png',
+    width: sizeIcon,
+  );
   // return Image.network(
   //   "https://cdn-icons-png.flaticon.com/512/1001/1001259.png",
   //   width: sizeIcon

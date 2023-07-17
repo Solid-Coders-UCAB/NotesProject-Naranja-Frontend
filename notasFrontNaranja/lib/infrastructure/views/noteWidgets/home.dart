@@ -29,9 +29,8 @@ class Home extends StatefulWidget {
 }
 
 class homeState extends State<Home> {
-  
   homeState();
-  
+
   bool loading = false;
   List<Nota> notas = <Nota>[];
 
@@ -65,13 +64,12 @@ class homeState extends State<Home> {
       //Side menu------------------------------
       drawer: const NavBar(),
 
-    //  Boton para crear una nota
+      //  Boton para crear una nota
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 99, 91, 250),
           onPressed: () async {
-
             // Se llama a la funcion para crear nota
             createNote();
           },
@@ -108,29 +106,27 @@ class homeState extends State<Home> {
     });
   }
 
-  void showNotes() async { 
-   controller.getAllNotesFromServer(this);
+  void showNotes() async {
+    controller.getAllNotesFromServer(this);
   }
 
-  void showSystemMessage(String? message){
+  void showSystemMessage(String? message) {
     setState(() {
       loading = false;
     });
-     ScaffoldMessenger.of(context)
+    ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message!)));
   }
 
   void createNote() async {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => HtmlEditorExampleApp()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => HtmlEditorExampleApp()));
   }
 
   Widget notePreview(Nota note) {
-    return (notePreviewWidget(
-        nota: note, home: this));
+    return (notePreviewWidget(nota: note, home: this));
   }
 }
-
 
 class MyListWidget extends StatelessWidget {
   final List<String> cosas = ['Cosas 1', 'Cosas 2', 'Cosas 3'];
