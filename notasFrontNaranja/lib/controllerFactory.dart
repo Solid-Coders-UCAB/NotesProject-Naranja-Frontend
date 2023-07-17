@@ -104,7 +104,9 @@ class controllerFactory {
             updateNoteInServerService(noteRepo: httpNoteRepository()),
         getAllEtiquetasService: 
             getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(), 
-                                             localUserRepo: localUserRepository())
+                                             localUserRepo: localUserRepository()),
+        getAllFoldersService: 
+            getAllFoldersFromServerService(folderRepo: HTTPfolderRepository(), localUserRepo: localUserRepository())
         
         );
   }
