@@ -20,15 +20,13 @@ class _RegistroState extends State<Registro> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Transform.translate(
-      //Acomodar la ubicacion inicial
-      offset: const Offset(0, 70),
-      child: SingleChildScrollView(
+      body: SingleChildScrollView(
         //Evitar el error BottomOverflowed
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            genericSizedBox(50),
             iconApp(120),
             genericSizedBox(30),
             Card(
@@ -43,11 +41,8 @@ class _RegistroState extends State<Registro> {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                 child: Column(children: <Widget>[
                   textLabel("Crear cuenta", 30),
-                  genericSizedBox(5),
                   genericTextFormField(userText, "Correo", false, 50),
-                  genericSizedBox(5),
                   genericTextFormField(userName, "Nombre", false, 40),
-                  genericSizedBox(5),
                   genericTextFormField(userPass, "Contraseña", true, 20),
                   genericSizedBox(5),
                   Center(
@@ -94,18 +89,18 @@ class _RegistroState extends State<Registro> {
                       ],
                     ),
                   ),
-                  genericSizedBox(25),
+                  genericSizedBox(20),
                   //genericTextFormField(userPass, "Confirm Password", true),
                   //genericSizedBox(25),
                   botonOk(context, userText, userPass, userName, date),
-                  genericSizedBox(25),
+                  genericSizedBox(5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       textLabel("¿Ya tienes una cuenta?", 15),
                       TextButton(
                           onPressed: () {
-                            Navigator.push(
+                            Navigator.pop(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const Inicio()));
@@ -125,8 +120,8 @@ class _RegistroState extends State<Registro> {
           ],
         ),
       ),
-    ) // Se pasa context como parametro
-        );
+      // Se pasa context como parametro
+    );
   }
 }
 
