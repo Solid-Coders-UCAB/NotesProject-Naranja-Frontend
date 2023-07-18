@@ -278,7 +278,7 @@ Widget menuOpciones() {
             title: Text('Tareas'),
             onTap: () async {
               Navigator.pop(context);
-              showBottomSheet(context: context, builder: (context) => folderList());
+              showBottomSheet(context: context, builder: (context) => NotaTareas(tasks: [],));
             },
           ),
           ListTile(
@@ -413,26 +413,148 @@ Widget folderList(){
     }  
 
   Widget taskList(){
+    var _controller = TextEditingController();
     return 
-        ListView.builder(
-          itemCount: folders.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-                      title: 
-                     
-                       Text("Tarea") 
-                      ,
-                      leading: const Icon(Icons.task_alt),
-                      onTap: () {
-                       // selectedFolder = folders[index];
-                       // Navigator.pop(context);
-                      },
-                      );
-                   }        
-              
-          ); 
+        Column(
+          children: [ListView.builder(
+            itemCount: 6,
+            itemBuilder: (context, index) {
+              return CheckboxListTile(
+              title: const Text('CheckboxListTile'),
+              value: true,
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged:(bool? value) { },
+            );
+                     }        
+                
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children:  [
+                TextField(
+                  controller: _controller,
+                  maxLength: 30,
+                  decoration: InputDecoration(
+                    labelText: "Nueva tarea",
+                    labelStyle: const TextStyle(
+                    color: Color.fromARGB(255, 154, 181, 255), 
+                  ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: 
+                    (){
+
+                    }, 
+                child: Icon(Icons.add))
+              ],
+            )
+            ]
+        ); 
     }        
-} 
+}
+
+
+// Vista para la lista de tareas
+// ignore: must_be_immutable
+class NotaTareas extends StatefulWidget {
+  List<tarea> tasks = [];
+  NotaTareas({super.key, required this.tasks});
+
+  @override
+  State<NotaTareas> createState() => NotaTareasState(tasks: tasks);
+}
+
+class NotaTareasState extends State<NotaTareas> {
+  List<tarea> tasks = [];
+  NotaTareasState({required this.tasks});
+
+  // Se asigna el controlador con la logica de la ventana notas en carpeta
+  // notasPorPalabraClaveController controller = controllerFactory.createnotasPorPalabraClaveController();
+  var _controller = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    //showNotes(idCarpeta);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child:
+          Column(
+            children: [
+              Expanded(
+               // height: 200.0,
+                child : 
+                ListView.builder(
+                    itemCount: 20,
+                    itemBuilder: (context, index) {
+                      return CheckboxListTile(
+                      title: const Text('CheckboxListTile'),
+                      value: true,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged:(bool? value) { },
+                    );
+                             }        
+                        
+                    ),
+              ),
+      
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children:  [
+                      Expanded(
+                        child: TextField(
+                          
+                          controller: _controller,
+                          maxLength: 30,
+                          decoration: InputDecoration(
+                            labelText: "Nueva tarea",
+                            labelStyle: const TextStyle(
+                            color: Color.fromARGB(255, 154, 181, 255), 
+                          ),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                          onPressed: 
+                            (){
+                            
+                            }, 
+                        child: Icon(Icons.add)),
+                    ],
+                  ),
+              )
+            ],        
+          ),
+      
+    );
+  }
+
+  void reset() {
+    setState(() {
+    //  loading = true;
+    });
+  }
+
+  void showNotes(String palabraClave) async { 
+   // controller.getNotesByKeyword(this, palabraClave);
+  }
+
+
+  void showSystemMessage(String? message){
+    setState(() {
+   //   loading = false;
+    });
+     ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message!)));
+  }
+
+}
 
 
 
