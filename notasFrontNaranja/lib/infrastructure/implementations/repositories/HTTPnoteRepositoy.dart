@@ -95,15 +95,70 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
                ).right;
 
         var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
+        print("assigned:${jsonAssignedGeolocalitation}");
         if ( jsonAssignedGeolocalitation){
-            nota.latitud = jsonNote['geolocalizacion']['latitud'];
-            nota.longitud = jsonNote['geolocalizacion']['longitud'];
+            nota.latitud = double.parse( jsonNote['geolocalizacion']['value']['latitud'].toString());
+            nota.longitud = double.parse(jsonNote['geolocalizacion']['value']['longitud'].toString());
         }else{
             nota.latitud = null;
             nota.longitud = null;
         }
         notas.add(nota);
         etiquetas = [];
+      } 
+      return Right(notas);
+    }
+          
+    return Left(MyError(key: AppError.NotFound,
+                message: response.body ));
+                
+}
+
+ Future<Either<MyError, List<Nota>>> getALLnotesPreview(String userId) async {
+
+    List<Nota> notas = [];
+    Response response;
+    var body = jsonEncode({
+      'idUsuario': userId
+    });
+
+
+    try{ 
+     response = await post(Uri.parse('http://$domain/nota/findByUser'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+    }catch(e){
+      return Left(MyError(key: AppError.NotFound,
+                                  message: "$e"));
+    }
+
+   if (response.statusCode == 200){
+
+      var jsonData = json.decode(response.body);
+
+      for (var jsonNote in jsonData){
+
+       Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
+                     titulo: jsonNote['titulo']['titulo'],
+                     n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
+                     n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
+                     estado: jsonNote['estado'], 
+                     carpeta: jsonNote['idCarpeta']['UUID'],                    
+               ).right;
+
+        var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
+        print("assigned:${jsonAssignedGeolocalitation}");
+        if ( jsonAssignedGeolocalitation){
+            nota.latitud = double.parse( jsonNote['geolocalizacion']['value']['latitud'].toString());
+            nota.longitud = double.parse(jsonNote['geolocalizacion']['value']['longitud'].toString());
+        }else{
+            nota.latitud = null;
+            nota.longitud = null;
+        }
+        notas.add(nota);
       } 
       return Right(notas);
     }

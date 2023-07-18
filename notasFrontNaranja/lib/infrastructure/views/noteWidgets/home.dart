@@ -1,13 +1,11 @@
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/infrastructure/controllers/homeController.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/map%20copy.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
 import 'package:flutter/material.dart';
-import 'nota_nueva.dart';
-import 'textEditor.dart';
 import 'notePreview.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/navigationBar.dart';
-import 'package:firstapp/infrastructure/views/filterWidgets/filterHome.dart';
 import 'package:firstapp/infrastructure/views/filterWidgets/searchNotaDelegate.dart';
 // Pagina principal donde se muestran todas las notas de un usuario
 class PaginaPrincipal extends StatelessWidget {
@@ -94,7 +92,10 @@ class homeState extends State<Home> {
         FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 99, 91, 250),
           onPressed: () async {
-            //createNote();
+           /* Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MyHomeMapScreen()));
+           */
+            filtrarNotasForMap(); 
           },
           heroTag: 'mapButton',
           child: const Icon(Icons.map),
@@ -147,27 +148,66 @@ class homeState extends State<Home> {
 
   Widget notePreview(Nota note) {
     return (notePreviewWidget(
-        nota: note, home: this));
+        nota: note));
+  
   }
+
+
+void filtrarNotasForMap() {
+    List<Nota> auxNotas = [];
+        for (var note in notas){
+          auxNotas.add(Nota(n_date: note.n_date
+          ,n_edit_date: note.n_edit_date, 
+          contenido: note.contenido, 
+          titulo: note.titulo, id: note.id, 
+          idCarpeta: note.idCarpeta,
+          longitud: note.longitud,latitud: note.latitud,
+          etiquetas: note.etiquetas, 
+          estado: note.estado
+          ));
+        }
+    print('paso');
+    auxNotas.removeWhere((element) => element.latitud == null && element.longitud == null);
+    print(auxNotas.length);
+    auxNotas.forEach((element) { print('auxNotas:${element.titulo}');});
+    notas.forEach((element) { print('Notas:${element.id}');});
+    List<homeMapNote> mapNotes = [];
+
+    int cont = 0;
+
+  
+     for (var note in auxNotas) {
+      if (note.id != ''){
+       List<Nota> previews = [];
+       for (var note2 in auxNotas){
+          if (note2.latitud == note.latitud && note2.longitud == note.longitud  && (note.id != note2.id) && (note2.id != '')) {
+            previews.add(note2);
+            //auxNotas.remove(note2); 
+            note2.id = '';
+          }
+       }
+       previews.add(note);
+       previews.forEach((element) { print('notasPre[${cont}]${element.titulo}');});
+       cont++;
+        //auxNotas.remove(note);
+        note.id = '';
+       mapNotes.add(homeMapNote(notas: previews, latitud: note.latitud!, longitud: note.longitud!));
+      }
+     } 
+
+      mapNotes.forEach((element) {print('${element.longitud},${element.latitud}');});
+
+        if (mapNotes.isEmpty){
+          showSystemMessage('no posee notas con localizacion para usar esta opcion, para agregar localizacion cree una nota y pulse el boton de +');
+        }else{
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => MyHomeMapScreen(notas: mapNotes)));
+        }
+
+      
+   }
+
 }
 
-
-class MyListWidget extends StatelessWidget {
-  final List<String> cosas = ['Cosas 1', 'Cosas 2', 'Cosas 3'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: ListView.builder(
-        itemCount: cosas.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(cosas[index]),
-          );
-        },
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-      ),
-    );
-  }
-}
