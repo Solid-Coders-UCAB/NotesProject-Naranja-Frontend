@@ -45,6 +45,8 @@ import 'package:firstapp/application/getNotesByFolderService.dart';
 import 'package:firstapp/infrastructure/controllers/notasEnCarpetaController.dart';
 import 'package:firstapp/application/getNotesByEtiquetaService.dart';
 import 'package:firstapp/infrastructure/controllers/notasPorEtiquetaController.dart';
+import 'package:firstapp/application/getNotesByKeywordService.dart';
+import 'package:firstapp/infrastructure/controllers/notasPorPalabraClaveController.dart';
 
 //fabrica de controladores
 
@@ -190,6 +192,13 @@ class controllerFactory {
     return notasPorEtiquetaController(
             notesByEtiquetaService: getNotesByEtiquetaService(
             etiquetaRepo: HTTPetiquetasRepository(),
+            localUserRepo: localUserRepository()));
+  }
+
+    static notasPorPalabraClaveController createnotasPorPalabraClaveController() {
+    return notasPorPalabraClaveController(
+            notesByKeywordService: getNotesByKeywordService(
+            noteRepo: httpNoteRepository(),
             localUserRepo: localUserRepository()));
   }
 }

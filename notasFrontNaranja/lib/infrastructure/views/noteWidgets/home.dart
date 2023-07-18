@@ -7,7 +7,8 @@ import 'nota_nueva.dart';
 import 'textEditor.dart';
 import 'notePreview.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/navigationBar.dart';
-
+import 'package:firstapp/infrastructure/views/filterWidgets/filterHome.dart';
+import 'package:firstapp/infrastructure/views/filterWidgets/searchNotaDelegate.dart';
 // Pagina principal donde se muestran todas las notas de un usuario
 class PaginaPrincipal extends StatelessWidget {
   const PaginaPrincipal({super.key});
@@ -61,6 +62,15 @@ class homeState extends State<Home> {
             );
           },
         ),
+        actions: <Widget>[
+          IconButton(
+                    onPressed: () {
+                      showSearch(context: context, 
+                      delegate: searchNotaDelegate());
+                    },
+                    icon: const Icon(Icons.search),    
+                        ),
+        ],
       ),
       //Side menu------------------------------
       drawer: const NavBar(),
