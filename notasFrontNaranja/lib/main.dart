@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firstapp/api/filebase_api.dart';
 import 'package:firstapp/application/DTOS/cmdCreateUser.dart';
 import 'package:firstapp/application/createNoteInServerService.dart';
 import 'package:firstapp/application/createUserService.dart';
@@ -12,7 +14,10 @@ import 'infrastructure/views/systemWidgets/pruebaImageToText.dart';
 import 'infrastructure/views/noteWidgets/drawing_room_screen.dart';
 import 'infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseApi().initNotifications();
   //sqfliteFfiInit();
   //databaseFactory = databaseFactoryFfi;
   runApp(const App());
