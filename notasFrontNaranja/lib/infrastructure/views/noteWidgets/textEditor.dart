@@ -21,6 +21,7 @@ import '../systemWidgets/widgets.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../../domain/tarea.dart';
 // Ventana para crear una nueva nota
 class HtmlEditorExampleApp extends StatelessWidget {
   
@@ -66,6 +67,7 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
   List<etiqueta> tagsList = [];
   List<etiqueta> selectedTags = [];
   List<folder> folders = [];
+  List<tarea> tasks = [];
   folder? selectedFolder;
   location? noteLocation;
 
@@ -255,7 +257,7 @@ Widget menuOpciones() {
           ),
           ListTile(
             leading: Icon(Icons.new_label),
-            title: Text('etiquetas'),
+            title: Text('Etiquetas'),
             onTap: () async {
               Navigator.pop(context);
               selectedTags = [];
@@ -264,7 +266,16 @@ Widget menuOpciones() {
           ),
           ListTile(
             leading: Icon(Icons.folder_copy_sharp),
-            title: Text('agregar a carpeta'),
+            title: Text('Carpeta'),
+            onTap: () async {
+              Navigator.pop(context);
+              showBottomSheet(context: context, builder: (context) => folderList());
+            },
+          ),
+      // Lista de tareas
+          ListTile(
+            leading: Icon(Icons.add_task),
+            title: Text('Tareas'),
             onTap: () async {
               Navigator.pop(context);
               showBottomSheet(context: context, builder: (context) => folderList());
@@ -377,7 +388,7 @@ Widget menuOpciones() {
       );
   }
 
-  Widget folderList(){
+Widget folderList(){
     return 
         ListView.builder(
           itemCount: folders.length,
@@ -386,7 +397,7 @@ Widget menuOpciones() {
                       title: 
                       (selectedFolder != null)  
                       ?
-                      (selectedFolder!.id == folders[index].id ) ? Text('${folders[index].name} (seleccionada)') : Text(folders[index].name) 
+                      (selectedFolder!.id == folders[index].id ) ? Text('${folders[index].name} (Seleccionada)') : Text(folders[index].name) 
                       : 
                        Text(folders[index].name) 
                       ,
@@ -399,9 +410,30 @@ Widget menuOpciones() {
                    }        
               
           ); 
-    }
-          
+    }  
+
+  Widget taskList(){
+    return 
+        ListView.builder(
+          itemCount: folders.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+                      title: 
+                     
+                       Text("Tarea") 
+                      ,
+                      leading: const Icon(Icons.task_alt),
+                      onTap: () {
+                       // selectedFolder = folders[index];
+                       // Navigator.pop(context);
+                      },
+                      );
+                   }        
+              
+          ); 
+    }        
 } 
+
 
 
 
