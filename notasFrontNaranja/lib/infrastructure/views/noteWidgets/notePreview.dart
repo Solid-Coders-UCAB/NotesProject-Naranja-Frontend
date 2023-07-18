@@ -10,13 +10,11 @@ import 'package:flutter_tags_x/flutter_tags_x.dart';
 
 import '../../../domain/etiqueta.dart';
 import '../../../domain/nota.dart';
-import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 
 class notePreviewWidget extends StatefulWidget{
 
   final Nota nota;
-  final homeState home;
-  const notePreviewWidget({super.key,required this.nota, required this.home});
+  const notePreviewWidget({super.key,required this.nota});
 
     @override
     State<notePreviewWidget> createState() => notePreviewWidgetState(nota: nota);

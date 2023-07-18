@@ -4,16 +4,45 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import '../../../domain/location.dart';
+import '../../../domain/nota.dart';
 
+class notePreviu {
+  String titulo;
+  DateTime date;
 
-class MyMapScreen extends StatefulWidget {
-  @override
-  _MyMapScreenState createState() => _MyMapScreenState();
+  notePreviu({required this.titulo,required this.date}); 
 }
 
-class _MyMapScreenState extends State<MyMapScreen> {
+class homeMapNote {
+  List<Nota> notas;
+  double latitud;
+  double longitud;
 
-  List<location> Locations = [];
+  homeMapNote({required this.notas, required this.latitud, required this.longitud});
+}
+
+
+
+class MyHomeMapScreen extends StatefulWidget {
+
+  List<homeMapNote> notas;
+  MyHomeMapScreen({super.key,required this.notas});
+
+  @override
+  _MyHomeMapScreenState createState() => _MyHomeMapScreenState(notas: notas);
+}
+
+class _MyHomeMapScreenState extends State<MyHomeMapScreen> {
+
+  List<homeMapNote> notas;
+  _MyHomeMapScreenState({required this.notas});
+
+
+  List<location> Locations = [location(latitude: 5, longitude: 4),
+  location(latitude: 10, longitude: 15),
+  location(latitude: 10, longitude: -60),
+  location(latitude: 10, longitude: -60 + 0.0001)
+  ];
   bool loading = false;
   String snapshotData = '';
   List<Placemark> placemarks = []; 
@@ -71,25 +100,35 @@ Widget build(BuildContext context) {
         userAgentPackageName: 'com.example.app',
       ),
     MarkerLayer(
-    markers: [
-    Marker(
-      point: LatLng(0, 0),
-      width: 80,
-      height: 80,
-      builder: (context) => IconButton(
-                           icon: const Icon(Icons.location_on,color: Colors.red,),
-          onPressed: () {
-           showBottomSheet(context: context, builder: (context) => textLocation());
-          },
-      )
-    ),
-  ],
+    markers: marcadores()
 ),
     ],
   )
   
  );
 }
+
+List<Marker> marcadores(){
+  List<Marker> markers = [];
+  for (var element in Locations) {
+    markers.add(
+      Marker(
+      point: LatLng(element.latitude!,element.longitude!),
+      width: 80,
+      height: 80,
+      builder: (context) => IconButton(
+                           icon: const Icon(Icons.location_on,color: Colors.red,),
+          onPressed: () {
+           //showBottomSheet(context: context, builder: (context) => );
+          },
+       )
+      ) 
+    );
+  }
+  return markers;
+}
+
+
 
  Widget textLocation() {
     return ListView(
