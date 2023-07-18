@@ -1,4 +1,4 @@
-import 'package:firstapp/infrastructure/implementations/getLocationImp.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/notePreview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
@@ -38,11 +38,6 @@ class _MyHomeMapScreenState extends State<MyHomeMapScreen> {
   _MyHomeMapScreenState({required this.notas});
 
 
-  List<location> Locations = [location(latitude: 5, longitude: 4),
-  location(latitude: 10, longitude: 15),
-  location(latitude: 10, longitude: -60),
-  location(latitude: 10, longitude: -60 + 0.0001)
-  ];
   bool loading = false;
   String snapshotData = '';
   List<Placemark> placemarks = []; 
@@ -51,12 +46,9 @@ class _MyHomeMapScreenState extends State<MyHomeMapScreen> {
   @override
   void initState() {
     super.initState();
-    init();
   }
 
-  void init()async{
-    
-  }
+
 
   @override
 Widget build(BuildContext context) {
@@ -110,16 +102,16 @@ Widget build(BuildContext context) {
 
 List<Marker> marcadores(){
   List<Marker> markers = [];
-  for (var element in Locations) {
+  for (var element in notas) {
     markers.add(
       Marker(
-      point: LatLng(element.latitude!,element.longitude!),
+      point: LatLng(element.latitud,element.longitud),
       width: 80,
       height: 80,
       builder: (context) => IconButton(
                            icon: const Icon(Icons.location_on,color: Colors.red,),
           onPressed: () {
-           //showBottomSheet(context: context, builder: (context) => );
+            showBottomSheet(context: context, builder: (context) => textLocation(homeMapNotes: element));
           },
        )
       ) 
@@ -128,16 +120,61 @@ List<Marker> marcadores(){
   return markers;
 }
 
+}
 
 
- Widget textLocation() {
+class textLocation extends StatefulWidget{
+
+  homeMapNote homeMapNotes;
+
+  textLocation({super.key,required this.homeMapNotes});
+
+  @override
+  State<textLocation> createState() => textLocationState(homeMapNotes: homeMapNotes);
+
+}
+
+class textLocationState extends State<textLocation> {
+
+  homeMapNote homeMapNotes;
+  Placemark? placemark;
+  bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+     setState(() {
+       loading = true;
+     });
+     init();
+  }
+
+  void init() async {
+    var placemarks = await placemarkFromCoordinates(homeMapNotes.latitud,homeMapNotes.longitud);
+      placemark = placemarks.first;
+      setState(() {
+        loading = false;
+      });  
+
+  }
+
+
+  textLocationState({required this.homeMapNotes});
+  
+  @override
+  Widget build(BuildContext context) {
     return ListView(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         children: <Widget>[
           ListTile(
-            title: const Text("Nota escrita en:"),
+            title: const Text("Nota(s) escrita(s) en:"),
             subtitle:
+            loading == true
+          ? const Center(
+              child: SizedBox(
+                  width: 30, height: 30, child: CircularProgressIndicator()))
+          : 
             Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -150,26 +187,17 @@ List<Marker> marcadores(){
                     ],
                   ),
               ),
-            ListTile(
-            leading: const Icon(Icons.save),
-            title: const Text('Guardar ubicacion'),
-            onTap: () {
-              Navigator.pop(context);
+            ListView.builder(
+              itemCount: homeMapNotes.notas.length,
+              itemBuilder: (context, index) {
+                return notePreviewWidget(nota: homeMapNotes.notas[index]);
               },
-             ),  
-            ListTile(
-            leading: const Icon(Icons.arrow_back_rounded),
-            title: const Text('Regresar'),
-            onTap: () {
-              Navigator.pop(context);  
-              },
-             ), 
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+            ),
            ]
-          );  
-
+          ); 
   }
 
-
-
-
 }
+  

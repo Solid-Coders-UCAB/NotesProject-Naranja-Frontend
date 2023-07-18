@@ -159,6 +159,7 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
                 """<img src="data:image/${file.extension};base64,$base64Data" data-filename="${file.name}" width="300" height="300"/>""";
                 editorC.insertHtml(base64Image);
               }
+    editorC.insertHtml('<br>');                 
    return false; 
  }
 

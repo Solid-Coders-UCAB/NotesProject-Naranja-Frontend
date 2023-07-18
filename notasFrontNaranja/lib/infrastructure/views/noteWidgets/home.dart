@@ -156,12 +156,15 @@ class homeState extends State<Home> {
 void filtrarNotasForMap() {
     List<Nota> auxNotas = [];
         for (var note in notas){
-          auxNotas.add(Nota(n_date: note.n_date
-          ,n_edit_date: note.n_edit_date, 
+          auxNotas.add(Nota(
+          n_date: note.n_date,
+          n_edit_date: note.n_edit_date, 
           contenido: note.contenido, 
-          titulo: note.titulo, id: note.id, 
+          titulo: note.titulo, 
+          id: note.id, 
           idCarpeta: note.idCarpeta,
-          longitud: note.longitud,latitud: note.latitud,
+          longitud: note.longitud,
+          latitud: note.latitud,
           etiquetas: note.etiquetas, 
           estado: note.estado
           ));
@@ -181,12 +184,37 @@ void filtrarNotasForMap() {
        List<Nota> previews = [];
        for (var note2 in auxNotas){
           if (note2.latitud == note.latitud && note2.longitud == note.longitud  && (note.id != note2.id) && (note2.id != '')) {
-            previews.add(note2);
+
+            var auxNote = Nota(
+                n_date: note2.n_date,
+                n_edit_date: note2.n_edit_date, 
+                contenido: note2.contenido, 
+                titulo: note2.titulo, 
+                id: note2.id, 
+                idCarpeta: note2.idCarpeta,
+                longitud: note2.longitud,
+                latitud: note2.latitud,
+                etiquetas: note2.etiquetas, 
+                estado: note2.estado
+              );
+            previews.add(auxNote);
             //auxNotas.remove(note2); 
             note2.id = '';
           }
        }
-       previews.add(note);
+          var auxNote = Nota(
+                n_date: note.n_date,
+                n_edit_date: note.n_edit_date, 
+                contenido: note.contenido, 
+                titulo: note.titulo, 
+                id: note.id, 
+                idCarpeta: note.idCarpeta,
+                longitud: note.longitud,
+                latitud: note.latitud,
+                etiquetas: note.etiquetas, 
+                estado: note.estado
+              );
+       previews.add(auxNote);
        previews.forEach((element) { print('notasPre[${cont}]${element.titulo}');});
        cont++;
         //auxNotas.remove(note);

@@ -3,6 +3,7 @@
 
 import 'dart:typed_data';
 import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/infrastructure/controllers/notePreviewController.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/editarNotaEditor.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class notePreviewWidgetState extends State<notePreviewWidget> {
   notePreviewWidgetState({required this.nota});
   List<etiqueta> tags = [];
   bool loadingTags = false;
+  AppError? tagError;
 
   @override
   void initState() {
@@ -47,6 +49,10 @@ class notePreviewWidgetState extends State<notePreviewWidget> {
       tags = controllerResponse.right.etiquetas!;
     }else{
       print(controllerResponse.left.message);
+      tagError = controllerResponse.left.key;
+      setState(() {
+        loadingTags = false;
+      });
     }
      
   } 

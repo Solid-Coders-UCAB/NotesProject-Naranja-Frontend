@@ -87,8 +87,9 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
          tagsList = controllerResponse.right;
         if (nota.etiquetas != null){ 
          if (nota.etiquetas!.isNotEmpty){
-         for (var tag in tagsList) {
-          selectedTags.add(nota.etiquetas!.firstWhere((element) => element.id == tag.id));
+           nota.etiquetas!.forEach((element) {print('element: ${element.id}');});
+         for (var tag in nota.etiquetas!) {
+          selectedTags.add(tagsList.firstWhere((element) => element.id == tag.id));
          } 
          }
         }
@@ -167,6 +168,7 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
                 """<img src="data:image/${file.extension};base64,$base64Data" data-filename="${file.name}" width="300" height="300"/>""";
                 editorC.insertHtml(base64Image);
               }
+    editorC.insertHtml('<br>');         
    return false; 
  }
 
