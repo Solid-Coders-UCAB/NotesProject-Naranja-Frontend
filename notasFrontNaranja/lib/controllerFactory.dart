@@ -72,7 +72,7 @@ class controllerFactory {
                                           folderRepo: HTTPfolderRepository(),
                                            localUserRepo: localUserRepository()),
         locationService:
-            GetUserCurrentLocationService(location: GetLocationImp()),
+            GetUserCurrentLocationService(loca: GetLocationImp()),
         getAllEtiquetasService: 
             getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(), localUserRepo: localUserRepository()),
          getAllFoldersService: 

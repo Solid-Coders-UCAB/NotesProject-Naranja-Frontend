@@ -16,7 +16,7 @@ class notaNuevaWidgetController {
   service<void, File> imageService;
   service<void, File> galleryService;
   service<CreatenoteParams, String> createNotaService;
-  service<void, Location> locationService;
+  service<void, location> locationService;
   service<void,List<etiqueta>> getAllEtiquetasService;
   service<void,List<folder>> getAllFoldersService;
 
@@ -33,8 +33,8 @@ class notaNuevaWidgetController {
       {required String titulo,
       required String contenido,
       String? folderId,
-      int? longitud,
-      int? latitud,
+      double? longitud,
+      double? latitud,
       List<etiqueta>? etiquetas,
       List<Uint8List>? imagenes}) async {
     
@@ -94,14 +94,14 @@ class notaNuevaWidgetController {
     return Right(imagen);
   }
 
-  Future<Either<MyError, Location>> getUserLocation() async {
+  Future<Either<MyError, location>> getUserLocation() async {
     var locationResponse = await locationService.execute(null);
 
     if (locationResponse.isLeft) {
       return Left(locationResponse.left);
     }
-    Location location = locationResponse.right;
-    return Right(location);
+    location loca = locationResponse.right;
+    return Right(loca);
   }
 
   Future<Either<MyError, List<etiqueta>>> getAllEtiquetas() async {
