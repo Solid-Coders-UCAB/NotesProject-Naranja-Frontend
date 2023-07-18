@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'notePreview.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/navigationBar.dart';
 import 'package:firstapp/infrastructure/views/filterWidgets/searchNotaDelegate.dart';
+
 // Pagina principal donde se muestran todas las notas de un usuario
 class PaginaPrincipal extends StatelessWidget {
   const PaginaPrincipal({super.key});
@@ -28,9 +29,8 @@ class Home extends StatefulWidget {
 }
 
 class homeState extends State<Home> {
-  
   homeState();
-  
+
   bool loading = false;
   List<Nota> notas = <Nota>[];
 
@@ -47,7 +47,7 @@ class homeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+        backgroundColor: const Color.fromARGB(255, 30, 103, 240),
         title: const Text("Notas"),
         leading: Builder(
           builder: (BuildContext context) {
@@ -62,22 +62,20 @@ class homeState extends State<Home> {
         ),
         actions: <Widget>[
           IconButton(
-                    onPressed: () {
-                      showSearch(context: context, 
-                      delegate: searchNotaDelegate());
-                    },
-                    icon: const Icon(Icons.search),    
-                        ),
+            onPressed: () {
+              showSearch(context: context, delegate: searchNotaDelegate());
+            },
+            icon: const Icon(Icons.search),
+          ),
         ],
       ),
       //Side menu------------------------------
       drawer: const NavBar(),
 
-    //  Boton para crear una nota
+      //  Boton para crear una nota
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
-        child: 
-        FloatingActionButton(
+        child: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 99, 91, 250),
           onPressed: () async {
             createNote();
@@ -129,21 +127,21 @@ class homeState extends State<Home> {
     });
   }
 
-  void showNotes() async { 
-   controller.getAllNotesFromServer(this);
+  void showNotes() async {
+    controller.getAllNotesFromServer(this);
   }
 
-  void showSystemMessage(String? message){
+  void showSystemMessage(String? message) {
     setState(() {
       loading = false;
     });
-     ScaffoldMessenger.of(context)
+    ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message!)));
   }
 
   void createNote() async {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => HtmlEditorExampleApp()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => HtmlEditorExampleApp()));
   }
 
   Widget notePreview(Nota note) {

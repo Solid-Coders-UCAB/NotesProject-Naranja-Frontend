@@ -22,9 +22,9 @@ import '../systemWidgets/widgets.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../../domain/tarea.dart';
 // Ventana para crear una nueva nota
 class HtmlEditorExampleApp extends StatelessWidget {
-  
   HtmlEditorExampleApp({super.key});
 
   HtmlEditorExample textEditor = HtmlEditorExample();
@@ -34,7 +34,7 @@ class HtmlEditorExampleApp extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Nueva nota"),
-        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+        backgroundColor: const Color.fromARGB(255, 30, 103, 240),
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -44,22 +44,21 @@ class HtmlEditorExampleApp extends StatelessWidget {
       body: textEditor,
     );
   }
-
-} 
+}
 
 class HtmlEditorExample extends StatefulWidget {
-  
   const HtmlEditorExample({super.key});
 
   @override
   _HtmlEditorExampleState createState() => _HtmlEditorExampleState();
 }
 
-class _HtmlEditorExampleState extends State<HtmlEditorExample> {  
+class _HtmlEditorExampleState extends State<HtmlEditorExample> {
   String initialText = '';
   bool loading = false;
 
-  final notaNuevaWidgetController controller = controllerFactory.notaNuevaWidController();
+  final notaNuevaWidgetController controller =
+      controllerFactory.notaNuevaWidController();
 
   final HtmlEditorController editorC = HtmlEditorController();
   final TextEditingController tituloC = TextEditingController();
@@ -67,61 +66,58 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
   List<etiqueta> tagsList = [];
   List<etiqueta> selectedTags = [];
   List<folder> folders = [];
+  List<tarea> tasks = [];
   folder? selectedFolder;
   location? noteLocation;
 
   @override
   void initState() {
     super.initState();
-      setState(() {
-        loading = true;
-      });
+    setState(() {
+      loading = true;
+    });
     init();
   }
+
   void init() async {
     var controllerResponse = await controller.getAllEtiquetas();
-      if (controllerResponse.isLeft){
-           showSystemMessage(controllerResponse.left.message);
-      }else{
-        tagsList = controllerResponse.right; 
-      } 
+    if (controllerResponse.isLeft) {
+      showSystemMessage(controllerResponse.left.message);
+    } else {
+      tagsList = controllerResponse.right;
+    }
     /////
     var getFoldersRes = await controller.getAllFolders();
-      if (getFoldersRes.isLeft){
-        showSystemMessage(getFoldersRes.left.message);
-      }
-      setState(() {
-        loading = false;
-      });
-     folders = getFoldersRes.right;
+    if (getFoldersRes.isLeft) {
+      showSystemMessage(getFoldersRes.left.message);
+    }
+    setState(() {
+      loading = false;
+    });
+    folders = getFoldersRes.right;
   }
 
   @override
   Widget build(BuildContext context) {
-    return
-    Container(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
-      color: Colors.white,
-      child: loading == true
-          ? const Center(
-              child: SizedBox(
-                  width: 30, height: 30, child: CircularProgressIndicator()))
-    : 
-    SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-      child:
-      //  Form(
-      //    child:
-          Column( 
-            children: [
-              genericTextFormField(tituloC, "Título de la nota", false, 40),
-              htmlEditor()
-          ]       
-     // )
-    )
-   )
-  );
- }
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+        color: Colors.white,
+        child: loading == true
+            ? const Center(
+                child: SizedBox(
+                    width: 30, height: 30, child: CircularProgressIndicator()))
+            : SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child:
+                    //  Form(
+                    //    child:
+                    Column(children: [
+                  genericTextFormField(tituloC, "Título de la nota", false, 40),
+                  htmlEditor()
+                ]
+                        // )
+                        )));
+  }
 
 // Cuerpo de la nota (Editor de texto)
  Widget htmlEditor(){
@@ -189,77 +185,79 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
 
 
 // Envia a la ventana principal luego de guardar la nueva nota
-void regresarHome(){
-  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-  builder: (context) => Home()),(Route<dynamic> route) => false);
-}
+  void regresarHome() {
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => Home()),
+        (Route<dynamic> route) => false);
+  }
 
 // Funcion para guardar una nota
-void saveNota() async {
-  String? folderId;
-  String text = await editorC.getText();
-    if (selectedFolder != null){
+  void saveNota() async {
+    String? folderId;
+    String text = await editorC.getText();
+    if (selectedFolder != null) {
       folderId = selectedFolder!.id;
     }
-  var controllerResponse = await controller.saveNota(titulo: tituloC.text, contenido: text,etiquetas: selectedTags,folderId: folderId,
-    latitud: noteLocation != null ? noteLocation!.latitude! : 0,longitud: noteLocation != null ? noteLocation!.longitude! : 0
-  );  
-  if (controllerResponse.isLeft){
-    showSystemMessage(controllerResponse.left.message);
-  }else{
-     showSystemMessage('Nota guardada satisfactoriamente');
-     regresarHome();
+    var controllerResponse = await controller.saveNota(
+        titulo: tituloC.text,
+        contenido: text,
+        etiquetas: selectedTags,
+        folderId: folderId,
+        latitud: noteLocation != null ? noteLocation!.latitude! : 0,
+        longitud: noteLocation != null ? noteLocation!.longitude! : 0);
+    if (controllerResponse.isLeft) {
+      showSystemMessage(controllerResponse.left.message);
+    } else {
+      showSystemMessage('Nota guardada satisfactoriamente');
+      regresarHome();
+    }
   }
-}
 
 // Funcion para insertar la imagen a texto en el cuerpo de la nota
-void imageToText() async {
-  var controllerResponse = await controller.showTextFromIA();
-  String text = controllerResponse.right;  
-  if (controllerResponse.isLeft){
-    showSystemMessage(controllerResponse.left.message);
-  }else{
-    print(text);
-     editorC.setText(await editorC.getText()+text);
-    print(await editorC.getText());
-
+  void imageToText() async {
+    var controllerResponse = await controller.showTextFromIA();
+    String text = controllerResponse.right;
+    if (controllerResponse.isLeft) {
+      showSystemMessage(controllerResponse.left.message);
+    } else {
+      print(text);
+      editorC.setText(await editorC.getText() + text);
+      print(await editorC.getText());
+    }
   }
-}
 
 // Funcion para insertar el voice to text en el cuerpo de la nota
-void voiceToText() async {
-  String espacio = " ";
-  String audio = await Navigator.push(
-   context,
-   MaterialPageRoute(builder: (context) =>  SpeechScreen(text: '')));                    
-  editorC.setText(await editorC.getText() + espacio + audio + espacio);
-}
+  void voiceToText() async {
+    String espacio = " ";
+    String audio = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => SpeechScreen(text: '')));
+    editorC.setText(await editorC.getText() + espacio + audio + espacio);
+  }
 
 // Funcion para insertar el esbozado en el cuerpo de la nota
- void esbozado(PlatformFile file) async {
+  void esbozado(PlatformFile file) async {
     String base64Data = base64.encode(file.bytes!);
     String base64Image =
-      """<img src="data:image/${file.extension};base64,$base64Data" data-filename="${file.name}" width="300" height="300"/>""";
+        """<img src="data:image/${file.extension};base64,$base64Data" data-filename="${file.name}" width="300" height="300"/>""";
     editorC.insertHtml(base64Image);
-        
- }
+  }
 
-void showSystemMessage(String? message){
+  void showSystemMessage(String? message) {
     setState(() {
       loading = false;
     });
-     ScaffoldMessenger.of(context)
+    ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message!)));
   }
 
-// 
-Future<String> get _localPath async {
-  final directory = await getApplicationDocumentsDirectory();
-  
-  return directory.path;
-}
+//
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
 
-Widget menuOpciones() {
+    return directory.path;
+  }
+
+  Widget menuOpciones() {
     return ListView(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -281,7 +279,7 @@ Widget menuOpciones() {
           ),
           ListTile(
             leading: Icon(Icons.new_label),
-            title: Text('etiquetas'),
+            title: Text('Etiquetas'),
             onTap: () async {
               Navigator.pop(context);
               selectedTags = [];
@@ -290,10 +288,19 @@ Widget menuOpciones() {
           ),
           ListTile(
             leading: Icon(Icons.folder_copy_sharp),
-            title: Text('agregar a carpeta'),
+            title: Text('Carpeta'),
             onTap: () async {
               Navigator.pop(context);
               showBottomSheet(context: context, builder: (context) => folderList());
+            },
+          ),
+      // Lista de tareas
+          ListTile(
+            leading: Icon(Icons.add_task),
+            title: Text('Tareas'),
+            onTap: () async {
+              Navigator.pop(context);
+              showBottomSheet(context: context, builder: (context) => NotaTareas(tasks: [],));
             },
           ),
           ListTile(
@@ -322,88 +329,85 @@ Widget menuOpciones() {
             onTap: () async {
               Navigator.pop(context);
 
-              Uint8List? imagen = await Navigator.push(
+            Uint8List? imagen = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                builder: (context) => const DrawingRoomScreen()));
-              if (imagen != null) {
-                try {
-                  final appStorage = await _localPath;
-                  int randomNumber = Random().nextInt(10000);
-                  String imageName = 'image$randomNumber';
-                  final archivo = File('$appStorage/$imageName.png');
-                  archivo.writeAsBytes(imagen); 
+                    builder: (context) => const DrawingRoomScreen()));
+            if (imagen != null) {
+              try {
+                final appStorage = await _localPath;
+                int randomNumber = Random().nextInt(10000);
+                String imageName = 'image$randomNumber';
+                final archivo = File('$appStorage/$imageName.png');
+                archivo.writeAsBytes(imagen);
 
-                  PlatformFile file = PlatformFile(
-                    name: imageName,
-                    bytes: imagen,
-                    path: archivo.path, 
-                    size: 0,
-                  );
-                  esbozado(file);
-                } catch (e) {
+                PlatformFile file = PlatformFile(
+                  name: imageName,
+                  bytes: imagen,
+                  path: archivo.path,
+                  size: 0,
+                );
+                esbozado(file);
+              } catch (e) {
                 //print("error guardando imagen ${e}");
-                }
-                
-                }
-                
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.image),
-            title: Text('Imagen a texto'),
-            onTap: () {
-              Navigator.pop(context);
-              imageToText();  
-            },
-          ),
-        ],
-      );
+              }
+            }
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.image),
+          title: Text('Imagen a texto'),
+          onTap: () {
+            Navigator.pop(context);
+            imageToText();
+          },
+        ),
+      ],
+    );
   }
 
   Widget menuEtiquetas() {
     return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTile(
-            leading: const Icon(Icons.exit_to_app_rounded),
-            title: Text('Salir'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),  
-          ListTile(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ListTile(
+          leading: const Icon(Icons.exit_to_app_rounded),
+          title: Text('Salir'),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+        ListTile(
             title: const Text("Etiquetas disponibles:"),
-            subtitle: Tags(  
-              direction: Axis.horizontal,
-              itemCount: tagsList.length, 
-              itemBuilder: (int index){ 
-              return Tooltip(
-                message: tagsList[index].nombre,
-                child: ItemTags(
-                  textStyle: const TextStyle(fontSize: 20),
-                  textActiveColor: Colors.black,
-                  color:  Colors.blueGrey,
-                  activeColor: Colors.white,
-                  title: tagsList[index].nombre, index: index,
-                  pressEnabled: true,
-                  onPressed: (item) {
-                    if (item.active! == false){
-                      selectedTags.add(tagsList[index]);
-                    }else{
-                      selectedTags.removeWhere((element) => tagsList[index].id == element.id);
-                    }
-                  },
-               )   
-             );
-            } 
-          )
-         ) 
-       ],
-      );
+            subtitle: Tags(
+                direction: Axis.horizontal,
+                itemCount: tagsList.length,
+                itemBuilder: (int index) {
+                  return Tooltip(
+                      message: tagsList[index].nombre,
+                      child: ItemTags(
+                        textStyle: const TextStyle(fontSize: 20),
+                        textActiveColor: Colors.black,
+                        color: Colors.blueGrey,
+                        activeColor: Colors.white,
+                        title: tagsList[index].nombre,
+                        index: index,
+                        pressEnabled: true,
+                        onPressed: (item) {
+                          if (item.active! == false) {
+                            selectedTags.add(tagsList[index]);
+                          } else {
+                            selectedTags.removeWhere(
+                                (element) => tagsList[index].id == element.id);
+                          }
+                        },
+                      ));
+                }))
+      ],
+    );
   }
 
-  Widget folderList(){
+Widget folderList(){
     return 
         ListView.builder(
           itemCount: folders.length,
@@ -412,7 +416,7 @@ Widget menuOpciones() {
                       title: 
                       (selectedFolder != null)  
                       ?
-                      (selectedFolder!.id == folders[index].id ) ? Text('${folders[index].name} (seleccionada)') : Text(folders[index].name) 
+                      (selectedFolder!.id == folders[index].id ) ? Text('${folders[index].name} (Seleccionada)') : Text(folders[index].name) 
                       : 
                        Text(folders[index].name) 
                       ,
@@ -425,9 +429,152 @@ Widget menuOpciones() {
                    }        
               
           ); 
-    }
-          
-} 
+    }  
+
+  Widget taskList(){
+    var _controller = TextEditingController();
+    return 
+        Column(
+          children: [ListView.builder(
+            itemCount: 6,
+            itemBuilder: (context, index) {
+              return CheckboxListTile(
+              title: const Text('CheckboxListTile'),
+              value: true,
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged:(bool? value) { },
+            );
+                     }        
+                
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children:  [
+                TextField(
+                  controller: _controller,
+                  maxLength: 30,
+                  decoration: InputDecoration(
+                    labelText: "Nueva tarea",
+                    labelStyle: const TextStyle(
+                    color: Color.fromARGB(255, 154, 181, 255), 
+                  ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: 
+                    (){
+
+                    }, 
+                child: Icon(Icons.add))
+              ],
+            )
+            ]
+        ); 
+    }        
+}
+
+
+// Vista para la lista de tareas
+// ignore: must_be_immutable
+class NotaTareas extends StatefulWidget {
+  List<tarea> tasks = [];
+  NotaTareas({super.key, required this.tasks});
+
+  @override
+  State<NotaTareas> createState() => NotaTareasState(tasks: tasks);
+}
+
+class NotaTareasState extends State<NotaTareas> {
+  List<tarea> tasks = [];
+  NotaTareasState({required this.tasks});
+
+  // Se asigna el controlador con la logica de la ventana notas en carpeta
+  // notasPorPalabraClaveController controller = controllerFactory.createnotasPorPalabraClaveController();
+  var _controller = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    //showNotes(idCarpeta);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child:
+          Column(
+            children: [
+              Expanded(
+               // height: 200.0,
+                child : 
+                ListView.builder(
+                    itemCount: 20,
+                    itemBuilder: (context, index) {
+                      return CheckboxListTile(
+                      title: const Text('CheckboxListTile'),
+                      value: true,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged:(bool? value) { },
+                    );
+                             }        
+                        
+                    ),
+              ),
+      
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children:  [
+                      Expanded(
+                        child: TextField(
+                          
+                          controller: _controller,
+                          maxLength: 30,
+                          decoration: InputDecoration(
+                            labelText: "Nueva tarea",
+                            labelStyle: const TextStyle(
+                            color: Color.fromARGB(255, 154, 181, 255), 
+                          ),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                          onPressed: 
+                            (){
+                            
+                            }, 
+                        child: Icon(Icons.add)),
+                    ],
+                  ),
+              )
+            ],        
+          ),
+      
+    );
+  }
+
+  void reset() {
+    setState(() {
+    //  loading = true;
+    });
+  }
+
+  void showNotes(String palabraClave) async { 
+   // controller.getNotesByKeyword(this, palabraClave);
+  }
+
+
+  void showSystemMessage(String? message){
+    setState(() {
+   //   loading = false;
+    });
+     ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message!)));
+  }
+
+}
+
 
 
 

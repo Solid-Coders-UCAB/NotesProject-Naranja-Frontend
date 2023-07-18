@@ -8,7 +8,6 @@ import 'package:flutter_tags_x/flutter_tags_x.dart';
 
 import '../../../domain/etiqueta.dart';
 import '../../../domain/nota.dart';
-import 'package:firstapp/infrastructure/views/etiquetasWidgets/notasPorEtiqueta.dart';
 
 class noteKeywordPreviewWidget extends StatefulWidget{
 

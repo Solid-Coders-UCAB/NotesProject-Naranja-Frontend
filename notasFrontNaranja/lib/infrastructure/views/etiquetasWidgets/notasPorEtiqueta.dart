@@ -15,50 +15,54 @@ import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
 class NotasPorEtiqueta extends StatelessWidget {
   String nombreEtiqueta;
   String idEtiqueta;
-  NotasPorEtiqueta({super.key, required this.nombreEtiqueta, required this.idEtiqueta});
+  NotasPorEtiqueta(
+      {super.key, required this.nombreEtiqueta, required this.idEtiqueta});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(nombreEtiqueta),
-        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
-        leading: 
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {Navigator.pop(context); }
-            ),
+        backgroundColor: const Color.fromARGB(255, 30, 103, 240),
+        leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
         actions: <Widget>[
           ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 99, 91, 250),
-                        ),
-                        onPressed: () {
-                          Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => EditarEtiqueta(nombreEtiqueta: nombreEtiqueta, idEtiqueta: idEtiqueta)));
-                        },
-                        child: const Text("Editar")
-                        ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 30, 103, 240),
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditarEtiqueta(
+                            nombreEtiqueta: nombreEtiqueta,
+                            idEtiqueta: idEtiqueta)));
+              },
+              child: const Text("Editar")),
         ],
       ),
-
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
-          backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+          backgroundColor: const Color.fromARGB(255, 30, 103, 240),
           onPressed: () async {
             Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HtmlEditorExampleApp()));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => HtmlEditorExampleApp()));
           },
           heroTag: 'addButton',
           child: const Icon(Icons.add),
         ),
       ),
-
       body: Center(
-        child: NotasEtiqueta(idEtiqueta: idEtiqueta,)
-      ),
+          child: NotasEtiqueta(
+        idEtiqueta: idEtiqueta,
+      )),
     );
   }
 }
@@ -70,7 +74,8 @@ class NotasEtiqueta extends StatefulWidget {
 
   @override
   // ignore: no_logic_in_create_state
-  State<NotasEtiqueta> createState() => NotasEtiquetaState(idEtiqueta: idEtiqueta);
+  State<NotasEtiqueta> createState() =>
+      NotasEtiquetaState(idEtiqueta: idEtiqueta);
 }
 
 class NotasEtiquetaState extends State<NotasEtiqueta> {
@@ -81,7 +86,8 @@ class NotasEtiquetaState extends State<NotasEtiqueta> {
   NotasEtiquetaState({required this.idEtiqueta});
 
   // Se asigna el controlador con la logica de la ventana notas con etiqueta
-  notasPorEtiquetaController controller = controllerFactory.createnotasPorEtiquetaController();
+  notasPorEtiquetaController controller =
+      controllerFactory.createnotasPorEtiquetaController();
 
   @override
   void initState() {
@@ -94,45 +100,44 @@ class NotasEtiquetaState extends State<NotasEtiqueta> {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
-        child : loading == true
-          ? const Center(
-              child: SizedBox(
-                  width: 30, height: 30, child: CircularProgressIndicator()))
-          :
-        ListView.builder(
-              itemCount: notas.length,
-              itemBuilder: (context, index) {
-                return notePreview(notas[index]);
-              },
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-            ),
+        child: loading == true
+            ? const Center(
+                child: SizedBox(
+                    width: 30, height: 30, child: CircularProgressIndicator()))
+            : ListView.builder(
+                itemCount: notas.length,
+                itemBuilder: (context, index) {
+                  return notePreview(notas[index]);
+                },
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+              ),
       ),
     );
   }
 
-    void reset() {
+  void reset() {
     setState(() {
       loading = true;
     });
   }
 
-  void showNotes(String idEtiqueta) async { 
-    controller.getNotesByEtiqueta(this, idEtiqueta, );
+  void showNotes(String idEtiqueta) async {
+    controller.getNotesByEtiqueta(
+      this,
+      idEtiqueta,
+    );
   }
 
   Widget notePreview(Nota note) {
-    return (noteEtiquetaPreviewWidget(
-        nota: note, home: this));
+    return (noteEtiquetaPreviewWidget(nota: note, home: this));
   }
 
-  void showSystemMessage(String? message){
+  void showSystemMessage(String? message) {
     setState(() {
       loading = false;
     });
-     ScaffoldMessenger.of(context)
+    ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message!)));
   }
-
 }
-

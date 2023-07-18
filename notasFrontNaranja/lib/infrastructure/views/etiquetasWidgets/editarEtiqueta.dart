@@ -10,23 +10,26 @@ import 'package:firstapp/infrastructure/views/etiquetasWidgets/etiquetasHome.dar
 class EditarEtiqueta extends StatelessWidget {
   String nombreEtiqueta;
   String idEtiqueta;
-  EditarEtiqueta({super.key, required this.nombreEtiqueta, required this.idEtiqueta});
+  EditarEtiqueta(
+      {super.key, required this.nombreEtiqueta, required this.idEtiqueta});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Editar Etiqueta"),
-        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
-        leading: 
-            IconButton(
-              icon: new Icon(Icons.close),
-              onPressed: () {Navigator.pop(context); }
-            ),
+        backgroundColor: const Color.fromARGB(255, 30, 103, 240),
+        leading: IconButton(
+            icon: new Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
       ),
       body: Center(
-        child: EtiquetaEditar(nombreEtiqueta: nombreEtiqueta, idEtiqueta: idEtiqueta,)
-      ),
+          child: EtiquetaEditar(
+        nombreEtiqueta: nombreEtiqueta,
+        idEtiqueta: idEtiqueta,
+      )),
     );
   }
 }
@@ -35,11 +38,13 @@ class EditarEtiqueta extends StatelessWidget {
 class EtiquetaEditar extends StatefulWidget {
   String nombreEtiqueta;
   String idEtiqueta;
-  EtiquetaEditar({super.key, required this.nombreEtiqueta, required this.idEtiqueta});
+  EtiquetaEditar(
+      {super.key, required this.nombreEtiqueta, required this.idEtiqueta});
 
   @override
   // ignore: no_logic_in_create_state
-  State<EtiquetaEditar> createState() => EtiquetaEditarState(nombreEtiqueta: nombreEtiqueta, idEtiqueta: idEtiqueta);
+  State<EtiquetaEditar> createState() => EtiquetaEditarState(
+      nombreEtiqueta: nombreEtiqueta, idEtiqueta: idEtiqueta);
 }
 
 class EtiquetaEditarState extends State<EtiquetaEditar> {
@@ -53,12 +58,12 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
   editarEtiquetaWidgetController controller =
       controllerFactory.createEditarEtiquetaWidgetController();
 
-
   @override
   Widget build(BuildContext context) {
     // ignore: no_leading_underscores_for_local_identifiers
 
-    final TextEditingController _nombreEtiqueta = TextEditingController(text: nombreEtiqueta);
+    final TextEditingController _nombreEtiqueta =
+        TextEditingController(text: nombreEtiqueta);
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
@@ -70,22 +75,22 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
                 child: SizedBox(
                     width: 30, height: 30, child: CircularProgressIndicator()))
             : SingleChildScrollView(
-              child: Column(
+                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  genericTextFormField(_nombreEtiqueta, "Nombre de la etiqueta", false, 40),
-    
+                  genericTextFormField(
+                      _nombreEtiqueta, "Nombre de la etiqueta", false, 40),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                    // Boton para cambiar el nombre de la etiqueta
+                      // Boton para cambiar el nombre de la etiqueta
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25)),
                             backgroundColor:
-                                const Color.fromARGB(255, 99, 91, 250),
+                                const Color.fromARGB(255, 30, 103, 240),
                           ),
                           onPressed: () {
                             if (_nombreEtiqueta.text != '') {
@@ -104,13 +109,13 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25)),
                             backgroundColor:
-                                const Color.fromARGB(255, 99, 91, 250),
+                                const Color.fromARGB(255, 30, 103, 240),
                           ),
                           onPressed: () {
                             deleteEtiqueta(idEtiqueta);
                             ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Etiqueta eliminada")));
+                                const SnackBar(
+                                    content: Text("Etiqueta eliminada")));
                           },
                           child: const Text("Eliminar")),
                       const SizedBox(
@@ -119,8 +124,7 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
                     ],
                   ),
                 ],
-              )
-              ),
+              )),
       ),
     );
   }
@@ -135,25 +139,24 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
     setState(() {
       loading = true;
     });
-    
+
     // Se llama a la funcion del controlador para editar la etiqueta
     var response = await controller.updateEtiqueta(
-      nombreEtiqueta: nombreEtiqueta,
-      idEtiqueta: idEtiqueta
-      );
+        nombreEtiqueta: nombreEtiqueta, idEtiqueta: idEtiqueta);
 
     if (response.isLeft) {
       String text = '';
       text = response.left.message!;
       loading = false;
-      showSystemMessage(text);   
+      showSystemMessage(text);
     }
     if (response.isRight) {
       showSystemMessage('Etiqueta actualizada correctamente');
 
       // Se regresa a la ventana de HomeEtiqueta
-       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-       builder: (context) => etiquetasHome()),(Route<dynamic> route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => etiquetasHome()),
+          (Route<dynamic> route) => false);
     }
   }
 
@@ -161,25 +164,23 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
     setState(() {
       loading = true;
     });
-    
+
     // Se llama a la funcion del controlador para eliminar la etiqueta
-    var response = await controller.deleteEtiqueta(
-      idEtiqueta: idEtiqueta
-      );
+    var response = await controller.deleteEtiqueta(idEtiqueta: idEtiqueta);
 
     if (response.isLeft) {
       String text = '';
       text = response.left.message!;
       loading = false;
-      showSystemMessage(text);   
+      showSystemMessage(text);
     }
     if (response.isRight) {
       showSystemMessage('Etiqueta eliminada correctamente');
 
       // Se regresa a la ventana de HomeEtiqueta
-       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-       builder: (context) => etiquetasHome()),(Route<dynamic> route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => etiquetasHome()),
+          (Route<dynamic> route) => false);
     }
   }
-
 }

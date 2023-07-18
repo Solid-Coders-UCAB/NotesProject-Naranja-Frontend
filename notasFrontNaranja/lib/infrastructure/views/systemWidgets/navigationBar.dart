@@ -34,49 +34,67 @@ class NavBar extends StatelessWidget {
         child: Wrap(
           runSpacing: 15,
           children: [
-          // Home de notas (ventana principal)
+            // Home de notas (ventana principal)
             ListTile(
-              leading: const Icon(Icons.home_outlined),
+              leading: const Icon(
+                Icons.home_rounded,
+                color: Color.fromARGB(255, 30, 103, 240),
+              ),
               title: const Text('Inicio'),
               onTap: () =>
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) => Home(),
               )),
             ),
-          // Home de carpetas
+            // Home de carpetas
             ListTile(
-              leading: const Icon(Icons.folder_outlined),
+              leading: const Icon(
+                Icons.folder_rounded,
+                color: Color.fromARGB(255, 30, 103, 240),
+              ),
               title: const Text('Carpetas'),
               onTap: () {
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                 builder: (context) => folderHome()),(Route<dynamic> route) => false);
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => folderHome()),
+                    (Route<dynamic> route) => false);
               },
             ),
-          // Home de etiquetas
+            // Home de etiquetas
             ListTile(
-              leading: const Icon(Icons.label_outline),
+              leading: const Icon(
+                Icons.label_rounded,
+                color: Color.fromARGB(255, 30, 103, 240),
+              ),
               title: const Text('Etiquetas'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.of(context).push(MaterialPageRoute(
-                 builder: (context) => const etiquetasHome()));
+                    builder: (context) => const etiquetasHome()));
               },
             ),
-          // Ventana de papelera para las notas eliminadas
+            // Ventana de papelera para las notas eliminadas
             ListTile(
-              leading: const Icon(Icons.cleaning_services_rounded),
+              leading: const Icon(
+                Icons.delete_rounded,
+                color: Color.fromARGB(255, 30, 103, 240),
+              ),
               title: const Text('Papelera'),
               onTap: () {
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                 builder: (context) => const recycleBinHome()),(Route<dynamic> route) => false);
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const recycleBinHome()),
+                    (Route<dynamic> route) => false);
               },
             ),
             const Divider(
               color: Color.fromRGBO(114, 114, 114, 1),
             ),
-          // Ventana de perfil del usuario
+            // Ventana de perfil del usuario
             ListTile(
-              leading: const Icon(Icons.account_circle_outlined),
+              leading: const Icon(
+                Icons.account_circle,
+                color: Color.fromARGB(255, 30, 103, 240),
+              ),
               title: const Text('Perfil'),
               onTap: () {
                 //Navigator.of(context).pushReplacement(MaterialPageRoute(

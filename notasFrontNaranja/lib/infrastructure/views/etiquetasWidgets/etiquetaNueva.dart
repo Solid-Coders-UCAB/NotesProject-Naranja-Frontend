@@ -6,7 +6,6 @@ import '../systemWidgets/widgets.dart';
 
 // Ventana para crear una etiqueta
 class EtiquetaNueva extends StatelessWidget {
-  
   const EtiquetaNueva({super.key});
 
   @override
@@ -14,23 +13,20 @@ class EtiquetaNueva extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Nueva Etiqueta"),
-        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
-        leading: 
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {Navigator.pop(context); }
-            ),
+        backgroundColor: const Color.fromARGB(255, 30, 103, 240),
+        leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
       ),
-      body: const Center(
-        child: NuevaEtiqueta()
-      ),
+      body: const Center(child: NuevaEtiqueta()),
     );
   }
 }
 
 // ignore: must_be_immutable
 class NuevaEtiqueta extends StatefulWidget {
-
   const NuevaEtiqueta({super.key});
 
   @override
@@ -38,13 +34,12 @@ class NuevaEtiqueta extends StatefulWidget {
 }
 
 class NuevaEtiquetaState extends State<NuevaEtiqueta> {
-
-
   NuevaEtiquetaState();
   bool loading = false;
 
 // Se crea el controlador con la logica de la ventana EtiquetaNueva
-  etiquetaNuevaWidgetController controller = controllerFactory.createEtiquetaNuevaWidgetController();
+  etiquetaNuevaWidgetController controller =
+      controllerFactory.createEtiquetaNuevaWidgetController();
 
 //
 
@@ -67,19 +62,18 @@ class NuevaEtiquetaState extends State<NuevaEtiqueta> {
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  genericTextFormField(_nombreEtiqueta, "Nombre de la etiqueta", false, 40),
-    
+                  genericTextFormField(
+                      _nombreEtiqueta, "Nombre de la etiqueta", false, 40),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-
                       // Boton para crear una nueva carpeta
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25)),
                             backgroundColor:
-                                const Color.fromARGB(255, 99, 91, 250),
+                                const Color.fromARGB(255, 30, 103, 240),
                           ),
                           onPressed: () {
                             if (_nombreEtiqueta.text != '') {
@@ -98,17 +92,18 @@ class NuevaEtiquetaState extends State<NuevaEtiqueta> {
                     ],
                   ),
                 ],
-              )
-              ),
+              )),
       ),
     );
   }
 
-void regresarHome(){
+  void regresarHome() {
     //home.showNotes();
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                 builder: (context) => const etiquetasHome()),(Route<dynamic> route) => false);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const etiquetasHome()),
+        (Route<dynamic> route) => false);
   }
+
   showSystemMessage(String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
@@ -120,7 +115,8 @@ void regresarHome(){
       loading = true;
     });
     // Se llama a la funcion del controlador para crear una etiqueta
-    var response = await controller.createEtiqueta(nombreEtiqueta: nombreEtiqueta); 
+    var response =
+        await controller.createEtiqueta(nombreEtiqueta: nombreEtiqueta);
 
     if (response.isLeft) {
       setState(() {
@@ -132,14 +128,9 @@ void regresarHome(){
     }
 
     if (response.isRight) {
-
-       loading = false;
-    // Regresa a la ventana principal
+      loading = false;
+      // Regresa a la ventana principal
       regresarHome();
     }
-    
   }
-
-  
-
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "421762943429",
+    "project_id": "notesproject-naranja",
+    "storage_bucket": "notesproject-naranja.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421762943429:android:4c6d0063a6b72ffde123ac",
+        "android_client_info": {
+          "package_name": "com.example.firstapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421762943429-sp5gp2dm63no0i5ce5aojo73lkq0l21k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATSL2o82x28c4vuftKRB4DhTSy6Wisj1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421762943429-sp5gp2dm63no0i5ce5aojo73lkq0l21k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
