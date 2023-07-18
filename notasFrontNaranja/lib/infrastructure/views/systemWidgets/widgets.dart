@@ -84,10 +84,7 @@ Widget genericSizedBox(double size) {
 }
 
 Widget iconApp(double sizeIcon) {
-  return Image.network(
-    "https://cdn-icons-png.flaticon.com/512/1001/1001259.png",
-    width: sizeIcon
-  );
+    return Icon( Icons.flutter_dash ,size: sizeIcon);
 }
 
 Widget textLabel(String textInput,double fontSize) {

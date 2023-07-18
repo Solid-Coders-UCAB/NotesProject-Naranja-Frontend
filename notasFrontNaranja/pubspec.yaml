@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter_image_compress: ^2.0.3
   flutter_map: ^5.0.0
   flutter_tags_x:  # last version
   sqflite_common_ffi: any
