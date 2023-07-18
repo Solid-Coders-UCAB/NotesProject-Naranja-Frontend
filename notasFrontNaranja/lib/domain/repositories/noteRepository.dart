@@ -11,7 +11,7 @@ abstract class noteRepository {
     Future<Either<MyError,String>> deleteNota(Nota note);
     Future<Either<MyError,List<Nota>>> getALLnotes(String userId);
     Future<Either<MyError,List<Nota>>> getAllEliminatedNotes(String userId);
-
+    Future<Either<MyError, List<Nota>>> getNotesByKeyword(String palabraClave, String idUsuario);
 
 }
 

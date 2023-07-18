@@ -15,6 +15,8 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
   @override
   Future<Either<MyError, String>> createNota(Nota note) async {
 
+    print(note.latitud);
+
     var body = jsonEncode({
       "titulo": note.getTitulo,
       'cuerpo':note.getContenido,
@@ -22,7 +24,9 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
       'fechaModificacion': note.getEditDate.toString(),
       'fechaCreacion': note.getDate.toString(),
       'idCarpeta': note.idCarpeta,
-      'etiquetas': note.getEtiquetasIds()
+      'etiquetas': note.getEtiquetasIds(),
+      "latitud":  note.latitud,
+      "longitud": note.longitud
     });
 
   try{
@@ -210,6 +214,69 @@ Future<Either<MyError, String>> deleteNota(Nota note) async {
     return Left(MyError(key: AppError.NotFound,
                 message: response.body ));
   }
+
+  @override
+Future<Either<MyError, List<Nota>>> getNotesByKeyword(String palabraClave, String idUsuario) async {
+
+    List<Nota> notas = [];
+    List<etiqueta> etiquetas = [];
+    Response response;
+    var body = jsonEncode({
+      "palabraClave": palabraClave,
+      "idUsuario": idUsuario
+    });
+
+
+    try{ 
+     response = await post(Uri.parse('http://$domain/nota/findByKeyword'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+    }catch(e){
+      return Left(MyError(key: AppError.NotFound,
+                                  message: "$e"));
+    }
+
+   if (response.statusCode == 200){
+
+      var jsonData = json.decode(response.body);
+
+      for (var jsonNote in jsonData){
+
+          for (var eti in jsonNote['etiquetas']) {
+            etiquetas.add( etiqueta(nombre: '', idUsuario: '',id: eti['id']) );
+          }
+       
+       Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
+                     titulo: jsonNote['titulo']['titulo'],
+                     contenido: jsonNote['cuerpo']['cuerpo'],
+                     n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
+                     n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
+                     estado: jsonNote['estado'], 
+                     carpeta: jsonNote['idCarpeta']['UUID'],
+                     etiquetas: etiquetas                            
+               ).right;
+
+        var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
+        if ( jsonAssignedGeolocalitation){
+            nota.latitud = jsonNote['geolocalizacion']['latitud'];
+            nota.longitud = jsonNote['geolocalizacion']['longitud'];
+        }else{
+            nota.latitud = null;
+            nota.longitud = null;
+        }
+        notas.add(nota);
+        etiquetas = [];
+      } 
+      return Right(notas);
+    }
+          
+    return Left(MyError(key: AppError.NotFound,
+                message: response.body ));
+                
+}
 
 }
 void main() async {

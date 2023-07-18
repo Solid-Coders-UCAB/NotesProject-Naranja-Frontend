@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/map.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../domain/etiqueta.dart';
 import '../../../domain/folder.dart';
+import '../../../domain/location.dart';
 import '../systemWidgets/widgets.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
 import 'package:path_provider/path_provider.dart';
@@ -63,6 +65,7 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
   List<etiqueta> selectedTags = [];
   List<folder> folders = [];
   folder? selectedFolder;
+  location? noteLocation;
 
   @override
   void initState() {
@@ -168,7 +171,9 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
         titulo: tituloC.text,
         contenido: text,
         etiquetas: selectedTags,
-        folderId: folderId);
+        folderId: folderId,
+        latitud: noteLocation != null ? noteLocation!.latitude! : 0,
+        longitud: noteLocation != null ? noteLocation!.longitude! : 0);
     if (controllerResponse.isLeft) {
       showSystemMessage(controllerResponse.left.message);
     } else {
@@ -263,8 +268,11 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
         ListTile(
           leading: const Icon(Icons.map),
           title: Text('Agregar ubicacion'),
-          onTap: () {
+          onTap: () async {
             Navigator.pop(context);
+            noteLocation = await Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MyMapScreen()));
+            print("nota en el boton:${noteLocation}");
           },
         ),
         ListTile(

@@ -6,8 +6,8 @@ import '../../domain/etiqueta.dart';
 
 class CreatenoteParams {
   
-  int? longitud;
-  int? latitud;
+  double? longitud;
+  double? latitud;
   String titulo;
   String contenido;
   List<Uint8List>? imagenes;

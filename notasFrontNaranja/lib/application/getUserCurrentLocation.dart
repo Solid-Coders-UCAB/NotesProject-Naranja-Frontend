@@ -4,20 +4,20 @@ import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/location.dart';
 
 abstract class GetUserLocation {
-  Future<Either<MyError, Location>> getCurrentLocation();
+  Future<Either<MyError, location>> getCurrentLocation();
 }
 
-class GetUserCurrentLocationService implements service<void, Location> {
-  GetUserLocation location;
+class GetUserCurrentLocationService implements service<void, location> {
+  GetUserLocation loca;
 
   GetUserCurrentLocationService({
-    required this.location,
+    required this.loca,
   });
 
   @override
-  Future<Either<MyError, Location>> execute(void params) async {
-    Either<MyError, Location> getLocationResponse =
-        await location.getCurrentLocation();
+  Future<Either<MyError, location>> execute(void params) async {
+    Either<MyError, location> getLocationResponse =
+        await loca.getCurrentLocation();
     if (getLocationResponse.isLeft) {
       return Left(getLocationResponse.left);
     }

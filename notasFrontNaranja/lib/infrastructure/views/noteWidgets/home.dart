@@ -7,6 +7,8 @@ import 'nota_nueva.dart';
 import 'textEditor.dart';
 import 'notePreview.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/navigationBar.dart';
+import 'package:firstapp/infrastructure/views/filterWidgets/filterHome.dart';
+import 'package:firstapp/infrastructure/views/filterWidgets/searchNotaDelegate.dart';
 
 // Pagina principal donde se muestran todas las notas de un usuario
 class PaginaPrincipal extends StatelessWidget {
@@ -60,6 +62,14 @@ class homeState extends State<Home> {
             );
           },
         ),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              showSearch(context: context, delegate: searchNotaDelegate());
+            },
+            icon: const Icon(Icons.search),
+          ),
+        ],
       ),
       //Side menu------------------------------
       drawer: const NavBar(),
@@ -68,16 +78,24 @@ class homeState extends State<Home> {
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
-          backgroundColor: const Color.fromARGB(255, 30, 103, 240),
+          backgroundColor: const Color.fromARGB(255, 99, 91, 250),
           onPressed: () async {
-            // Se llama a la funcion para crear nota
             createNote();
           },
           heroTag: 'addButton',
           child: const Icon(Icons.add),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
+      bottomNavigationBar: FloatingActionButton(
+        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+        onPressed: () async {
+          //createNote();
+        },
+        heroTag: 'mapButton',
+        child: const Icon(Icons.map),
+      ),
 
       body: loading == true
           ? const Center(

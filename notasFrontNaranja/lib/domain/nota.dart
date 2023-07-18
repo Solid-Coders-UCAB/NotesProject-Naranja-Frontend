@@ -13,8 +13,8 @@ import 'etiqueta.dart';
 class Nota {
 
   List<Uint8List>? imagenes;
-  int? longitud;
-  int? latitud;
+  double? longitud;
+  double? latitud;
   String? estado;
   String titulo;
   String contenido;
@@ -45,8 +45,8 @@ class Nota {
     n_date,
     contenido,
     titulo,
-    longitud,
-    latitud,
+    double? longitud,
+    double? latitud,
     estado,
     required String id,
     etiquetas,
