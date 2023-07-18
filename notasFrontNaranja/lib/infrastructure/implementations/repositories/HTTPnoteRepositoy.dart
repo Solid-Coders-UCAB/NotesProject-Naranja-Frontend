@@ -14,9 +14,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
   
   @override
   Future<Either<MyError, String>> createNota(Nota note) async {
-
-    print(note.latitud);
-
+    
     var body = jsonEncode({
       "titulo": note.getTitulo,
       'cuerpo':note.getContenido,

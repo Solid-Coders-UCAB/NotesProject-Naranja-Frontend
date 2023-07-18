@@ -11,6 +11,7 @@ import 'package:firstapp/infrastructure/views/noteWidgets/map.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:file_picker/file_picker.dart';
@@ -151,17 +152,41 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
             );
  }
 
+Future<PlatformFile> CompressFile(PlatformFile file) async {
+      var result = await FlutterImageCompress.compressWithFile(
+      file.path!,
+      minWidth: 300,
+      minHeight: 300,
+      quality: 97,
+      //rotate: 90,
+    );
+    final appStorage = await _localPath;
+                  int randomNumber = Random().nextInt(10000);
+                  String imageName = 'image$randomNumber';
+                  final archivo = File('$appStorage/$imageName.png');
+                  archivo.writeAsBytes(result!.cast<int>()); 
 
+                  PlatformFile newFile = PlatformFile(
+                    name: imageName,
+                    bytes: result,
+                    path: archivo.path, 
+                    size: 0,
+                  );
+    return newFile;
+  }
+  
  FutureOr<bool> fileInterceptor(PlatformFile file, InsertFileType type) async {
   if (type == InsertFileType.image) {
+                file = await CompressFile(file);
                 String base64Data = base64.encode(file.bytes!);
                 String base64Image =
                 """<img src="data:image/${file.extension};base64,$base64Data" data-filename="${file.name}" width="300" height="300"/>""";
                 editorC.insertHtml(base64Image);
               }
-    editorC.insertHtml('<br>');                 
+    editorC.insertHtml('<br>');         
    return false; 
  }
+
 
 // Envia a la ventana principal luego de guardar la nueva nota
 void regresarHome(){

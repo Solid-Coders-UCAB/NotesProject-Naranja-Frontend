@@ -27,9 +27,19 @@ Future<Database> openBD() async {
   }
   
   @override
-  Future<Either<MyError, user>> deleteUser(user u) {
-    // TODO: implement deleteUser
-    throw UnimplementedError();
+  Future<Either<MyError, user>> deleteUser(user u) async  {
+     var database = await openBD();
+   try{   
+    await database.transaction((txn) async {
+      await txn.execute('DELETE FROM User');   
+    });
+    }catch(e){
+      await database.close();
+      return Left(MyError(key: AppError.NotFound,message: e.toString()));
+    }  
+
+    await database.close();
+    return Right(u);
   }
 
   @override
