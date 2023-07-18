@@ -78,18 +78,28 @@ class homeState extends State<Home> {
     //  Boton para crear una nota
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
-        child: FloatingActionButton(
+        child: 
+        FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 99, 91, 250),
           onPressed: () async {
-
-            // Se llama a la funcion para crear nota
             createNote();
           },
           heroTag: 'addButton',
           child: const Icon(Icons.add),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
+      bottomNavigationBar: 
+        FloatingActionButton(
+          backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+          onPressed: () async {
+            //createNote();
+          },
+          heroTag: 'mapButton',
+          child: const Icon(Icons.map),
+        ),
+
 
       body: loading == true
           ? const Center(

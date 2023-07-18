@@ -21,7 +21,7 @@ class NotaNueva extends StatelessWidget {
         title: const Text("Nueva nota"),
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
         leading: IconButton(
-            icon: new Icon(Icons.transit_enterexit_outlined),
+            icon: const Icon(Icons.transit_enterexit_outlined),
             onPressed: () {
               h!.showNotes();
               Navigator.pop(context);
@@ -271,7 +271,7 @@ class NuevaNotaState extends State<NuevaNota> {
   }
 
   Future getUserPosition() async {
-    Location location = Location();
+    location loca = location();
     var response = await controller.getUserLocation();
     if (response.isLeft) {
       setState(() {
@@ -283,10 +283,10 @@ class NuevaNotaState extends State<NuevaNota> {
       showSystemMessage(text);
     }
     if (response.isRight) {
-      location = response.right;
+      loca = response.right;
       setState(() {
-        latitud = location.getLatitude;
-        longitud = location.getLongitude;
+        latitud = loca.getLatitude;
+        longitud = loca.getLongitude;
         loading = false;
       });
     }

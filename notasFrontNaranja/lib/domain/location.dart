@@ -1,17 +1,17 @@
 import 'package:either_dart/either.dart';
 import 'package:firstapp/domain/errores.dart';
 
-class Location {
-  String? latitude;
-  String? longitude;
+class location {
+  double? latitude;
+  double? longitude;
 
-  Location({
+  location({
     this.latitude,
     this.longitude,
   });
 
-  static Either<MyError, Location> create({latitude, longitude}) {
-    return Right(Location(latitude: latitude, longitude: longitude));
+  static Either<MyError, location> create({latitude, longitude}) {
+    return Right(location(latitude: latitude, longitude: longitude));
   }
 
   get getLatitude => latitude;
