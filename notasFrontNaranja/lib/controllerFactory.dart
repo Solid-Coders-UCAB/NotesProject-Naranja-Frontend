@@ -7,6 +7,7 @@ import 'package:firstapp/application/getImageFromCameraService.dart';
 import 'package:firstapp/application/getImageFromGalleryService.dart';
 import 'package:firstapp/application/getUserCurrentLocation.dart';
 import 'package:firstapp/application/imageToTextService.dart';
+import 'package:firstapp/application/iniciarSesionService.dart';
 import 'package:firstapp/application/updateFolderInServerService.dart';
 import 'package:firstapp/application/updateNoteInServerService.dart';
 import 'package:firstapp/application/widgetToImageService.dart';
@@ -25,6 +26,7 @@ import 'package:firstapp/infrastructure/implementations/connectionCheckerImp.dar
 import 'package:firstapp/infrastructure/implementations/imagePickerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imageToTextImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerGalleryImp.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/HTTPuserRepository.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/localUserRepository.dart';
 import 'application/getAllEliminatedNotes.dart';
 import 'application/getAllNotEliminatedNotesFromServerService.dart';
@@ -47,6 +49,8 @@ import 'package:firstapp/application/getNotesByEtiquetaService.dart';
 import 'package:firstapp/infrastructure/controllers/notasPorEtiquetaController.dart';
 import 'package:firstapp/application/getNotesByKeywordService.dart';
 import 'package:firstapp/infrastructure/controllers/notasPorPalabraClaveController.dart';
+
+import 'infrastructure/controllers/iniciarSesionController.dart';
 
 //fabrica de controladores
 
@@ -201,4 +205,11 @@ class controllerFactory {
             noteRepo: httpNoteRepository(),
             localUserRepo: localUserRepository()));
   }
+
+    static iniciarSesionController createIniciarSesionController() {
+      return iniciarSesionController(
+              iniciarSesionService: iniciarSesionService(
+                                      localRepo: localUserRepository(), httpRepo: httpUserRepository()));
+    }
+
 }
