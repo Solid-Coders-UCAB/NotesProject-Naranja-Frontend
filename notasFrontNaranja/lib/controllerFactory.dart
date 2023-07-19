@@ -6,6 +6,7 @@ import 'package:firstapp/application/getAllFoldersFromServerService.dart';
 import 'package:firstapp/application/getAllTagsFromNote.dart';
 import 'package:firstapp/application/getImageFromCameraService.dart';
 import 'package:firstapp/application/getImageFromGalleryService.dart';
+import 'package:firstapp/application/getUserByIdServide.dart';
 import 'package:firstapp/application/getUserCurrentLocation.dart';
 import 'package:firstapp/application/imageToTextService.dart';
 import 'package:firstapp/application/iniciarSesionService.dart';
@@ -14,6 +15,7 @@ import 'package:firstapp/application/updateFolderInServerService.dart';
 import 'package:firstapp/application/updateNoteInServerService.dart';
 import 'package:firstapp/application/widgetToImageService.dart';
 import 'package:firstapp/infrastructure/controllers/drawingRoomController.dart';
+import 'package:firstapp/infrastructure/controllers/findUserByIdController.dart';
 import 'package:firstapp/infrastructure/controllers/homeController.dart';
 import 'package:firstapp/infrastructure/controllers/imageToTextWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
@@ -77,34 +79,40 @@ class controllerFactory {
   }
 
   static createNoteInServerService createNoInServerService() {
-     var servicio = createNoteInServerService(noteRepo: httpNoteRepository(),
-                                     folderRepo: HTTPfolderRepository(),
-                                     localUserRepo: localUserRepository());
+    var servicio = createNoteInServerService(
+        noteRepo: httpNoteRepository(),
+        folderRepo: HTTPfolderRepository(),
+        localUserRepo: localUserRepository());
     return servicio;
   }
 
   static notaNuevaWidgetController notaNuevaWidController() {
-      var servicio = createNoteInServerService(noteRepo: httpNoteRepository(),
-                                     folderRepo: HTTPfolderRepository(),
-                                     localUserRepo: localUserRepository());
-     var offlineService = createNoteInServerService(noteRepo: localNoteRepository(),
-                                     folderRepo: localFolderRepository(),
-                                     localUserRepo: localUserRepository());
-     var offlineDeco = offlineDecorator(servicio: servicio, offlineService: offlineService, checker:  connectionCheckerImp());
-     
+    var servicio = createNoteInServerService(
+        noteRepo: httpNoteRepository(),
+        folderRepo: HTTPfolderRepository(),
+        localUserRepo: localUserRepository());
+    var offlineService = createNoteInServerService(
+        noteRepo: localNoteRepository(),
+        folderRepo: localFolderRepository(),
+        localUserRepo: localUserRepository());
+    var offlineDeco = offlineDecorator(
+        servicio: servicio,
+        offlineService: offlineService,
+        checker: connectionCheckerImp());
+
     return notaNuevaWidgetController(
         imageToText: imageToTextService(ia: iaTextImp()),
         imageService: getImageFromCamaraService(picker: imagePickerImp()),
         galleryService:
             getImageFromGalleryService(picker: imagePickerGalleryImp()),
-        createNotaService: 
-                offlineDeco,
-        locationService:
-            GetUserCurrentLocationService(loca: GetLocationImp()),
-        getAllEtiquetasService: 
-            getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(), localUserRepo: localUserRepository()),
-         getAllFoldersService: 
-            getAllFoldersFromServerService(folderRepo: HTTPfolderRepository(), localUserRepo: localUserRepository())    );
+        createNotaService: offlineDeco,
+        locationService: GetUserCurrentLocationService(loca: GetLocationImp()),
+        getAllEtiquetasService: getAllEtiquetasFromServerService(
+            etiquetaRepo: HTTPetiquetasRepository(),
+            localUserRepo: localUserRepository()),
+        getAllFoldersService: getAllFoldersFromServerService(
+            folderRepo: HTTPfolderRepository(),
+            localUserRepo: localUserRepository()));
   }
 
 // Controlador para el widget de esbozado DrawingRoom
@@ -114,17 +122,16 @@ class controllerFactory {
   }
 
   static homeController createHomeController() {
-
     var onlineService = getAllNotEliminatedNotesFromServerService(
-            noteRepo: httpNoteRepository(),
-            localUserRepo: localUserRepository());
+        noteRepo: httpNoteRepository(), localUserRepo: localUserRepository());
     var localService = getAllNotEliminatedNotesFromServerService(
-            noteRepo: localNoteRepository(),
-            localUserRepo: localUserRepository());
-    var offlineDeco = offlineDecorator(servicio: onlineService, offlineService: localService, checker: connectionCheckerImp());                
+        noteRepo: localNoteRepository(), localUserRepo: localUserRepository());
+    var offlineDeco = offlineDecorator(
+        servicio: onlineService,
+        offlineService: localService,
+        checker: connectionCheckerImp());
 
-    return homeController(
-        getAllNotesFromServerService: offlineDeco);
+    return homeController(getAllNotesFromServerService: offlineDeco);
   }
 
   static editarNotaWidgetController editarNotaWidController() {
@@ -135,37 +142,36 @@ class controllerFactory {
             getImageFromGalleryService(picker: imagePickerGalleryImp()),
         updateNotaService:
             updateNoteInServerService(noteRepo: httpNoteRepository()),
-        getAllEtiquetasService: 
-            getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(), 
-                                             localUserRepo: localUserRepository()),
-        getAllFoldersService: 
-            getAllFoldersFromServerService(folderRepo: HTTPfolderRepository(), localUserRepo: localUserRepository())
-        
-        );
+        getAllEtiquetasService: getAllEtiquetasFromServerService(
+            etiquetaRepo: HTTPetiquetasRepository(),
+            localUserRepo: localUserRepository()),
+        getAllFoldersService: getAllFoldersFromServerService(
+            folderRepo: HTTPfolderRepository(),
+            localUserRepo: localUserRepository()));
   }
 
   static homeFolderController homefolderController() {
     return homeFolderController(
-        getAllFoldersService:
-            getAllFoldersFromServerService(folderRepo: HTTPfolderRepository(),
-                                          localUserRepo: localUserRepository()));
+        getAllFoldersService: getAllFoldersFromServerService(
+            folderRepo: HTTPfolderRepository(),
+            localUserRepo: localUserRepository()));
   }
 
   static carpetaNuevaWidgetController createCarpetaNuevaWidgetController() {
     return carpetaNuevaWidgetController(
-        createCarpetaService:
-            createFolderInServerService(folderRepo: HTTPfolderRepository(),
-                                        localUserRepo: localUserRepository()));
+        createCarpetaService: createFolderInServerService(
+            folderRepo: HTTPfolderRepository(),
+            localUserRepo: localUserRepository()));
   }
 
   static editarCarpetaWidgetController createEditarCarpetaWidgetController() {
     return editarCarpetaWidgetController(
-            updateCarpetaService:
-            updateFolderInServerService(folderRepo: HTTPfolderRepository(),
-                                        localUserRepo: localUserRepository()),
-            deleteCarpetaService: deleteCarpetaInServerService(folderRepo: HTTPfolderRepository(), 
-                                                              localUserRepo: localUserRepository())
-        );
+        updateCarpetaService: updateFolderInServerService(
+            folderRepo: HTTPfolderRepository(),
+            localUserRepo: localUserRepository()),
+        deleteCarpetaService: deleteCarpetaInServerService(
+            folderRepo: HTTPfolderRepository(),
+            localUserRepo: localUserRepository()));
   }
 
   static recycleBinHomeController recycleBinhomeController() {
@@ -174,76 +180,81 @@ class controllerFactory {
             getAllEliminatedNotesFromServerService(
                 noteRepo: httpNoteRepository(),
                 localUserRepo: localUserRepository()),
-        deleteNoteFromServerService: 
-                deleteNoteFromServerService(
-                  noteRepo: httpNoteRepository()),
-        updateNoteFromServer: 
-                updateNoteInServerService(noteRepo: httpNoteRepository())          
-        );
+        deleteNoteFromServerService:
+            deleteNoteFromServerService(noteRepo: httpNoteRepository()),
+        updateNoteFromServer:
+            updateNoteInServerService(noteRepo: httpNoteRepository()));
   }
 
-   static homeEtiquetasController createHomeEtiquetasController() {
+  static homeEtiquetasController createHomeEtiquetasController() {
     return homeEtiquetasController(
-            getAllEtiquetasService: getAllEtiquetasFromServerService(etiquetaRepo: HTTPetiquetasRepository(),
-                                                                    localUserRepo: localUserRepository()));
+        getAllEtiquetasService: getAllEtiquetasFromServerService(
+            etiquetaRepo: HTTPetiquetasRepository(),
+            localUserRepo: localUserRepository()));
   }
 
-    static etiquetaNuevaWidgetController createEtiquetaNuevaWidgetController() {
+  static etiquetaNuevaWidgetController createEtiquetaNuevaWidgetController() {
     return etiquetaNuevaWidgetController(
-        createEtiquetaService:
-            createEtiquetaInServerService(etiquetaRepo: HTTPetiquetasRepository(),
-                                        localUserRepo: localUserRepository())
-        );
+        createEtiquetaService: createEtiquetaInServerService(
+            etiquetaRepo: HTTPetiquetasRepository(),
+            localUserRepo: localUserRepository()));
   }
 
-    static editarEtiquetaWidgetController createEditarEtiquetaWidgetController() {
+  static editarEtiquetaWidgetController createEditarEtiquetaWidgetController() {
     return editarEtiquetaWidgetController(
-            updateEtiquetaService:
-            updateEtiquetaInServerService(etiquetaRepo: HTTPetiquetasRepository(),
-                                        localUserRepo: localUserRepository()),
-            deleteEtiquetaService: deleteEtiquetaInServerService(etiquetaRepo: HTTPetiquetasRepository(), 
-                                                                localUserRepo: localUserRepository())
-          );
-   }
+        updateEtiquetaService: updateEtiquetaInServerService(
+            etiquetaRepo: HTTPetiquetasRepository(),
+            localUserRepo: localUserRepository()),
+        deleteEtiquetaService: deleteEtiquetaInServerService(
+            etiquetaRepo: HTTPetiquetasRepository(),
+            localUserRepo: localUserRepository()));
+  }
 
-   static notePreviewController createNotePreviewController(){
-    return notePreviewController(getAllTagsFromNote: 
-                                    getAllTagsFromNoteService(tagRepo: HTTPetiquetasRepository())
-                                );
-   }
+  static notePreviewController createNotePreviewController() {
+    return notePreviewController(
+        getAllTagsFromNote:
+            getAllTagsFromNoteService(tagRepo: HTTPetiquetasRepository()));
+  }
 
   static notasEnCarpetaController createnotasEnCarpetaController() {
     return notasEnCarpetaController(
-            notesByFolderService: getNotesByFolderService(
+        notesByFolderService: getNotesByFolderService(
             folderRepo: HTTPfolderRepository(),
             localUserRepo: localUserRepository()));
   }
 
   static notasPorEtiquetaController createnotasPorEtiquetaController() {
     return notasPorEtiquetaController(
-            notesByEtiquetaService: getNotesByEtiquetaService(
+        notesByEtiquetaService: getNotesByEtiquetaService(
             etiquetaRepo: HTTPetiquetasRepository(),
             localUserRepo: localUserRepository()));
   }
 
-    static notasPorPalabraClaveController createnotasPorPalabraClaveController() {
+  static notasPorPalabraClaveController createnotasPorPalabraClaveController() {
     return notasPorPalabraClaveController(
-            notesByKeywordService: getNotesByKeywordService(
+        notesByKeywordService: getNotesByKeywordService(
             noteRepo: httpNoteRepository(),
             localUserRepo: localUserRepository()));
   }
 
-    static iniciarSesionController createIniciarSesionController() {
-      return iniciarSesionController(
-              localUserRepo: localUserRepository(),
-              iniciarSesionService: iniciarSesionService(
-                                      localRepo: localUserRepository(), httpRepo: httpUserRepository()));
-    }
-    static registroController createRegistroController(){
-      return registroController(
-               createUserService: 
-                 createUserService(
-                    serverRepo: httpUserRepository(), localRepo: localUserRepository()));
-    }
+  static iniciarSesionController createIniciarSesionController() {
+    return iniciarSesionController(
+        localUserRepo: localUserRepository(),
+        iniciarSesionService: iniciarSesionService(
+            localRepo: localUserRepository(), httpRepo: httpUserRepository()));
+  }
 
+  static registroController createRegistroController() {
+    return registroController(
+        createUserService: createUserService(
+            serverRepo: httpUserRepository(),
+            localRepo: localUserRepository()));
+  }
+
+  static findUserByIdController createfindUserByIdController() {
+    return findUserByIdController(
+        getUserByIDService: getUserByIdInServerService(
+            userRepo: httpUserRepository(),
+            localUserRepo: localUserRepository()));
+  }
 }

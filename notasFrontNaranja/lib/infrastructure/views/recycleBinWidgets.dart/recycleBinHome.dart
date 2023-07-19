@@ -100,7 +100,7 @@ class recycleBinHomeState extends State<recycleBinHome> {
                   ),
                   ListTile(
                     leading: Icon(Icons.delete),
-                    title: Text('eliminar permanentemente'),
+                    title: Text('Eliminar permanentemente'),
                     onTap: () {
                       Navigator.pop(context);
                       eliminarPermanentementeOnPressed(notas[index]);

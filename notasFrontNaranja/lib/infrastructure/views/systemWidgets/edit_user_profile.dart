@@ -89,7 +89,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                                 const Color.fromARGB(255, 30, 103, 240)),
                         child: const Text(
                           'Editar',
-                          style: TextStyle(color: Colors.white, fontSize: 25),
+                          style: TextStyle(color: Colors.white, fontSize: 20),
                         ))
                   ],
                 ),
