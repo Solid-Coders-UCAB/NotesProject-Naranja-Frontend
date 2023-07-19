@@ -16,6 +16,8 @@ class localNoteRepository implements noteRepository {
     // Generate a v1 (time-based) id
     var v1 = uuid.v1();  
 
+    print("paso por crear nota local");
+
    try{   
     await bd.transaction((txn) async {
       await txn.rawInsert('''INSERT INTO nota(id,savedInServer,fechaModificacion,fechaCreacion,estado,titulo,cuerpo,longitud,latitud,idCarpeta) 
@@ -52,6 +54,7 @@ class localNoteRepository implements noteRepository {
     List<Nota> notes = [];
     try{
       notas = await bd.rawQuery('SELECT * FROM nota');
+      print("cantidad de notas en local:${notas.length}");
         if (notas.isNotEmpty){
           for (var nota in notas){
             List<Map> etiquetas = await bd.rawQuery('SELECT idEtiqueta FROM nota_etiqueta WHERE (idNota = "${nota['id']}")');
