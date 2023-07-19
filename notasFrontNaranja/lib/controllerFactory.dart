@@ -73,9 +73,11 @@ class controllerFactory {
   }
 
   static sincronizacionService createSincronizacionService(){
-    return sincronizacionService(localNoteRepo: localNoteRepository(), serverNoteRepo: httpNoteRepository(), 
+    return sincronizacionService(
+    localNoteRepo: localNoteRepository(), serverNoteRepo: httpNoteRepository(), 
     localUserRepo: localUserRepository(),
     localfolderrepo: localFolderRepository(), serverFolderRepo: HTTPfolderRepository(),
+    localEtiquetaRepo: localEtiquetaRepository(),serverEtiquetaRepo: HTTPetiquetasRepository(),
     checker: connectionCheckerImp());
   }
 
