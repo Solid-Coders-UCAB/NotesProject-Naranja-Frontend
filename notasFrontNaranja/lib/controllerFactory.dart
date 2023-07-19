@@ -1,5 +1,6 @@
 import 'package:firstapp/application/connectionCheckerDecorator.dart';
 import 'package:firstapp/application/createNoteInServerService.dart';
+import 'package:firstapp/application/createUserService.dart';
 import 'package:firstapp/application/deleteNoteFromServerService.dart';
 import 'package:firstapp/application/getAllFoldersFromServerService.dart';
 import 'package:firstapp/application/getAllTagsFromNote.dart';
@@ -17,6 +18,7 @@ import 'package:firstapp/infrastructure/controllers/imageToTextWidgetController.
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/editarNotaWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/notePreviewController.dart';
+import 'package:firstapp/infrastructure/controllers/registroController.dart';
 import 'package:firstapp/infrastructure/implementations/getLocationImp.dart';
 import 'package:firstapp/infrastructure/controllers/recycleBinHomeController.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPfolderRepository.dart';
@@ -208,8 +210,15 @@ class controllerFactory {
 
     static iniciarSesionController createIniciarSesionController() {
       return iniciarSesionController(
+              localUserRepo: localUserRepository(),
               iniciarSesionService: iniciarSesionService(
                                       localRepo: localUserRepository(), httpRepo: httpUserRepository()));
+    }
+    static registroController createRegistroController(){
+      return registroController(
+               createUserService: 
+                 createUserService(
+                    serverRepo: httpUserRepository(), localRepo: localUserRepository()));
     }
 
 }

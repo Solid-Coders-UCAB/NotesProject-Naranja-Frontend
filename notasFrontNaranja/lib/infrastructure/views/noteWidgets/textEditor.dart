@@ -153,7 +153,7 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
       file.path!,
       minWidth: 300,
       minHeight: 300,
-      quality: 97,
+      quality: 98,
       //rotate: 90,
     );
     final appStorage = await _localPath;

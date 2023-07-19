@@ -1,12 +1,20 @@
+import 'package:firstapp/application/cerrarSesionService.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/localUserRepository.dart';
 import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 import 'package:firstapp/infrastructure/views/etiquetasWidgets/etiquetasHome.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/map%20copy.dart';
 import 'package:firstapp/infrastructure/views/recycleBinWidgets.dart/recycleBinHome.dart';
+import 'package:firstapp/infrastructure/views/systemWidgets/inicio_sesion.dart';
+import 'package:firstapp/infrastructure/views/systemWidgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 // Ventana que contiene el menu lateral de opciones en la aplicacion
 class NavBar extends StatelessWidget {
-  const NavBar({super.key});
+
+  cerrarSesionService logOutService = cerrarSesionService(localRepo: localUserRepository());
+  
+  NavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +83,18 @@ class NavBar extends StatelessWidget {
             // Ventana de papelera para las notas eliminadas
             ListTile(
               leading: const Icon(
+                Icons.map,
+                color: Color.fromARGB(255, 30, 103, 240),
+              ),
+              title: const Text('Mapa'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MyHomeMapScreen()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(
                 Icons.delete_rounded,
                 color: Color.fromARGB(255, 30, 103, 240),
               ),
@@ -100,8 +120,27 @@ class NavBar extends StatelessWidget {
                 //Navigator.of(context).pushReplacement(MaterialPageRoute(
                 //  builder: (context) => Pagina a llamar));
               },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.logout,
+                color: Color.fromARGB(255, 30, 103, 240),
+              ),
+              title: const Text('Cerrar sesion'),
+              onTap: () async {
+                  var response = await logOutService.execute(null);
+                    if (response.isLeft){
+                      alerta(context, false, 'login error', response.left.message!);
+                  }else{
+                    Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const Inicio()),
+                    (Route<dynamic> route) => false);
+                  }
+              },
             )
           ],
         ),
       );
+
+
 }

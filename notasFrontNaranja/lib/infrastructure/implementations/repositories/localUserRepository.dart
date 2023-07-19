@@ -23,22 +23,46 @@ Future<Database> openBD() async {
     onCreate: (Database db, int version) async {
       await db.execute(
         'CREATE TABLE User (id TEXT PRIMARY KEY, name TEXT)');
-      });
+      await db.execute('''
+            CREATE TABLE nota (
+            id TEXT PRIMARY KEY,
+            fechaModificacion TEXT NOT NULL,
+            fechaCreacion TEXT NOT NULL,
+            estado TEXT NOT NULL,
+            titulo TEXT NOT NULL,
+            cuerpo TEXT,
+            longitud REAL,
+            latitud REAL,
+            idCarpeta TEXT NOT NULL,
+            etiquetas TEXT NOT NULL,
+            tareas TEXT NOT NULL,
+            FOREIGN KEY (idCarpeta) REFERENCES carpeta(id) ON DELETE CASCADE
+            )
+      ''');
+      await db.execute('''
+            CREATE TABLE carpeta (
+            id TEXT PRIMARY KEY,
+            nombre TEXT NOT NULL
+            )
+      ''');      
+      }      
+    );
   }
   
   @override
   Future<Either<MyError, user>> deleteUser(user u) async  {
      var database = await openBD();
-   try{   
+   try{
     await database.transaction((txn) async {
       await txn.execute('DELETE FROM User');   
     });
     }catch(e){
       await database.close();
       return Left(MyError(key: AppError.NotFound,message: e.toString()));
-    }  
+    }
 
     await database.close();
+    await deleteDatabase(database.path);
     return Right(u);
   }
 

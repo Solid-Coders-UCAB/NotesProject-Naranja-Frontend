@@ -1,12 +1,7 @@
-import 'package:either_dart/either.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/iniciarSesionController.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/register.dart';
 import 'package:flutter/material.dart';
-import '../../../application/DTOS/cmdCreateUser.dart';
-import '../../../application/createUserService.dart';
-import '../../implementations/repositories/HTTPuserRepository.dart';
-import '../../implementations/repositories/localUserRepository.dart';
 import '../noteWidgets/home.dart';
 import 'widgets.dart';
 
@@ -39,6 +34,27 @@ class _InicioState extends State<Inicio> {
   
   bool loading = false;
   iniciarSesionController controller = controllerFactory.createIniciarSesionController();
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      loading = true;
+    });
+    init();
+  }
+
+  void init() async {
+    var memoryResponse = await controller.checkUserInCache();
+    if (memoryResponse.isRight){
+      Navigator.pushReplacement( context, MaterialPageRoute(builder: (context) => Home()));
+    }else{
+      setState(() {
+        loading = false;
+      });
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
