@@ -4,7 +4,7 @@ import 'package:firstapp/infrastructure/views/systemWidgets/navigationBar.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/suscripcion.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/widgets.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firstapp/domain/user.dart';
 import '../../controllers/findUserByIdController.dart';
 
 class UserProfile extends StatefulWidget {
@@ -15,6 +15,7 @@ class UserProfile extends StatefulWidget {
 }
 
 class UserProfileState extends State<UserProfile> {
+  bool loading = false;
   findUserByIdController controller =
       controllerFactory.createfindUserByIdController();
   String nombre = "";
@@ -22,6 +23,22 @@ class UserProfileState extends State<UserProfile> {
   String fechaNacimiento = "";
   String suscripcion = "";
 
+  void changeState(user u) {
+    setState(() {
+      loading = false;
+      nombre = u.getNombre.toString();
+      correo = u.getCorreo.toString();
+      int dia = DateTime.parse(u.getDate.toString()).day;
+      int mes = DateTime.parse(u.getDate.toString()).month;
+      int year = DateTime.parse(u.getDate.toString()).year;
+      fechaNacimiento = '$dia/ $mes / $year';
+    if (u.getSuscripcion) {
+      suscripcion = "Suscripción Premium";
+    } else {
+      suscripcion = "Suscripción Básica";
+    }
+    });
+  }
   @override
   void initState() {
     super.initState();

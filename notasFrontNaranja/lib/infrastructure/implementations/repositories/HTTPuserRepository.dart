@@ -74,9 +74,10 @@ class httpUserRepository extends HTTPrepository implements userRepository {
       var jsonData = json.decode(res.body);
       var u = user(
           id: jsonData['id']['UUID'], isSuscribed: jsonData['suscripcion']);
+      u.nombre = jsonData['nombre']['nombre'];
       u.clave = jsonData['clave']['clave'];
       u.correo = jsonData['correo']['correo'];
-      u.fechaNacimiento = jsonData['fechaNacimiento']['fechaNacimiento'];
+      u.fechaNacimiento = DateTime.parse(jsonData['fechaNacimiento']['fecha']);
       return Right(u);
     } else {
       return Left(MyError(key: AppError.NotFound, message: res.body));
@@ -109,10 +110,11 @@ class httpUserRepository extends HTTPrepository implements userRepository {
     if (res.statusCode == 200) {
       var jsonData = json.decode(res.body);
       var u = user(
-          id: jsonData['id']['UUID'], isSuscribed: jsonData['suscripcion']);
+      id: jsonData['id']['UUID'], isSuscribed: jsonData['suscripcion']);
+      u.nombre = jsonData['nombre']['nombre'];
       u.clave = jsonData['clave']['clave'];
       u.correo = jsonData['correo']['correo'];
-      u.fechaNacimiento = jsonData['fechaNacimiento']['fechaNacimiento'];
+      u.fechaNacimiento = DateTime.parse(jsonData['fechaNacimiento']['fecha']);
       return Right(u);
     } else {
       return Left(MyError(key: AppError.NotFound, message: res.body));

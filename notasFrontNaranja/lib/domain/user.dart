@@ -27,6 +27,10 @@ class user{
     u.fechaNacimiento = fechaNacimiento;
     return (Right(u));
   }
- 
+  get getNombre => nombre;
+  get getCorreo => correo;
+  get getDate => fechaNacimiento;
+  get getSuscripcion => isSuscribed;
+
 
 }

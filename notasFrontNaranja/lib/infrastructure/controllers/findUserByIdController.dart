@@ -10,22 +10,16 @@ class findUserByIdController {
 
   findUserByIdController({required this.getUserByIDService});
 
-  Future<Either<MyError, user>> getUserById(UserProfileState widget) async {
+  void getUserById(UserProfileState widget) async {
+    widget.loading = true;
     var serviceResponse = await getUserByIDService.execute(null);
 
     if (serviceResponse.isLeft) {
-      return Left(serviceResponse.left);
+      //return Left(serviceResponse.left);
     }
-    //widget.setState(() {
-    widget.nombre = serviceResponse.right.nombre!;
-    widget.correo = serviceResponse.right.correo!;
-    widget.fechaNacimiento = serviceResponse.right.fechaNacimiento.toString();
-    if (serviceResponse.right.isSuscribed) {
-      widget.suscripcion = "Suscripción Premium";
-    } else {
-      widget.suscripcion = "Suscripción Básica";
-    }
-    //});
-    return Right(serviceResponse.right);
+    print(serviceResponse.right.nombre);
+    widget.changeState(serviceResponse.right);
+
+    //return Right(serviceResponse.right);
   }
 }
