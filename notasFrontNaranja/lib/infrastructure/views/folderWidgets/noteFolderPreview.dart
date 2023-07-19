@@ -77,7 +77,7 @@ class noteFolderPreviewWidgetState extends State<noteFolderPreviewWidget> {
                     child: ItemTags(
                       title: tags[index].nombre,
                       index: index,
-                      pressEnabled: true,
+                      pressEnabled: false,
                     ));
               })
           : const Text('cargando etiquetas...')

@@ -165,10 +165,10 @@ class _MyHomeMapScreenState extends State<MyHomeMapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Notas con ubicación"),
-          backgroundColor: const Color.fromARGB(255, 30, 103, 240),
+          title: const Text("Ubicacion de las notas"),
+          backgroundColor: const Color.fromARGB(255, 99, 91, 250),
           leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(Icons.close),
               onPressed: () {
                 Navigator.pop(context);
               }),

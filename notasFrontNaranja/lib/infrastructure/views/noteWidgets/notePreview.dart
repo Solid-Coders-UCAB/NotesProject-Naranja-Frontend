@@ -11,6 +11,7 @@ import 'package:flutter_tags_x/flutter_tags_x.dart';
 
 import '../../../domain/etiqueta.dart';
 import '../../../domain/nota.dart';
+import 'package:firstapp/infrastructure/views/etiquetasWidgets/notasPorEtiqueta.dart';
 
 class notePreviewWidget extends StatefulWidget{
 
@@ -89,6 +90,15 @@ class notePreviewWidgetState extends State<notePreviewWidget> {
                 child: ItemTags(
                   title: tags[index].nombre, index: index,
                   pressEnabled: true,
+                  onPressed: (i) {
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                    builder: (context) => NotasPorEtiqueta(
+                          nombreEtiqueta: tags[index].nombre,
+                          idEtiqueta: tags[index].id.toString(),
+                        )));
+                  },
                )   
              );
             } 
