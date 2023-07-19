@@ -76,7 +76,7 @@ class homeState extends State<Home> {
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
-          backgroundColor: const Color.fromARGB(255, 99, 91, 250),
+          backgroundColor: const Color.fromARGB(255, 30, 103, 240),
           onPressed: () async {
             createNote();
           },
@@ -131,9 +131,7 @@ class homeState extends State<Home> {
   }
 
   Widget notePreview(Nota note) {
-    return (notePreviewWidget(
-        nota: note));
-  
+    return (notePreviewWidget(nota: note));
   }
 
 /*
@@ -225,4 +223,3 @@ void filtrarNotasForMap() {
    }
 */
 }
-

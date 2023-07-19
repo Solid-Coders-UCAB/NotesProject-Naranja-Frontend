@@ -12,6 +12,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Inicio de sesión',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -31,9 +32,10 @@ class Inicio extends StatefulWidget {
 class _InicioState extends State<Inicio> {
   TextEditingController userText = TextEditingController(text: "");
   TextEditingController userPass = TextEditingController(text: "");
-  
+
   bool loading = false;
-  iniciarSesionController controller = controllerFactory.createIniciarSesionController();
+  iniciarSesionController controller =
+      controllerFactory.createIniciarSesionController();
 
   @override
   void initState() {
@@ -46,26 +48,24 @@ class _InicioState extends State<Inicio> {
 
   void init() async {
     var memoryResponse = await controller.checkUserInCache();
-    if (memoryResponse.isRight){
-      Navigator.pushReplacement( context, MaterialPageRoute(builder: (context) => Home()));
-    }else{
+    if (memoryResponse.isRight) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Home()));
+    } else {
       setState(() {
         loading = false;
       });
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: 
-    loading == true
+      body: loading == true
           ? const Center(
               child: SizedBox(
                   width: 30, height: 30, child: CircularProgressIndicator()))
-    :
-      bodyInicio(), // Se pasa context como parametro
+          : bodyInicio(), // Se pasa context como parametro
     );
   }
 
@@ -83,7 +83,7 @@ class _InicioState extends State<Inicio> {
             loading = true;
           });
           iniciar();
-        }, 
+        },
         child: const Text(
           "Ingresar",
           style: TextStyle(
@@ -92,16 +92,17 @@ class _InicioState extends State<Inicio> {
   }
 
   void iniciar() async {
-    var iniciarResponse = await controller.iniciarSesion(email: userText.text, password: userPass.text);
-      if (iniciarResponse.isRight){
-         Navigator.pushReplacement( context, MaterialPageRoute(builder: (context) => Home()));
-      }else{
-        showSystemMessage(iniciarResponse.left.message);
-      }
-
+    var iniciarResponse = await controller.iniciarSesion(
+        email: userText.text, password: userPass.text);
+    if (iniciarResponse.isRight) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Home()));
+    } else {
+      showSystemMessage(iniciarResponse.left.message);
+    }
   }
 
-  void showSystemMessage(String? message){
+  void showSystemMessage(String? message) {
     setState(() {
       loading = false;
     });
