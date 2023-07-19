@@ -86,6 +86,7 @@ class controllerFactory {
     return servicio;
   }
 
+// Controlador de la ventana de crear nota
   static notaNuevaWidgetController notaNuevaWidController() {
     var servicio = createNoteInServerService(
         noteRepo: httpNoteRepository(),
@@ -151,17 +152,40 @@ class controllerFactory {
   }
 
   static homeFolderController homefolderController() {
-    return homeFolderController(
-        getAllFoldersService: getAllFoldersFromServerService(
+    var onlineService = getAllFoldersFromServerService(
             folderRepo: HTTPfolderRepository(),
-            localUserRepo: localUserRepository()));
+            localUserRepo: localUserRepository());
+
+    var localService = getAllFoldersFromServerService(
+        folderRepo: localFolderRepository(), localUserRepo: localUserRepository());
+
+    var offlineDeco = offlineDecorator(
+        servicio: onlineService,
+        offlineService: localService,
+        checker: connectionCheckerImp());
+
+    return homeFolderController(
+        getAllFoldersService: offlineDeco);
   }
 
+// Controlador de la ventana crear carpeta
   static carpetaNuevaWidgetController createCarpetaNuevaWidgetController() {
-    return carpetaNuevaWidgetController(
-        createCarpetaService: createFolderInServerService(
+    var servicio = createFolderInServerService(
             folderRepo: HTTPfolderRepository(),
-            localUserRepo: localUserRepository()));
+            localUserRepo: localUserRepository());
+
+    var offlineService = createFolderInServerService(
+        folderRepo: localFolderRepository(),
+        localUserRepo: localUserRepository());
+
+    var offlineDeco = offlineDecorator(
+        servicio: servicio,
+        offlineService: offlineService,
+        checker: connectionCheckerImp());
+
+    return carpetaNuevaWidgetController(
+        createCarpetaService: offlineDeco
+        );
   }
 
   static editarCarpetaWidgetController createEditarCarpetaWidgetController() {
