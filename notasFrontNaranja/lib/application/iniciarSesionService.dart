@@ -16,8 +16,15 @@ class iniciarSesionService implements service<cmdIniciarSesion,user> {
   @override
   Future<Either<MyError, user>> execute(cmdIniciarSesion params) async {
     
-      return Left( MyError(key: AppError.NotFound));
-
+      var serverResponse = await httpRepo.getUserByEmailAndPass(params.email, params.password);
+        if (serverResponse.isLeft){
+          return Left(serverResponse.left);
+        }
+      var cacheResponse =  await localRepo.saveUser(serverResponse.right);
+       if (cacheResponse.isLeft){
+        return Left(cacheResponse.left);
+       } 
+    return Right(serverResponse.right);
   }
   
   

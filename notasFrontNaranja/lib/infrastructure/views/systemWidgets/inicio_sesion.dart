@@ -1,3 +1,6 @@
+import 'package:either_dart/either.dart';
+import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/infrastructure/controllers/iniciarSesionController.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/register.dart';
 import 'package:flutter/material.dart';
 import '../../../application/DTOS/cmdCreateUser.dart';
@@ -33,11 +36,20 @@ class Inicio extends StatefulWidget {
 class _InicioState extends State<Inicio> {
   TextEditingController userText = TextEditingController(text: "");
   TextEditingController userPass = TextEditingController(text: "");
+  
+  bool loading = false;
+  iniciarSesionController controller = controllerFactory.createIniciarSesionController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: bodyInicio(), // Se pasa context como parametro
+      body: 
+    loading == true
+          ? const Center(
+              child: SizedBox(
+                  width: 30, height: 30, child: CircularProgressIndicator()))
+    :
+      bodyInicio(), // Se pasa context como parametro
     );
   }
 
@@ -51,11 +63,11 @@ class _InicioState extends State<Inicio> {
             backgroundColor: const Color.fromARGB(255, 30, 103, 240),
             padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10)),
         onPressed: () {
+          setState(() {
+            loading = true;
+          });
           iniciar();
-
-          //alerta(context,true,"Wrong Password","The password didnt match");
-          ///Envia al usuario a la ventana de inicio
-        }, // Funcion para cuando se presione el boton (se debe validar el usuario que va a ingresar para ver sus notas)
+        }, 
         child: const Text(
           "Ingresar",
           style: TextStyle(
@@ -63,25 +75,22 @@ class _InicioState extends State<Inicio> {
         ));
   }
 
-  Future<void> iniciar() async {
-    var user = await localUserRepository().getUser();
-    if (user.isLeft) {
-      print(user.left.message);
-      var res = await createUserService(
-              serverRepo: httpUserRepository(),
-              localRepo: localUserRepository())
-          .execute(cmdCreateUser(
-              nombre: 'userTelefono',
-              correo: 'telefono@gmail.com',
-              clave: '23041614d',
-              fechaNacimiento: DateTime.now()));
-      if (res.isLeft) {
-        print(res.left.message);
+  void iniciar() async {
+    var iniciarResponse = await controller.iniciarSesion(email: userText.text, password: userPass.text);
+      if (iniciarResponse.isRight){
+         Navigator.pushReplacement( context, MaterialPageRoute(builder: (context) => Home()));
+      }else{
+        showSystemMessage(iniciarResponse.left.message);
       }
-    }
 
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Home()));
+  }
+
+  void showSystemMessage(String? message){
+    setState(() {
+      loading = false;
+    });
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message!)));
   }
 
   Widget bodyInicio() {
