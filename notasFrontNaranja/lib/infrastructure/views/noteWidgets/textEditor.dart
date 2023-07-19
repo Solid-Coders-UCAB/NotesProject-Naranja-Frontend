@@ -9,7 +9,6 @@ import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.da
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/map.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
@@ -194,6 +193,7 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
 
 // Funcion para guardar una nota
   void saveNota() async {
+    if(tituloC.text != ""){
     String? folderId;
     String text = await editorC.getText();
     if (selectedFolder != null) {
@@ -211,6 +211,9 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
     } else {
       showSystemMessage('Nota guardada satisfactoriamente');
       regresarHome();
+    }
+    } else{
+      showSystemMessage('El titulo de la nota no debe estar vacio');
     }
   }
 

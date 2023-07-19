@@ -10,7 +10,7 @@ class folder {
  List<Nota>? notas;
  bool predeterminada;
  String idUsuario;
-
+ int savedInServer = 1;
  folder({this.id,required this.predeterminada,required this.name, required this.idUsuario});
 
   static Either<MyError,folder> create({
