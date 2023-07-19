@@ -44,7 +44,7 @@ class noteKeywordPreviewWidgetState extends State<noteKeywordPreviewWidget> {
       });
       tags = controllerResponse.right.etiquetas!;
     }else{
-      print(controllerResponse.left.message);
+   //   print(controllerResponse.left.message);
     }
      
   } 
@@ -70,7 +70,7 @@ class noteKeywordPreviewWidgetState extends State<noteKeywordPreviewWidget> {
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text("ultima actualizacion: ${nota.getEditDate}"
+          Text("última actualización: ${nota.getEditDate}"
           ),
           loadingTags == false ?
           Tags(  
@@ -86,7 +86,7 @@ class noteKeywordPreviewWidgetState extends State<noteKeywordPreviewWidget> {
             } 
           )
           :
-          const Text('cargando etiquetas...')
+          const Text('')
         ] 
        );
   }

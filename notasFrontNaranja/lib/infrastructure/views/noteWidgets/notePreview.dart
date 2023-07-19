@@ -78,7 +78,7 @@ class notePreviewWidgetState extends State<notePreviewWidget> {
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text("ultima actualizacion: ${nota.getEditDate}"
+          Text("última actualización: ${nota.getEditDate}"
           ),
           loadingTags == false ?
           Tags(  
