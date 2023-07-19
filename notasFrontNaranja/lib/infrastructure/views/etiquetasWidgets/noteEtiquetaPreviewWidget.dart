@@ -82,7 +82,7 @@ class noteEtiquetaPreviewWidgetState extends State<noteEtiquetaPreviewWidget> {
                 message: tags[index].nombre,
                 child: ItemTags(
                   title: tags[index].nombre, index: index,
-                  pressEnabled: true,
+                  pressEnabled: false,
                )   
              );
             } 

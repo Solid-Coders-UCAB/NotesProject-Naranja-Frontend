@@ -162,7 +162,7 @@ Widget build(BuildContext context) {
         title: const Text("ubicacion de la notas"),
         backgroundColor: const Color.fromARGB(255, 99, 91, 250),
         leading: IconButton(
-            icon: const Icon(Icons.transit_enterexit_outlined),
+            icon: const Icon(Icons.close),
             onPressed: () {
               Navigator.pop(context);
             }),
