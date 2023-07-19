@@ -22,14 +22,14 @@ class localEtiquetaRepository implements etiquetaRepository {
    try{   
     await bd.transaction((txn) async {
       await txn.rawInsert('''INSERT INTO etiqueta(id,savedInServer,nombre) 
-      VALUES("$v1",${etiqueta.savedInServer},"${etiqueta.nombre}" ''');    
+      VALUES("$v1",${etiqueta.savedInServer},"${etiqueta.nombre}") ''');    
     });
     }catch(e){
       await bd.close();
       return Left(MyError(key: AppError.NotFound,message: e.toString()));
    }
     await bd.close();
-    return const Right('nota guardada correctamente');
+    return const Right('etiqueta guardada correctamente');
   }
 
   @override
@@ -39,9 +39,28 @@ class localEtiquetaRepository implements etiquetaRepository {
   }
 
   @override
-  Future<Either<MyError, List<etiqueta>>> getAllEtiquetas(String idUsuario) {
-    // TODO: implement getAllEtiquetas
-    throw UnimplementedError();
+  Future<Either<MyError, List<etiqueta>>> getAllEtiquetas(String idUsuario) async {
+    var bd = await database.getDatabase();
+    List<Map> etiquetasMap = [];
+    List<etiqueta> etiquetas = [];
+    try{
+      etiquetasMap = await bd.rawQuery('SELECT * FROM etiqueta');
+      print("cantidad de etiqueta en etiquetas:${etiquetasMap.length}");
+        if (etiquetasMap.isNotEmpty){
+          for (var etiMap in etiquetasMap){
+            etiqueta trueEti = etiqueta(id: etiMap['id'],
+                     nombre: etiMap['nombre'],
+                     idUsuario: idUsuario,
+                    );         
+            trueEti.savedInServer = etiMap['savedInServer'];
+          etiquetas.add(trueEti);  
+          }
+        }
+        bd.close();
+       return Right(etiquetas);
+    }catch(e){
+      return Left(MyError(key: AppError.NotFound,message: e.toString()));
+    }
   }
 
   @override

@@ -1,10 +1,13 @@
 import 'package:either_dart/src/either.dart';
 import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/application/connectionCheckerDecorator.dart';
+import 'package:firstapp/database.dart';
 import 'package:firstapp/domain/errores.dart';
+import 'package:firstapp/domain/folder.dart';
 import 'package:firstapp/domain/repositories/folderRepository.dart';
 import 'package:firstapp/domain/repositories/noteRepository.dart';
 import 'package:firstapp/domain/repositories/userRepository.dart';
+import 'package:firstapp/domain/user.dart';
 
 import '../domain/nota.dart';
 
@@ -15,7 +18,7 @@ class sincronizacionService extends service {
   folderRepository localfolderrepo,serverFolderRepo;
   connectionChecker checker;
 
-  sincronizacionService({required this.localNoteRepo,required this.serverNoteRepo,required,
+ sincronizacionService({required this.localNoteRepo,required this.serverNoteRepo,required,
   required this.localfolderrepo, required this.serverFolderRepo,
   required this.localUserRepo,
   required this.checker});
@@ -34,6 +37,14 @@ class sincronizacionService extends service {
       userId = userRes.right.id;
      }
 
+    var localFolderRes = await localfolderrepo.getALLfolders(userId);
+      if (localFolderRes.isRight){
+          List<folder> folders = localFolderRes.right;
+         // for (var fol in folders){
+         //   if (fol.)
+         // }
+      }
+        
     var localNoteResponse = await localNoteRepo.getALLnotes('');
       if (localNoteResponse.isRight){
         List<Nota> localNotes = localNoteResponse.right;
@@ -56,6 +67,8 @@ class sincronizacionService extends service {
       }else{
         return Left(localNoteResponse.left);
       }
+
+    await database.deleteNoteTable();
 
     return const Right('mensaje exitioso');
   }

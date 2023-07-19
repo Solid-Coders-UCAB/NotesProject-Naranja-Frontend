@@ -32,6 +32,7 @@ import 'package:firstapp/infrastructure/implementations/imagePickerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imageToTextImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerGalleryImp.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPuserRepository.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/localEtiquetaRepository.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/localFolderRepository.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/localUserRepository.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/localnoteRepository.dart';
@@ -91,10 +92,12 @@ class controllerFactory {
         noteRepo: httpNoteRepository(),
         folderRepo: HTTPfolderRepository(),
         localUserRepo: localUserRepository());
+
     var offlineService = createNoteInServerService(
         noteRepo: localNoteRepository(),
         folderRepo: localFolderRepository(),
         localUserRepo: localUserRepository());
+
     var offlineDeco = offlineDecorator(
         servicio: servicio,
         offlineService: offlineService,
@@ -187,17 +190,29 @@ class controllerFactory {
   }
 
   static homeEtiquetasController createHomeEtiquetasController() {
-    return homeEtiquetasController(
-        getAllEtiquetasService: getAllEtiquetasFromServerService(
+
+    var onlineService = getAllEtiquetasFromServerService(
             etiquetaRepo: HTTPetiquetasRepository(),
-            localUserRepo: localUserRepository()));
+            localUserRepo: localUserRepository());
+    var offlineService = getAllEtiquetasFromServerService(
+            etiquetaRepo: localEtiquetaRepository(),
+            localUserRepo: localUserRepository());
+    var offlineDeco = offlineDecorator(servicio: onlineService, offlineService: offlineService, checker: connectionCheckerImp());                      
+
+    return homeEtiquetasController(
+        getAllEtiquetasService: offlineDeco);
   }
 
   static etiquetaNuevaWidgetController createEtiquetaNuevaWidgetController() {
-    return etiquetaNuevaWidgetController(
-        createEtiquetaService: createEtiquetaInServerService(
+
+    var onlineService = createEtiquetaInServerService(
             etiquetaRepo: HTTPetiquetasRepository(),
-            localUserRepo: localUserRepository()));
+            localUserRepo: localUserRepository());
+    var offlineService = createEtiquetaInServerService(etiquetaRepo: localEtiquetaRepository(), localUserRepo: localUserRepository());
+    var offlineDeco = offlineDecorator(servicio: onlineService, offlineService: offlineService, checker: connectionCheckerImp());
+
+    return etiquetaNuevaWidgetController(
+        createEtiquetaService: offlineDeco  );
   }
 
   static editarEtiquetaWidgetController createEditarEtiquetaWidgetController() {

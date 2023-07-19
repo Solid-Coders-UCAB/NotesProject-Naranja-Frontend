@@ -1,9 +1,10 @@
+import 'package:firstapp/application/Iservice.dart';
+import 'package:firstapp/domain/etiqueta.dart';
 import 'package:firstapp/infrastructure/views/etiquetasWidgets/etiquetasHome.dart';
-import 'package:firstapp/application/getAllEtiquetasFromServerService.dart';
 
 class homeEtiquetasController {
 
-  getAllEtiquetasFromServerService getAllEtiquetasService;
+  service<void,List<etiqueta>> getAllEtiquetasService;
 
   homeEtiquetasController({required this.getAllEtiquetasService});
 
