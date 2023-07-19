@@ -79,7 +79,8 @@ class _MyHomeMapScreenState extends State<MyHomeMapScreen> {
           longitud: note.longitud,
           latitud: note.latitud,
           etiquetas: note.etiquetas, 
-          estado: note.estado
+          estado: note.estado,
+          tareas: []
           ));
         }
     print('paso');
@@ -105,7 +106,8 @@ class _MyHomeMapScreenState extends State<MyHomeMapScreen> {
                 longitud: note2.longitud,
                 latitud: note2.latitud,
                 etiquetas: note2.etiquetas, 
-                estado: note2.estado
+                estado: note2.estado,
+                tareas: []
               );
             previews.add(auxNote);
             //auxNotas.remove(note2); 
@@ -122,7 +124,8 @@ class _MyHomeMapScreenState extends State<MyHomeMapScreen> {
                 longitud: note.longitud,
                 latitud: note.latitud,
                 etiquetas: note.etiquetas, 
-                estado: note.estado
+                estado: note.estado,
+                tareas: []
               );
        previews.add(auxNote);
        previews.forEach((element) { print('notasPre[${cont}]${element.titulo}');});

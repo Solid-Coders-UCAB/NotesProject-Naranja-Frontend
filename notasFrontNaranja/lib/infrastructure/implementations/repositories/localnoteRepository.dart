@@ -62,7 +62,8 @@ class localNoteRepository implements noteRepository {
                      n_date: DateTime.tryParse(nota['fechaCreacion'])!,
                      estado: nota['estado'], 
                      idCarpeta: nota['idCarpeta'],
-                     etiquetas: []);         
+                     etiquetas: [],
+                     tareas: []);         
             if (etiquetas.isNotEmpty){
               for (var eti in etiquetas) {
                 note.etiquetas!.add(etiqueta(id: eti['id'],nombre: '', idUsuario: ''));

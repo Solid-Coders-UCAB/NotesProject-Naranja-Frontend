@@ -30,7 +30,7 @@ class _UserProfileState extends State<UserProfile> {
         ),
       ),
       //Side Menu-------------------------------------
-      drawer: const NavBar(),
+      drawer: NavBar(),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(15),
