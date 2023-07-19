@@ -1,15 +1,35 @@
 import 'package:either_dart/src/either.dart';
 import 'package:firstapp/domain/errores.dart';
+import 'package:firstapp/database.dart';
 import 'package:firstapp/domain/etiqueta.dart';
 import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/domain/repositories/etiquetaRepository.dart';
+import 'package:uuid/uuid.dart';
+
+import '../connectionCheckerImp.dart';
 
 class localEtiquetaRepository implements etiquetaRepository {
   
   @override
-  Future<Either<MyError, String>> createEtiqueta(etiqueta etiqueta) {
-    // TODO: implement createEtiqueta
-    throw UnimplementedError();
+  Future<Either<MyError, String>> createEtiqueta(etiqueta etiqueta) async {
+    var bd = await database.getDatabase();
+    var uuid = const Uuid();
+    var v1 = uuid.v1();
+    var hasConneccion = await connectionCheckerImp().checkConnection();
+    (hasConneccion) ? etiqueta.savedInServer = 1 : etiqueta.savedInServer = 0;
+    print("savedInserver: ${etiqueta.savedInServer}");
+
+   try{   
+    await bd.transaction((txn) async {
+      await txn.rawInsert('''INSERT INTO etiqueta(id,savedInServer,nombre) 
+      VALUES("$v1",${etiqueta.savedInServer},"${etiqueta.nombre}" ''');    
+    });
+    }catch(e){
+      await bd.close();
+      return Left(MyError(key: AppError.NotFound,message: e.toString()));
+   }
+    await bd.close();
+    return const Right('nota guardada correctamente');
   }
 
   @override
