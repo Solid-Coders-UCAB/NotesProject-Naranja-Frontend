@@ -9,6 +9,8 @@ class etiqueta {
   String idUsuario;
   etiqueta({required this.nombre, required this.idUsuario, this.id});
 
+  int savedInServer = 1;
+
     static Either<MyError, etiqueta> create({
     String? id,
     required nombre,

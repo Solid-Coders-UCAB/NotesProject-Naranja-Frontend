@@ -7,11 +7,6 @@ import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/repositories/folderRepository.dart';
 import 'package:firstapp/domain/repositories/userRepository.dart';
 //pruebas
-import 'package:firstapp/infrastructure/implementations/repositories/HTTPfolderRepository.dart';
-import 'package:firstapp/infrastructure/implementations/repositories/HTTPnoteRepositoy.dart';
-import 'package:firstapp/infrastructure/implementations/repositories/localUserRepository.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-//
 import '../domain/nota.dart';
 import 'DTOS/createNoteParams.dart';
 import '../domain/repositories/noteRepository.dart';
@@ -69,17 +64,4 @@ class createNoteInServerService implements service<CreatenoteParams,String>{
     return Right(response.right);
   }
 
-}
-
-void main() async {
-
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
-  var sut = createNoteInServerService(noteRepo: httpNoteRepository(), folderRepo: HTTPfolderRepository(), localUserRepo: localUserRepository());
-  var exec = await sut.execute(CreatenoteParams(contenido: 'CONTENIDO1', titulo: 'TITULO1'));
-    if (exec.isRight){
-      print(exec.right);
-    }else{
-      print(exec.left.message);
-    }
 }

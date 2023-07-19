@@ -9,6 +9,7 @@ import 'package:firstapp/application/getImageFromGalleryService.dart';
 import 'package:firstapp/application/getUserCurrentLocation.dart';
 import 'package:firstapp/application/imageToTextService.dart';
 import 'package:firstapp/application/iniciarSesionService.dart';
+import 'package:firstapp/application/offlineDecorator.dart';
 import 'package:firstapp/application/updateFolderInServerService.dart';
 import 'package:firstapp/application/updateNoteInServerService.dart';
 import 'package:firstapp/application/widgetToImageService.dart';
@@ -29,7 +30,9 @@ import 'package:firstapp/infrastructure/implementations/imagePickerImp.dart';
 import 'package:firstapp/infrastructure/implementations/imageToTextImp.dart';
 import 'package:firstapp/infrastructure/implementations/imagePickerGalleryImp.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPuserRepository.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/localFolderRepository.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/localUserRepository.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/localnoteRepository.dart';
 import 'application/getAllEliminatedNotes.dart';
 import 'application/getAllNotEliminatedNotesFromServerService.dart';
 import 'infrastructure/controllers/homeFolderController.dart';
@@ -66,21 +69,28 @@ class controllerFactory {
   }
 
   static createNoteInServerService createNoInServerService() {
-    return createNoteInServerService(noteRepo: httpNoteRepository(),
+     var servicio = createNoteInServerService(noteRepo: httpNoteRepository(),
                                      folderRepo: HTTPfolderRepository(),
                                      localUserRepo: localUserRepository());
+    return servicio;
   }
 
   static notaNuevaWidgetController notaNuevaWidController() {
+      var servicio = createNoteInServerService(noteRepo: httpNoteRepository(),
+                                     folderRepo: HTTPfolderRepository(),
+                                     localUserRepo: localUserRepository());
+     var offlineService = createNoteInServerService(noteRepo: localNoteRepository(),
+                                     folderRepo: localFolderRepository(),
+                                     localUserRepo: localUserRepository());
+     var offlineDeco = offlineDecorator(servicio: servicio, offlineService: offlineService, checker:  connectionCheckerImp());
+     
     return notaNuevaWidgetController(
         imageToText: imageToTextService(ia: iaTextImp()),
         imageService: getImageFromCamaraService(picker: imagePickerImp()),
         galleryService:
             getImageFromGalleryService(picker: imagePickerGalleryImp()),
         createNotaService: 
-                createNoteInServerService(noteRepo: httpNoteRepository(),
-                                          folderRepo: HTTPfolderRepository(),
-                                           localUserRepo: localUserRepository()),
+                offlineDeco,
         locationService:
             GetUserCurrentLocationService(loca: GetLocationImp()),
         getAllEtiquetasService: 
@@ -96,10 +106,17 @@ class controllerFactory {
   }
 
   static homeController createHomeController() {
-    return homeController(
-        getAllNotesFromServerService: getAllNotEliminatedNotesFromServerService(
+
+    var onlineService = getAllNotEliminatedNotesFromServerService(
             noteRepo: httpNoteRepository(),
-            localUserRepo: localUserRepository()));
+            localUserRepo: localUserRepository());
+    var localService = getAllNotEliminatedNotesFromServerService(
+            noteRepo: localNoteRepository(),
+            localUserRepo: localUserRepository());
+    var offlineDeco = offlineDecorator(servicio: onlineService, offlineService: localService, checker: connectionCheckerImp());                
+
+    return homeController(
+        getAllNotesFromServerService: offlineDeco);
   }
 
   static editarNotaWidgetController editarNotaWidController() {

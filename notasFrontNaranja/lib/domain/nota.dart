@@ -24,6 +24,9 @@ class Nota {
   List<etiqueta>? etiquetas;
   String idCarpeta;
 
+
+  int savedInServer = 1;
+
   Nota({
     this.imagenes,
     this.n_edit_date,
