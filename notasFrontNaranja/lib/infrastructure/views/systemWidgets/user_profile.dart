@@ -1,5 +1,6 @@
 import 'package:firstapp/infrastructure/views/systemWidgets/edit_user_profile.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/navigationBar.dart';
+import 'package:firstapp/infrastructure/views/systemWidgets/suscripcion.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -60,14 +61,19 @@ class _UserProfileState extends State<UserProfile> {
               ),
               genericSizedBox(60),
               ElevatedButton(
-                onPressed: () {},
-                child: const Text(
-                  "Suscripción",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Suscripcion()));
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 0, 119, 255),
                   shape: const StadiumBorder(),
+                ),
+                child: const Text(
+                  "Suscripción",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
               ),
               genericSizedBox(50),
