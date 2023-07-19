@@ -11,6 +11,13 @@ También puedes agregar una lista de tareas en tus notas para mantenerte organiz
 
 NoteApp te permite organizar tus notas por carpetas, etiquetas y otras funcionalidades, para que puedas encontrar fácilmente lo que necesitas cuando lo necesites. Con NoteApp, nunca perderás una idea o inspiración importante, y podrás acceder a tus notas e ideas en cualquier momento y lugar.
 
+## Miembros del Equipo:
+- [Cérsar García](https://github.com/cesargarcg)
+- [Jian Liu](https://github.com/JianLiu08)
+- [Omar Meléndez](https://github.com/OmarJMM)
+- [Mayra Ramírez](https://github.com/mayquinte)
+- [Douglas Rojas](https://github.com/dfrojas20)
+
 ## Instalación de las dependencias
 ```bash
 # Limpiar las dependencias
@@ -42,7 +49,7 @@ Actividades:
 - Implementación de "Imagen a Texto" (OCR)
 - Implementación de agregar etiquetas en una nota
 - Desarrollo de la vista de la papelera de notas
-- Conexión del FrontEnd con el BackEnd
+- Implementación de persistencia en el dispositivo
 
 ### Mayra Ramírez
 Actividades:
