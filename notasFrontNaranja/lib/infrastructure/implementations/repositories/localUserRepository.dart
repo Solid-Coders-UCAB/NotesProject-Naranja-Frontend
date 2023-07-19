@@ -1,5 +1,6 @@
 
 
+import 'package:firstapp/database.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:either_dart/src/either.dart';
@@ -13,50 +14,39 @@ class localUserRepository implements userRepository{
 
  String? patch;
 
-Future<Database> openBD() async {
-  var databasesPath = await getDatabasesPath();
-  String p = join(databasesPath, 'notesApp.db');
-  patch = p;
-  print(patch);
-
-  return await openDatabase(p, version: 1,
-    onCreate: (Database db, int version) async {
-      await db.execute(
-        'CREATE TABLE User (id TEXT PRIMARY KEY, name TEXT)');
-      });
-  }
   
   @override
   Future<Either<MyError, user>> deleteUser(user u) async  {
-     var database = await openBD();
-   try{   
-    await database.transaction((txn) async {
+     var bd = await database.getDatabase();
+   try{
+    await bd.transaction((txn) async {
       await txn.execute('DELETE FROM User');   
     });
     }catch(e){
-      await database.close();
+      await bd.close();
       return Left(MyError(key: AppError.NotFound,message: e.toString()));
-    }  
+    }
 
-    await database.close();
+    await bd.close();
+    await deleteDatabase(bd.path);
     return Right(u);
   }
 
   @override
   Future<Either<MyError, user>> saveUser(user u) async {
-    var database = await openBD();
+    var bd = await database.getDatabase();
  try{   
-    await database.transaction((txn) async {
+    await bd.transaction((txn) async {
       await txn.execute('DELETE FROM User');
       await txn.rawInsert(
       'INSERT INTO User(id, name) VALUES("${u.id}", "${u.nombre}")');      
     });
     }catch(e){
-      await database.close();
+      await bd.close();
       return Left(MyError(key: AppError.NotFound,message: e.toString()));
   }  
 
-    await database.close();
+    await bd.close();
 
     return Right(u);
   }
@@ -69,10 +59,10 @@ Future<Database> openBD() async {
   
   @override
   Future<Either<MyError, user>> getUser() async {
-    var database = await openBD();
+    var bd = await database.getDatabase();
     List<Map> users;
     try{
-      users = await database.rawQuery('SELECT * FROM User');
+      users = await bd.rawQuery('SELECT * FROM User');
       return Right( user(id: users.first['id'],isSuscribed: false));
     }catch(e){
       return Left(MyError(key: AppError.NotFound,message: e.toString()));

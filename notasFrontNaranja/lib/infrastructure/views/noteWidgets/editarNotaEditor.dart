@@ -159,11 +159,13 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
 
  FutureOr<bool> fileInterceptor(PlatformFile file, InsertFileType type) async {
   if (type == InsertFileType.image) {
+                file = await CompressFile(file);
                 String base64Data = base64.encode(file.bytes!);
                 String base64Image =
                 """<img src="data:image/${file.extension};base64,$base64Data" data-filename="${file.name}" width="300" height="300"/>""";
                 editorC.insertHtml(base64Image);
               }
+    editorC.insertHtml('<br>');         
    return false; 
  }
 
@@ -420,4 +422,30 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
           );
         });
   }
+
+
+Future<PlatformFile> CompressFile(PlatformFile file) async {
+      var result = await FlutterImageCompress.compressWithFile(
+      file.path!,
+      minWidth: 300,
+      minHeight: 300,
+      quality: 100,
+      //rotate: 90,
+    );
+    final appStorage = await _localPath;
+                  int randomNumber = Random().nextInt(10000);
+                  String imageName = 'image$randomNumber';
+                  final archivo = File('$appStorage/$imageName.png');
+                  archivo.writeAsBytes(result!.cast<int>()); 
+
+                  PlatformFile newFile = PlatformFile(
+                    name: imageName,
+                    bytes: result,
+                    path: archivo.path, 
+                    size: 0,
+                  );
+    return newFile;
+  }
+
+
 }

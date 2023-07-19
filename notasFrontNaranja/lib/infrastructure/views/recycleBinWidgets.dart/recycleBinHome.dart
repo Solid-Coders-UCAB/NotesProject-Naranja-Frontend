@@ -63,7 +63,7 @@ class recycleBinHomeState extends State<recycleBinHome> {
           ),
         ),
         //Side menu------------------------------
-        drawer: const NavBar(),
+        drawer: NavBar(),
         body: loading == true
             ? const Center(
                 child: SizedBox(

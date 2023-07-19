@@ -1,3 +1,6 @@
+import 'package:firstapp/application/getAllNotEliminatedNotesFromServerService.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/HTTPnoteRepositoy.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/localUserRepository.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/notePreview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -25,32 +28,133 @@ class homeMapNote {
 
 class MyHomeMapScreen extends StatefulWidget {
 
-  List<homeMapNote> notas;
-  MyHomeMapScreen({super.key,required this.notas});
+  MyHomeMapScreen({super.key});
 
   @override
-  _MyHomeMapScreenState createState() => _MyHomeMapScreenState(notas: notas);
+  _MyHomeMapScreenState createState() => _MyHomeMapScreenState();
 }
 
 class _MyHomeMapScreenState extends State<MyHomeMapScreen> {
 
-  List<homeMapNote> notas;
-  _MyHomeMapScreenState({required this.notas});
+  List<homeMapNote> notas = [];
+  
+  _MyHomeMapScreenState();
 
 
   bool loading = false;
+  String error = '';
   String snapshotData = '';
   List<Placemark> placemarks = []; 
   Placemark? placemark;
+  getAllNotEliminatedNotesFromServerService getAllNotesService = 
+  getAllNotEliminatedNotesFromServerService(noteRepo: httpNoteRepository(), localUserRepo: localUserRepository());
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      loading = true;
+    });
+   init();
   }
 
+  void init () async {
+    var notasRes = await getAllNotesService.execute(null);
+    if (notasRes.isLeft){
+      setState(() {
+        loading = false;
+        error = notasRes.left.message!;
+      });      
+    }else{
+    List<Nota> auxNotas = [];
+    List<Nota> notas = notasRes.right;
+        for (var note in notas){
+          auxNotas.add(Nota(
+          n_date: note.n_date,
+          n_edit_date: note.n_edit_date, 
+          contenido: note.contenido, 
+          titulo: note.titulo, 
+          id: note.id, 
+          idCarpeta: note.idCarpeta,
+          longitud: note.longitud,
+          latitud: note.latitud,
+          etiquetas: note.etiquetas, 
+          estado: note.estado,
+          tareas: []
+          ));
+        }
+    print('paso');
+    auxNotas.removeWhere((element) => element.latitud == null && element.longitud == null);
+    print(auxNotas.length);
+    auxNotas.forEach((element) { print('auxNotas:${element.titulo}');});
+    notas.forEach((element) { print('Notas:${element.id}');});
+    List<homeMapNote> mapNotes = [];
+    int cont = 0;  
+     for (var note in auxNotas) {
+      if (note.id != ''){
+       List<Nota> previews = [];
+       for (var note2 in auxNotas){
+          if (note2.latitud == note.latitud && note2.longitud == note.longitud  && (note.id != note2.id) && (note2.id != '')) {
 
+            var auxNote = Nota(
+                n_date: note2.n_date,
+                n_edit_date: note2.n_edit_date, 
+                contenido: note2.contenido, 
+                titulo: note2.titulo, 
+                id: note2.id, 
+                idCarpeta: note2.idCarpeta,
+                longitud: note2.longitud,
+                latitud: note2.latitud,
+                etiquetas: note2.etiquetas, 
+                estado: note2.estado,
+                tareas: []
+              );
+            previews.add(auxNote);
+            //auxNotas.remove(note2); 
+            note2.id = '';
+          }
+       }
+          var auxNote = Nota(
+                n_date: note.n_date,
+                n_edit_date: note.n_edit_date, 
+                contenido: note.contenido, 
+                titulo: note.titulo, 
+                id: note.id, 
+                idCarpeta: note.idCarpeta,
+                longitud: note.longitud,
+                latitud: note.latitud,
+                etiquetas: note.etiquetas, 
+                estado: note.estado,
+                tareas: []
+              );
+       previews.add(auxNote);
+       previews.forEach((element) { print('notasPre[${cont}]${element.titulo}');});
+       cont++;
+        //auxNotas.remove(note);
+        note.id = '';
+       mapNotes.add(homeMapNote(notas: previews, latitud: note.latitud!, longitud: note.longitud!));
+      }
+     } 
 
-  @override
+      mapNotes.forEach((element) {print('${element.longitud},${element.latitud}');});
+
+        if (mapNotes.isEmpty){
+          setState(() {
+            loading = false;
+            error = 'no posee notas con localizacion para usar esta opcion, para agregar localizacion cree una nota y pulse el boton de +';
+          });
+        }else{
+          setState(() {
+            loading = false;
+             this.notas = mapNotes;
+          });
+        }
+
+  }
+
+}
+
+@override
 Widget build(BuildContext context) {
   return 
     Scaffold(
@@ -68,7 +172,10 @@ Widget build(BuildContext context) {
           ? const Center(
               child: SizedBox(
                   width: 30, height: 30, child: CircularProgressIndicator()))
-  :       
+  :
+  error != '' ?   Center(
+              child: Text(error))
+  :                       
   FlutterMap(
     options: MapOptions(
       center: const LatLng(0, 0),

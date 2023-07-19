@@ -1,7 +1,6 @@
 import 'package:either_dart/either.dart';
 
 import 'errores.dart';
-import 'nota.dart';
 
 class user{
  String id;

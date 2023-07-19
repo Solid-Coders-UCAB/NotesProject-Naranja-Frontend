@@ -70,7 +70,7 @@ class homeState extends State<Home> {
         ],
       ),
       //Side menu------------------------------
-      drawer: const NavBar(),
+      drawer: NavBar(),
 
       //  Boton para crear una nota
       floatingActionButton: Container(
@@ -85,20 +85,6 @@ class homeState extends State<Home> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-
-      bottomNavigationBar: 
-        FloatingActionButton(
-          backgroundColor: const Color.fromARGB(255, 99, 91, 250),
-          onPressed: () async {
-           /* Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MyHomeMapScreen()));
-           */
-            filtrarNotasForMap(); 
-          },
-          heroTag: 'mapButton',
-          child: const Icon(Icons.map),
-        ),
-
 
       body: loading == true
           ? const Center(
@@ -150,7 +136,7 @@ class homeState extends State<Home> {
   
   }
 
-
+/*
 void filtrarNotasForMap() {
     List<Nota> auxNotas = [];
         for (var note in notas){
@@ -237,6 +223,6 @@ void filtrarNotasForMap() {
 
       
    }
-
+*/
 }
 

@@ -1,6 +1,10 @@
+import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/infrastructure/controllers/registroController.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/inicio_sesion.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/widgets.dart';
 import 'package:flutter/material.dart';
+
+import '../noteWidgets/home.dart';
 
 class Registro extends StatefulWidget {
   const Registro({super.key});
@@ -15,12 +19,21 @@ class _RegistroState extends State<Registro> {
   TextEditingController userName = TextEditingController(text: "");
   DateTime date = DateTime(2023, 01, 01);
 
+  registroController controller = controllerFactory.createRegistroController();
+  bool loading = false;
+
   //TextEditingController confirmPass = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body:
+        loading == true
+          ? const Center(
+              child: SizedBox(
+                  width: 30, height: 30, child: CircularProgressIndicator()))
+    :
+       SingleChildScrollView(
         //Evitar el error BottomOverflowed
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -92,7 +105,7 @@ class _RegistroState extends State<Registro> {
                   genericSizedBox(20),
                   //genericTextFormField(userPass, "Confirm Password", true),
                   //genericSizedBox(25),
-                  botonOk(context, userText, userPass, userName, date),
+                  botonOk(),
                   genericSizedBox(5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -123,14 +136,8 @@ class _RegistroState extends State<Registro> {
       // Se pasa context como parametro
     );
   }
-}
 
-Widget botonOk(
-    BuildContext context,
-    TextEditingController userText,
-    TextEditingController userPass,
-    TextEditingController userName,
-    DateTime? date) {
+Widget botonOk() {
   //Se agrega el argumento context
   return TextButton(
       style: TextButton.styleFrom(
@@ -140,11 +147,41 @@ Widget botonOk(
           backgroundColor: const Color.fromARGB(255, 30, 103, 240),
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10)),
       onPressed: () {
-        //createRequest(userText.text, userPass.text, context);
-        // Registrar
+        setState(() {
+          loading = true;
+        });
+        acceder();
       },
       child: const Text(
         "Crear",
         style: TextStyle(fontSize: 25, color: Colors.white),
       ));
 }
+
+void acceder() async{
+  var controllerRes = await controller.acceder(nombre: userName.text, 
+                                        correo: userText.text, 
+                                        clave: userPass.text, 
+                                        fechaNacimiento: date);
+  if (controllerRes.isLeft){
+    showSystemMessage(controllerRes.left.message);
+   }else{
+    showSystemMessage('usuario registrado satisfactoriamente');
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                builder: (context) => Home()),
+                 (Route<dynamic> route) => false);
+   }
+
+}
+
+
+ void showSystemMessage(String? message){
+    setState(() {
+      loading = false;
+    });
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message!)));
+  }
+
+}
+

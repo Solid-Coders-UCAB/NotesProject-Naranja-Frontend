@@ -25,6 +25,9 @@ class Nota {
   String idCarpeta;
   List<tarea> tareas;
 
+
+  int savedInServer = 1;
+
   Nota({
     this.imagenes,
     this.n_edit_date,

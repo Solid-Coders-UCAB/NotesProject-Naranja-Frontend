@@ -65,7 +65,7 @@ class folderHomeState extends State<folderHome> {
           ),
         ),
         //Side menu------------------------------
-        drawer: const NavBar(),
+        drawer: NavBar(),
         // Boton para crear una nota
         floatingActionButton: Container(
           alignment: Alignment.bottomCenter,
