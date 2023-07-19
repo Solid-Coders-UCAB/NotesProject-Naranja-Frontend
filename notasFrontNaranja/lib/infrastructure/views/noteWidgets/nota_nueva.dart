@@ -145,7 +145,7 @@ class NuevaNotaState extends State<NuevaNota> {
                         ),
                         onPressed: () {
                           if (_tituloC.text != '') {
-                            saveNota();
+                          //  saveNota();
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -184,27 +184,27 @@ class NuevaNotaState extends State<NuevaNota> {
     Navigator.pop(context);
   }
 
-  saveNota() async {
-    setState(() {
-      loading = true;
-    });
-    var response = await controller.saveNota(
-        titulo: _tituloC.text, contenido: _contenidoC.text, imagenes: imagenes);
-    if (response.isLeft) {
-      setState(() {
-        loading = false;
-      });
-      String text = '';
-      text = response.left.message!;
-      showSystemMessage(text);
-    }
-    if (response.isRight) {
-      showSystemMessage('nota agregada satisfactoriamente');
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Home()),
-          (Route<dynamic> route) => false);
-    }
-  }
+  //saveNota() async {
+  //  setState(() {
+  //    loading = true;
+  //  });
+  //  var response = await controller.saveNota(
+    //    titulo: _tituloC.text, contenido: _contenidoC.text, imagenes: imagenes);
+    //if (response.isLeft) {
+     // setState(() {
+       // loading = false;
+      //});
+      //String text = '';
+      //text = response.left.message!;
+      //showSystemMessage(text);
+    //}
+    ///if (response.isRight) {
+     // showSystemMessage('nota agregada satisfactoriamente');
+     // Navigator.of(context).pushAndRemoveUntil(
+      ///    MaterialPageRoute(builder: (context) => Home()),
+        ///  (Route<dynamic> route) => false);
+   // }
+  //}
 
   Future getTextFromIa() async {
     setState(() {

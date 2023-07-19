@@ -86,7 +86,10 @@ Widget genericSizedBox(double size) {
 }
 
 Widget iconApp(double sizeIcon) {
-    return Icon( Icons.flutter_dash ,size: sizeIcon);
+  return Image.asset(
+    'assets/images/LogoSolo 1.png',
+    width: sizeIcon,
+  );
 }
 
 Widget textLabel(String textInput, double fontSize) {

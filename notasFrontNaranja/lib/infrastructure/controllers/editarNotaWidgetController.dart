@@ -11,6 +11,7 @@ import 'package:firstapp/infrastructure/views/noteWidgets/editar_nota.dart';
 
 import '../../domain/etiqueta.dart';
 import '../../domain/folder.dart';
+import '../../domain/tarea.dart';
 import '../views/noteWidgets/editarNotaEditor.dart';
 
 class editarNotaWidgetController {
@@ -31,7 +32,7 @@ class editarNotaWidgetController {
   Future<Either<MyError,String>> updateNota(
     {required String titulo, 
      required String contenido,int? longitud,int? latitud, List<Uint8List>? imagenes, 
-     required String idNota, required DateTime n_date, required String idCarpeta, List<etiqueta>? etiquetas} ) async {
+     required String idNota, required DateTime n_date, required String idCarpeta, List<etiqueta>? etiquetas, required List<tarea> tareas} ) async {
     longitud??=0;
     latitud??=0;
 
@@ -45,7 +46,8 @@ class editarNotaWidgetController {
       latitud: latitud, 
       n_date: n_date,
       etiquetas: etiquetas,
-      idCarpeta: idCarpeta));
+      idCarpeta: idCarpeta,
+      tareas: tareas));
 
       if (serviceResponse.isLeft){
         return Left(serviceResponse.left);
@@ -87,7 +89,7 @@ class editarNotaWidgetController {
    void eliminarNotaAction({ required EditarNotaState widget, required String id,
     required String titulo, 
     required String contenido,int? longitud,
-    int? latitud, List<Uint8List>? imagenes,required n_date,required String idCarpeta}) async {
+    int? latitud, List<Uint8List>? imagenes,required n_date,required String idCarpeta, required List<tarea> tareas}) async {
       
      widget.setState(() {
        widget.loading = true;
@@ -102,7 +104,8 @@ class editarNotaWidgetController {
       longitud: longitud,
       latitud: latitud, 
       n_date: n_date,
-      idCarpeta: idCarpeta));
+      idCarpeta: idCarpeta,
+      tareas: tareas));
 
       if (serviceResponse.isLeft){
        widget.setState(() {
@@ -118,7 +121,7 @@ class editarNotaWidgetController {
     required String titulo, 
     required String contenido,int? longitud,
     int? latitud, List<Uint8List>? imagenes,required n_date,
-    required String idCarpeta, List<etiqueta>? etiquetas }) async {
+    required String idCarpeta, List<etiqueta>? etiquetas, required List<tarea> tareas }) async {
       
      widget.setState(() {
        widget.loading = true;
@@ -134,7 +137,8 @@ class editarNotaWidgetController {
       latitud: latitud, 
       n_date: n_date,
       etiquetas: etiquetas,
-      idCarpeta: idCarpeta));
+      idCarpeta: idCarpeta,
+      tareas: tareas));
 
       if (serviceResponse.isLeft){
        widget.setState(() {

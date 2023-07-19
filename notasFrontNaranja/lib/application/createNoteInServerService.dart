@@ -48,7 +48,7 @@ class createNoteInServerService implements service<CreatenoteParams,String>{
       imagenes: params.imagenes,
       carpeta: params.folderId,
       etiquetas: params.etiquetas, 
-      id: ''
+      id: '', tareas: params.getTareas
     );
 
     if (note.isLeft){         //error al crear la nota

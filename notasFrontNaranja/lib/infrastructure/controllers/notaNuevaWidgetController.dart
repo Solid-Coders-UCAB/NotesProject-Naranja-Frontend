@@ -7,7 +7,7 @@ import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/application/DTOS/createNoteParams.dart';
 import 'package:firstapp/application/DTOS/imageToTextParams.dart';
 import 'package:firstapp/domain/location.dart';
-
+import 'package:firstapp/domain/tarea.dart';
 import '../../domain/etiqueta.dart';
 import '../../domain/folder.dart';
 
@@ -36,7 +36,8 @@ class notaNuevaWidgetController {
       double? longitud,
       double? latitud,
       List<etiqueta>? etiquetas,
-      List<Uint8List>? imagenes}) async {
+      List<Uint8List>? imagenes,
+      required List<tarea> tareas}) async {
     
     longitud ??= 0;
     latitud ??= 0;
@@ -49,7 +50,7 @@ class notaNuevaWidgetController {
         longitud: longitud,
         latitud: latitud,
         folderId: folderId,
-        etiquetas: etiquetas);
+        etiquetas: etiquetas, tareas: tareas);
 
         print(params.contenido);
 

@@ -29,7 +29,8 @@ class updateNoteInServerService implements service<UpdateNoteParams,String>{
       imagenes: params.imagenes,
       id: params.idNota,
       carpeta: params.idCarpeta,
-      etiquetas: params.etiquetas
+      etiquetas: params.etiquetas,
+      tareas: params.tareas
     );
 
   //error al crear la nota

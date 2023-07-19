@@ -7,6 +7,7 @@ import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/domain/repositories/etiquetaRepository.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPrepository.dart';
 import 'package:http/http.dart';
+import 'package:firstapp/domain/tarea.dart';
 
 class HTTPetiquetasRepository extends HTTPrepository implements etiquetaRepository {
 
@@ -173,6 +174,8 @@ Future<Either<MyError, List<Nota>>> getNotesByEtiqueta(String idEtiqueta, String
 
     List<Nota> notas = [];
     List<etiqueta> etiquetas = [];
+    List<tarea> tareas = [];
+
     Response response;
     var body = jsonEncode({
       "idEtiqueta": idEtiqueta,
@@ -202,6 +205,13 @@ Future<Either<MyError, List<Nota>>> getNotesByEtiqueta(String idEtiqueta, String
             etiquetas.add( etiqueta(nombre: '', idUsuario: '',id: eti['id']) );
           }
        
+       // Obtener las tareas de la nota
+          for (var jsonTarea in jsonNote['tareas']) {
+            String nombreTarea = jsonTarea['nombre']['nombre'];
+            bool completada = jsonTarea['completada'];
+            tareas.add(tarea(nombreTarea: nombreTarea, completada: completada));
+          }
+
        Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
                      titulo: jsonNote['titulo']['titulo'],
                      contenido: jsonNote['cuerpo']['cuerpo'],
@@ -209,7 +219,8 @@ Future<Either<MyError, List<Nota>>> getNotesByEtiqueta(String idEtiqueta, String
                      n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
                      estado: jsonNote['estado'], 
                      carpeta: jsonNote['idCarpeta']['UUID'],
-                     etiquetas: etiquetas                            
+                     etiquetas: etiquetas,
+                     tareas: tareas                           
                ).right;
 
         var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
@@ -222,6 +233,7 @@ Future<Either<MyError, List<Nota>>> getNotesByEtiqueta(String idEtiqueta, String
         }
         notas.add(nota);
         etiquetas = [];
+        tareas = [];
       } 
       return Right(notas);
     }

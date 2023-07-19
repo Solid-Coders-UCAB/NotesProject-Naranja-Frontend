@@ -20,5 +20,8 @@ class tarea {
       completada: completada
     ) );
   }
+
+  Map<String, dynamic> toJson() =>
+      {'nombreTarea': nombreTarea, 'completada': completada};
  
 }

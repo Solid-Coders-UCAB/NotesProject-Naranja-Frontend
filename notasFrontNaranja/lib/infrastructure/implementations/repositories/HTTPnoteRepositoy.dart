@@ -7,9 +7,8 @@ import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/domain/repositories/noteRepository.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPrepository.dart';
 import 'package:http/http.dart';
-
 import '../../../domain/etiqueta.dart';
-
+import 'package:firstapp/domain/tarea.dart';
 class httpNoteRepository extends HTTPrepository implements noteRepository{
   
   @override
@@ -23,6 +22,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
       'fechaCreacion': note.getDate.toString(),
       'idCarpeta': note.idCarpeta,
       'etiquetas': note.getEtiquetasIds(),
+      "tareas": note.tareas.map((t) => t.toJson()).toList(),
       "latitud":  note.latitud,
       "longitud": note.longitud
     });
@@ -54,6 +54,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
 
     List<Nota> notas = [];
     List<etiqueta> etiquetas = [];
+    List<tarea> tareas = [];
     Response response;
     var body = jsonEncode({
       'idUsuario': userId
@@ -81,7 +82,14 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
           for (var eti in jsonNote['etiquetas']) {
             etiquetas.add( etiqueta(nombre: '', idUsuario: '',id: eti['id']) );
           }
-       
+       // Obtener las tareas de la nota
+          for (var jsonTarea in jsonNote['tareas']) {
+            String nombreTarea = jsonTarea['nombre']['nombre'];
+            bool completada = jsonTarea['completada'];
+            tareas.add(tarea(nombreTarea: nombreTarea, completada: completada));
+          }
+
+
        Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
                      titulo: jsonNote['titulo']['titulo'],
                      contenido: jsonNote['cuerpo']['cuerpo'],
@@ -89,7 +97,8 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
                      n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
                      estado: jsonNote['estado'], 
                      carpeta: jsonNote['idCarpeta']['UUID'],
-                     etiquetas: etiquetas                            
+                     etiquetas: etiquetas,
+                     tareas: tareas                           
                ).right;
 
         var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
@@ -103,6 +112,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
         }
         notas.add(nota);
         etiquetas = [];
+        tareas = [];
       } 
       return Right(notas);
     }
@@ -113,7 +123,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
 }
 
  Future<Either<MyError, List<Nota>>> getALLnotesPreview(String userId) async {
-
+    List<tarea> tareas = [];
     List<Nota> notas = [];
     Response response;
     var body = jsonEncode({
@@ -139,12 +149,20 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
 
       for (var jsonNote in jsonData){
 
+    // Obtener las tareas de la nota
+          for (var jsonTarea in jsonNote['tareas']) {
+            String nombreTarea = jsonTarea['nombre']['nombre'];
+            bool completada = jsonTarea['completada'];
+            tareas.add(tarea(nombreTarea: nombreTarea, completada: completada));
+          }
+
        Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
                      titulo: jsonNote['titulo']['titulo'],
                      n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
                      n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
                      estado: jsonNote['estado'], 
-                     carpeta: jsonNote['idCarpeta']['UUID'],                    
+                     carpeta: jsonNote['idCarpeta']['UUID'], 
+                     tareas: tareas                   
                ).right;
 
         var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
@@ -157,6 +175,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
             nota.longitud = null;
         }
         notas.add(nota);
+        tareas = [];
       } 
       return Right(notas);
     }
@@ -179,7 +198,8 @@ Future<Either<MyError, String>> updateNota(Nota note) async {
       'idCarpeta': note.idCarpeta,
       'latitud': note.latitud,
       'longitud': note.longitud,
-      'etiquetas': note.getEtiquetasIds()
+      'etiquetas': note.getEtiquetasIds(),
+      "tareas": note.tareas.map((t) => t.toJson()).toList(),
     });
   try{
   final Response response = await put(Uri.parse('http://$domain/nota/modificate'),
@@ -225,6 +245,7 @@ Future<Either<MyError, String>> deleteNota(Nota note) async {
   @override
   Future<Either<MyError, List<Nota>>> getAllEliminatedNotes(String userId) async {
     List<Nota> notas = [];
+    List<tarea> tareas = [];
     Response response;
     var body = jsonEncode({
       'idUsuario': userId
@@ -243,13 +264,20 @@ Future<Either<MyError, String>> deleteNota(Nota note) async {
    if (response.statusCode == 200){
       var jsonData = json.decode(response.body);
     for (var jsonNote in jsonData){
+      // Obtener las tareas de la nota
+          for (var jsonTarea in jsonNote['tareas']) {
+            String nombreTarea = jsonTarea['nombre']['nombre'];
+            bool completada = jsonTarea['completada'];
+            tareas.add(tarea(nombreTarea: nombreTarea, completada: completada));
+          }
        Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
                      titulo: jsonNote['titulo']['titulo'],
                      contenido: jsonNote['cuerpo']['cuerpo'],
                      n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
                      n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
                      estado: jsonNote['estado'], 
-                     carpeta: jsonNote['idCarpeta']['UUID']                            
+                     carpeta: jsonNote['idCarpeta']['UUID'],
+                     tareas: tareas                            
                     ).right;
         var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
         if ( jsonAssignedGeolocalitation){
@@ -260,6 +288,7 @@ Future<Either<MyError, String>> deleteNota(Nota note) async {
             nota.longitud = null;
         }
         notas.add(nota);
+        tareas = [];
       } 
       return Right(notas);
     }
@@ -273,6 +302,7 @@ Future<Either<MyError, List<Nota>>> getNotesByKeyword(String palabraClave, Strin
 
     List<Nota> notas = [];
     List<etiqueta> etiquetas = [];
+    List<tarea> tareas = [];
     Response response;
     var body = jsonEncode({
       "palabraClave": palabraClave,
@@ -302,6 +332,12 @@ Future<Either<MyError, List<Nota>>> getNotesByKeyword(String palabraClave, Strin
             etiquetas.add( etiqueta(nombre: '', idUsuario: '',id: eti['id']) );
           }
        
+       // Obtener las tareas de la nota
+          for (var jsonTarea in jsonNote['tareas']) {
+            String nombreTarea = jsonTarea['nombre']['nombre'];
+            bool completada = jsonTarea['completada'];
+            tareas.add(tarea(nombreTarea: nombreTarea, completada: completada));
+          }
        Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
                      titulo: jsonNote['titulo']['titulo'],
                      contenido: jsonNote['cuerpo']['cuerpo'],
@@ -309,7 +345,8 @@ Future<Either<MyError, List<Nota>>> getNotesByKeyword(String palabraClave, Strin
                      n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
                      estado: jsonNote['estado'], 
                      carpeta: jsonNote['idCarpeta']['UUID'],
-                     etiquetas: etiquetas                            
+                     etiquetas: etiquetas,  
+                     tareas: tareas                          
                ).right;
 
         var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
@@ -322,6 +359,7 @@ Future<Either<MyError, List<Nota>>> getNotesByKeyword(String palabraClave, Strin
         }
         notas.add(nota);
         etiquetas = [];
+        tareas = [];
       } 
       return Right(notas);
     }

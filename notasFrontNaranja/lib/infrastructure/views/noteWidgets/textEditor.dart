@@ -23,6 +23,7 @@ import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.da
 import 'package:path_provider/path_provider.dart';
 
 import '../../../domain/tarea.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/notaTareas.dart';
 // Ventana para crear una nueva nota
 class HtmlEditorExampleApp extends StatelessWidget {
   HtmlEditorExampleApp({super.key});
@@ -50,10 +51,10 @@ class HtmlEditorExample extends StatefulWidget {
   const HtmlEditorExample({super.key});
 
   @override
-  _HtmlEditorExampleState createState() => _HtmlEditorExampleState();
+  HtmlEditorExampleState createState() => HtmlEditorExampleState();
 }
 
-class _HtmlEditorExampleState extends State<HtmlEditorExample> {
+class HtmlEditorExampleState extends State<HtmlEditorExample> {
   String initialText = '';
   bool loading = false;
 
@@ -204,7 +205,7 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
         etiquetas: selectedTags,
         folderId: folderId,
         latitud: noteLocation != null ? noteLocation!.latitude! : 0,
-        longitud: noteLocation != null ? noteLocation!.longitude! : 0);
+        longitud: noteLocation != null ? noteLocation!.longitude! : 0, tareas: tasks);
     if (controllerResponse.isLeft) {
       showSystemMessage(controllerResponse.left.message);
     } else {
@@ -300,7 +301,7 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
             title: Text('Tareas'),
             onTap: () async {
               Navigator.pop(context);
-              showBottomSheet(context: context, builder: (context) => NotaTareas(tasks: [],));
+              showBottomSheet(context: context, builder: (context) => NotaTareas(tasks: tasks, home: this,));
             },
           ),
           ListTile(
@@ -430,152 +431,5 @@ Widget folderList(){
               
           ); 
     }  
-
-  Widget taskList(){
-    var _controller = TextEditingController();
-    return 
-        Column(
-          children: [ListView.builder(
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              return CheckboxListTile(
-              title: const Text('CheckboxListTile'),
-              value: true,
-              controlAffinity: ListTileControlAffinity.leading,
-              onChanged:(bool? value) { },
-            );
-                     }        
-                
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children:  [
-                TextField(
-                  controller: _controller,
-                  maxLength: 30,
-                  decoration: InputDecoration(
-                    labelText: "Nueva tarea",
-                    labelStyle: const TextStyle(
-                    color: Color.fromARGB(255, 154, 181, 255), 
-                  ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: 
-                    (){
-
-                    }, 
-                child: Icon(Icons.add))
-              ],
-            )
-            ]
-        ); 
-    }        
-}
-
-
-// Vista para la lista de tareas
-// ignore: must_be_immutable
-class NotaTareas extends StatefulWidget {
-  List<tarea> tasks = [];
-  NotaTareas({super.key, required this.tasks});
-
-  @override
-  State<NotaTareas> createState() => NotaTareasState(tasks: tasks);
-}
-
-class NotaTareasState extends State<NotaTareas> {
-  List<tarea> tasks = [];
-  NotaTareasState({required this.tasks});
-
-  // Se asigna el controlador con la logica de la ventana notas en carpeta
-  // notasPorPalabraClaveController controller = controllerFactory.createnotasPorPalabraClaveController();
-  var _controller = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-    //showNotes(idCarpeta);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child:
-          Column(
-            children: [
-              Expanded(
-               // height: 200.0,
-                child : 
-                ListView.builder(
-                    itemCount: 20,
-                    itemBuilder: (context, index) {
-                      return CheckboxListTile(
-                      title: const Text('CheckboxListTile'),
-                      value: true,
-                      controlAffinity: ListTileControlAffinity.leading,
-                      onChanged:(bool? value) { },
-                    );
-                             }        
-                        
-                    ),
-              ),
       
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children:  [
-                      Expanded(
-                        child: TextField(
-                          
-                          controller: _controller,
-                          maxLength: 30,
-                          decoration: InputDecoration(
-                            labelText: "Nueva tarea",
-                            labelStyle: const TextStyle(
-                            color: Color.fromARGB(255, 154, 181, 255), 
-                          ),
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                          onPressed: 
-                            (){
-                            
-                            }, 
-                        child: Icon(Icons.add)),
-                    ],
-                  ),
-              )
-            ],        
-          ),
-      
-    );
-  }
-
-  void reset() {
-    setState(() {
-    //  loading = true;
-    });
-  }
-
-  void showNotes(String palabraClave) async { 
-   // controller.getNotesByKeyword(this, palabraClave);
-  }
-
-
-  void showSystemMessage(String? message){
-    setState(() {
-   //   loading = false;
-    });
-     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message!)));
-  }
-
 }
-
-
-
-
-
