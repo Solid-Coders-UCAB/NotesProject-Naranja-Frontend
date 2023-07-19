@@ -221,9 +221,7 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
     if (controllerResponse.isLeft) {
       showSystemMessage(controllerResponse.left.message);
     } else {
-      print(text);
       editorC.setText(await editorC.getText() + text);
-      print(await editorC.getText());
     }
   }
 
@@ -306,14 +304,13 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
           ),
           ListTile(
             leading: const Icon(Icons.map),
-            title: Text('Agregar ubicacion'),
+            title: Text('Agregar ubicación'),
             onTap: ()  async {
               Navigator.pop(context);
               noteLocation = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                builder: (context) => MyMapScreen()));
-                print("nota en el boton:${noteLocation}");        
+                builder: (context) => MyMapScreen()));       
             },
           ),
           ListTile(
