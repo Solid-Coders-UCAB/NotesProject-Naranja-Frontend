@@ -91,7 +91,6 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
          tagsList = controllerResponse.right;
         if (nota.etiquetas != null){ 
          if (nota.etiquetas!.isNotEmpty){
-           nota.etiquetas!.forEach((element) {print('element: ${element.id}');});
          for (var tag in nota.etiquetas!) {
           selectedTags.add(tagsList.firstWhere((element) => element.id == tag.id));
          } 
@@ -104,7 +103,6 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
       folders = folderRes.right;
       selectedFolder =
           folders.firstWhere((element) => element.id == nota.idCarpeta);
-      print(selectedFolder!.name);
     }
     
     setState(() {loading = false; });
@@ -138,7 +136,7 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
                 controller: editorC, //required
                 htmlEditorOptions: HtmlEditorOptions(
                 initialText: nota.contenido,
-                hint: 'recuperando contenido...'      
+                hint: 'Recuperando contenido...'      
               ),
               htmlToolbarOptions: HtmlToolbarOptions(
               toolbarPosition: ToolbarPosition.belowEditor, //by default
@@ -192,7 +190,7 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
     if (controllerResponse.isLeft) {
       showSystemMessage(controllerResponse.left.message);
     } else {
-      showSystemMessage('nota guardada satisfactoriamente');
+      showSystemMessage('Nota guardada satisfactoriamente');
       regresarHome();
     }
   }
@@ -307,7 +305,7 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
           ),
         ListTile(
           leading: const Icon(Icons.map),
-          title: Text('Agregar ubicacion'),
+          title: Text('Agregar ubicación'),
           onTap: () {
             Navigator.pop(context);
           },
