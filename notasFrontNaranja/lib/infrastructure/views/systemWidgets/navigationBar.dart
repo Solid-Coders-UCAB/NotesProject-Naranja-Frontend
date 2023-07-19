@@ -2,6 +2,7 @@ import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 import 'package:firstapp/infrastructure/views/etiquetasWidgets/etiquetasHome.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/recycleBinWidgets.dart/recycleBinHome.dart';
+import 'package:firstapp/infrastructure/views/systemWidgets/user_profile.dart';
 import 'package:flutter/material.dart';
 
 // Ventana que contiene el menu lateral de opciones en la aplicacion
@@ -97,8 +98,8 @@ class NavBar extends StatelessWidget {
               ),
               title: const Text('Perfil'),
               onTap: () {
-                //Navigator.of(context).pushReplacement(MaterialPageRoute(
-                //  builder: (context) => Pagina a llamar));
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const UserProfile()));
               },
             )
           ],
