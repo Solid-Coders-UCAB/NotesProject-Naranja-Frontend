@@ -9,7 +9,7 @@ class notasPorPalabraClaveController {
 
   notasPorPalabraClaveController({required this.notesByKeywordService});
 
-void getNotesByKeyword(NotasCarpetaState widget, String palabraClave) async {
+void getNotesByKeyword(NotasFiltradasState widget, String palabraClave) async {
 
 
     var notas = await notesByKeywordService.execute(getNotesByKeywordDTO(palabraClave: palabraClave));

@@ -53,7 +53,7 @@ class createNoteInServerService implements service<CreatenoteParams,String>{
       imagenes: params.imagenes,
       carpeta: params.folderId,
       etiquetas: params.etiquetas, 
-      id: ''
+      id: '', tareas: params.getTareas
     );
 
     if (note.isLeft){         //error al crear la nota
@@ -76,7 +76,7 @@ void main() async {
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
   var sut = createNoteInServerService(noteRepo: httpNoteRepository(), folderRepo: HTTPfolderRepository(), localUserRepo: localUserRepository());
-  var exec = await sut.execute(CreatenoteParams(contenido: 'CONTENIDO1', titulo: 'TITULO1'));
+  var exec = await sut.execute(CreatenoteParams(contenido: 'CONTENIDO1', titulo: 'TITULO1', tareas: []));
     if (exec.isRight){
       print(exec.right);
     }else{

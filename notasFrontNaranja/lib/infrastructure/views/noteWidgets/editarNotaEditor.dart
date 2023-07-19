@@ -18,10 +18,12 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import '../../../domain/etiqueta.dart';
 import '../../../domain/folder.dart';
 import '../../../domain/nota.dart';
+import '../../../domain/tarea.dart';
 import '../systemWidgets/widgets.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'package:firstapp/infrastructure/views/noteWidgets/notaTareasEditar.dart';
+// ignore: must_be_immutable
 class HtmlEditorEditar extends StatelessWidget {
   Nota nota;
 
@@ -67,7 +69,7 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
   List<etiqueta> tagsList = [];
   List<etiqueta> selectedTags = [];
   List<etiqueta> oldTags = [];
-
+  List<tarea> tasks = [];
   List<folder> folders = [];
   folder? selectedFolder;
 
@@ -78,6 +80,7 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
     super.initState();
     setState(() {
       loading = true;
+      tasks = nota.tareas;
     });
     init();
   }
@@ -184,7 +187,7 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
             (selectedFolder == null) ? nota.idCarpeta : selectedFolder!.id!,
         idNota: nota.id,
         n_date: nota.n_date,
-        etiquetas: selectedTags);
+        etiquetas: selectedTags, tareas: tasks);
 
     if (controllerResponse.isLeft) {
       showSystemMessage(controllerResponse.left.message);
@@ -204,7 +207,7 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
             (selectedFolder == null) ? nota.idCarpeta : selectedFolder!.id!,
         id: nota.id,
         n_date: nota.n_date,
-        etiquetas: selectedTags);
+        etiquetas: selectedTags, tareas: tasks);
   }
 
   void imageToText() async {
@@ -286,13 +289,22 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
         ),
         ListTile(
           leading: Icon(Icons.folder_copy_sharp),
-          title: Text('agregar a carpeta'),
+          title: Text('Carpeta'),
           onTap: () async {
             Navigator.pop(context);
             showBottomSheet(
                 context: context, builder: (context) => folderList());
           },
         ),
+              // Lista de tareas
+          ListTile(
+            leading: Icon(Icons.add_task),
+            title: Text('Tareas'),
+            onTap: () async {
+              Navigator.pop(context);
+              showBottomSheet(context: context, builder: (context) => NotaTareasEditar(tasks: tasks, home: this,));
+            },
+          ),
         ListTile(
           leading: const Icon(Icons.map),
           title: Text('Agregar ubicacion'),

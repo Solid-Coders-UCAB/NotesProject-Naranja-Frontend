@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firstapp/infrastructure/views/etiquetasWidgets/editarEtiqueta.dart';
 import 'package:firstapp/domain/nota.dart';
-import 'package:firstapp/infrastructure/controllers/notasPorEtiquetaController.dart';
-import 'package:firstapp/controllerFactory.dart';
-import 'package:firstapp/infrastructure/views/etiquetasWidgets/noteEtiquetaPreviewWidget.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
 import 'package:firstapp/infrastructure/views/filterWidgets/searchNotaDelegate.dart';
 //import '../nota_nueva.dart';

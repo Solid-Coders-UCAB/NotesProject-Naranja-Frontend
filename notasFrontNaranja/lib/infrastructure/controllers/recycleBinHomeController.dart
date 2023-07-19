@@ -65,7 +65,7 @@ class recycleBinHomeController {
     });
     
     var serviceResponse = await updateNoteFromServer.execute(
-      UpdateNoteParams(estado: 'Guardada', idNota: note.id, contenido: note.getContenido, titulo: note.titulo, n_date: note.n_date, idCarpeta: note.idCarpeta)
+      UpdateNoteParams(estado: 'Guardada', idNota: note.id, contenido: note.getContenido, titulo: note.titulo, n_date: note.n_date, idCarpeta: note.idCarpeta, tareas: note.tareas)
     );
 
      if (widget.mounted) {

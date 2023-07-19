@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'dart:typed_data';
-
+import 'package:firstapp/domain/tarea.dart';
 import '../../domain/etiqueta.dart';
 
 class CreatenoteParams {
@@ -13,7 +13,8 @@ class CreatenoteParams {
   List<Uint8List>? imagenes;
   String? folderId;
   List<etiqueta>? etiquetas;
-  
+  List<tarea> tareas;
+
   CreatenoteParams({
     required this.contenido,
     required this.titulo,
@@ -21,7 +22,8 @@ class CreatenoteParams {
     this.latitud,
     this.imagenes,
     this.etiquetas,
-    this.folderId
+    this.folderId,
+    required this.tareas,
   });
 
 
@@ -30,5 +32,6 @@ class CreatenoteParams {
   get getLongitud => longitud;
   get getLatitud => latitud;
   get getCarpeta => folderId;
+  get getTareas => tareas;
 
 }

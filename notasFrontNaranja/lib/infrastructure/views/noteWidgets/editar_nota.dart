@@ -221,7 +221,7 @@ class EditarNotaState extends State<NotaEditar> {
                   ),
                   onPressed: () async {
                     if (_tituloC.text != '') {
-                      updateNota(_tituloC.text, _contenidoC.text);
+                    //  updateNota(_tituloC.text, _contenidoC.text);
                       ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Nota editada")));
                     } else {
@@ -256,9 +256,9 @@ class EditarNotaState extends State<NotaEditar> {
             title: const Text('eliminar permanentemente'),
             onTap: () {
               Navigator.pop(context);
-              controller.eliminarNotaAction(widget: this,imagenes: note.imagenes,
-              id: note.getid , titulo: note.getTitulo, contenido: note.getContenido, n_date: note.getEditDate,
-              idCarpeta: note.idCarpeta);
+              // controller.eliminarNotaAction(widget: this,imagenes: note.imagenes,
+              // id: note.getid , titulo: note.getTitulo, contenido: note.getContenido, n_date: note.getEditDate,
+              // idCarpeta: note.idCarpeta);
             },
           ),
           ListTile(
@@ -307,38 +307,38 @@ class EditarNotaState extends State<NotaEditar> {
                  builder: (context) => Home()),(Route<dynamic> route) => false);
   }
 
-  updateNota(String titulo, String contenido) async {
-    setState(() {
-      loading = true;
-    });
+  // updateNota(String titulo, String contenido) async {
+  //   setState(() {
+  //     loading = true;
+  //   });
     
-    var response = await controller.updateNota(
-      titulo: titulo, 
-      contenido: contenido, 
-      idNota: note.getid, 
-      n_date: note.getDate,
-      longitud: note.getLongitud,
-      latitud: note.getLatitud,
-      imagenes: imagenes,
-      idCarpeta: note.idCarpeta);
+  //   var response = await controller.updateNota(
+  //     titulo: titulo, 
+  //     contenido: contenido, 
+  //     idNota: note.getid, 
+  //     n_date: note.getDate,
+  //     longitud: note.getLongitud,
+  //     latitud: note.getLatitud,
+  //     imagenes: imagenes,
+  //     idCarpeta: note.idCarpeta);
 
-    if (response.isLeft) {
-      String text = '';
-      text = response.left.message!;
+  //   if (response.isLeft) {
+  //     String text = '';
+  //     text = response.left.message!;
       
-      showSystemMessage(text);
-      setState(() {
-        loading = false;
-      });
+  //     showSystemMessage(text);
+  //     setState(() {
+  //       loading = false;
+  //     });
       
-    }
-    if (response.isRight) {
+  //   }
+  //   if (response.isRight) {
 
-       loading = false;
+  //      loading = false;
 
-      regresarHome();
-    }
-  }
+  //     regresarHome();
+  //   }
+  // }
 
     showSystemMessage(String? message) {
     ScaffoldMessenger.of(context)

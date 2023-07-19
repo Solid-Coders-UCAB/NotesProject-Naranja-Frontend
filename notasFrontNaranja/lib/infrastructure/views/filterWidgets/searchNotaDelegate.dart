@@ -6,6 +6,9 @@ import 'package:firstapp/infrastructure/views/filterWidgets/noteKeywordPreviewWi
 
 class searchNotaDelegate extends SearchDelegate{
 
+  @override
+  String get searchFieldLabel => 'Buscar';
+
   notasPorPalabraClaveController controller = controllerFactory.createnotasPorPalabraClaveController();
   @override
   String get query;
@@ -22,10 +25,7 @@ class searchNotaDelegate extends SearchDelegate{
 
   @override
   Widget buildResults(BuildContext context) {
-    print("Buscando las notas");
-    print(query);
-    print(notas.length);
-    return NotasCarpeta(idCarpeta: query);
+    return  NotasFiltradas(palabraClave: query);
   }
 
   @override
@@ -36,19 +36,19 @@ class searchNotaDelegate extends SearchDelegate{
 
 }
 // ignore: must_be_immutable
-class NotasCarpeta extends StatefulWidget {
-  String idCarpeta;
-  NotasCarpeta({super.key, required this.idCarpeta});
+class NotasFiltradas extends StatefulWidget {
+  String palabraClave;
+  NotasFiltradas({super.key, required this.palabraClave});
 
   @override
-  State<NotasCarpeta> createState() => NotasCarpetaState(idCarpeta: idCarpeta);
+  State<NotasFiltradas> createState() => NotasFiltradasState(palabraClave: palabraClave);
 }
 
-class NotasCarpetaState extends State<NotasCarpeta> {
-  String idCarpeta;
+class NotasFiltradasState extends State<NotasFiltradas> {
+  String palabraClave;
   List<Nota> notas = <Nota>[];
   bool loading = false;
-  NotasCarpetaState({required this.idCarpeta});
+  NotasFiltradasState({required this.palabraClave});
 
   // Se asigna el controlador con la logica de la ventana notas en carpeta
    notasPorPalabraClaveController controller = controllerFactory.createnotasPorPalabraClaveController();
@@ -56,7 +56,7 @@ class NotasCarpetaState extends State<NotasCarpeta> {
   @override
   void initState() {
     super.initState();
-    showNotes(idCarpeta);
+    showNotes(palabraClave);
   }
 
   @override
@@ -64,8 +64,12 @@ class NotasCarpetaState extends State<NotasCarpeta> {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
-        child : 
-        ListView.builder(
+        child : loading == true
+            ? const Center(
+                child: SizedBox(
+                    width: 30, height: 30, child: CircularProgressIndicator()))
+            :
+        ListView.builder( 
               itemCount: notas.length,
               itemBuilder: (context, index) {
                 return notePreview(notas[index]);

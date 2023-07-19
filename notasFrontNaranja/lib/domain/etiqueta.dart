@@ -1,5 +1,4 @@
 import 'package:either_dart/either.dart';
-import 'package:firstapp/domain/nota.dart';
 
 import 'errores.dart';
 

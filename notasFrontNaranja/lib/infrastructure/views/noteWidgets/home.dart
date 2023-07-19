@@ -164,7 +164,8 @@ void filtrarNotasForMap() {
           longitud: note.longitud,
           latitud: note.latitud,
           etiquetas: note.etiquetas, 
-          estado: note.estado
+          estado: note.estado,
+          tareas: note.tareas
           ));
         }
     print('paso');
@@ -193,7 +194,8 @@ void filtrarNotasForMap() {
                 longitud: note2.longitud,
                 latitud: note2.latitud,
                 etiquetas: note2.etiquetas, 
-                estado: note2.estado
+                estado: note2.estado,
+                tareas: note2.tareas
               );
             previews.add(auxNote);
             //auxNotas.remove(note2); 
@@ -210,7 +212,8 @@ void filtrarNotasForMap() {
                 longitud: note.longitud,
                 latitud: note.latitud,
                 etiquetas: note.etiquetas, 
-                estado: note.estado
+                estado: note.estado,
+                tareas: note.tareas
               );
        previews.add(auxNote);
        previews.forEach((element) { print('notasPre[${cont}]${element.titulo}');});

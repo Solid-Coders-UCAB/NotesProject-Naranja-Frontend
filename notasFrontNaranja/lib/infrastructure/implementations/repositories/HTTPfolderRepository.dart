@@ -8,7 +8,7 @@ import 'package:firstapp/domain/etiqueta.dart';
 import 'package:firstapp/domain/repositories/folderRepository.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPrepository.dart';
 import 'package:http/http.dart';
-
+import 'package:firstapp/domain/tarea.dart';
 class HTTPfolderRepository extends HTTPrepository implements folderRepository {
 
   @override
@@ -159,6 +159,7 @@ Future<Either<MyError, List<Nota>>> getNotesByFolder(String idCarpeta) async {
 
     List<Nota> notas = [];
     List<etiqueta> etiquetas = [];
+    List<tarea> tareas = [];
     Response response;
     var body = jsonEncode({
       "idCarpeta": idCarpeta
@@ -186,7 +187,12 @@ Future<Either<MyError, List<Nota>>> getNotesByFolder(String idCarpeta) async {
           for (var eti in jsonNote['etiquetas']) {
             etiquetas.add( etiqueta(nombre: '', idUsuario: '',id: eti['id']) );
           }
-       
+      // Obtener las tareas de la nota
+          for (var jsonTarea in jsonNote['tareas']) {
+            String nombreTarea = jsonTarea['nombre']['nombre'];
+            bool completada = jsonTarea['completada'];
+            tareas.add(tarea(nombreTarea: nombreTarea, completada: completada));
+          }
        Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
                      titulo: jsonNote['titulo']['titulo'],
                      contenido: jsonNote['cuerpo']['cuerpo'],
@@ -194,7 +200,8 @@ Future<Either<MyError, List<Nota>>> getNotesByFolder(String idCarpeta) async {
                      n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
                      estado: jsonNote['estado'], 
                      carpeta: jsonNote['idCarpeta']['UUID'],
-                     etiquetas: etiquetas                            
+                     etiquetas: etiquetas,
+                     tareas: tareas                             
                ).right;
 
         var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
@@ -207,6 +214,7 @@ Future<Either<MyError, List<Nota>>> getNotesByFolder(String idCarpeta) async {
         }
         notas.add(nota);
         etiquetas = [];
+        tareas = [];
       } 
       return Right(notas);
     }
