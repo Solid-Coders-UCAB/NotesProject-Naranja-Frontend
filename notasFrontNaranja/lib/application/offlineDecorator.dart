@@ -15,6 +15,7 @@ class offlineDecorator<params,result> extends serviceDecorator<params,result>{
 
     @override
     Future<Either<MyError,result>> execute(params params) async {   
+      
       var onlineExecute = await super.execute(params);
       var offlineExecute = await offlineService.execute(params); 
 
@@ -30,6 +31,8 @@ class offlineDecorator<params,result> extends serviceDecorator<params,result>{
           if (onlineExecute.isLeft && (isConnected) ){
             return Left(onlineExecute.left);
           }
+
+          print(offlineExecute.left.message);
 
     return Left(offlineExecute.left);
   }
