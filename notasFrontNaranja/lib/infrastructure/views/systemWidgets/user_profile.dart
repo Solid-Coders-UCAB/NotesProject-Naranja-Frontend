@@ -22,23 +22,26 @@ class UserProfileState extends State<UserProfile> {
   String correo = "";
   String fechaNacimiento = "";
   String suscripcion = "";
+  String idUsuario = "";
 
   void changeState(user u) {
     setState(() {
       loading = false;
+      idUsuario = u.id;
       nombre = u.getNombre.toString();
       correo = u.getCorreo.toString();
       int dia = DateTime.parse(u.getDate.toString()).day;
       int mes = DateTime.parse(u.getDate.toString()).month;
       int year = DateTime.parse(u.getDate.toString()).year;
       fechaNacimiento = '$dia/ $mes / $year';
-    if (u.getSuscripcion) {
-      suscripcion = "Suscripción Premium";
-    } else {
-      suscripcion = "Suscripción Básica";
-    }
+      if (u.getSuscripcion) {
+        suscripcion = "Suscripción Premium";
+      } else {
+        suscripcion = "Suscripción Básica";
+      }
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -115,7 +118,12 @@ class UserProfileState extends State<UserProfile> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const EditarPerfil()));
+                          builder: (context) => EditarPerfil(
+                                idUsuario: idUsuario,
+                                correo: correo,
+                                nombre: nombre,
+                                suscripcion: suscripcion,
+                              )));
                 },
                 child: const Text(
                   "Editar Perfil",

@@ -47,7 +47,7 @@ class localUserRepository implements userRepository {
   }
 
   @override
-  Future<Either<MyError, user>> updateUser(user u) {
+  Future<Either<MyError, String>> updateUser(user u) {
     // TODO: implement updateUser
     throw UnimplementedError();
   }

@@ -85,9 +85,33 @@ class httpUserRepository extends HTTPrepository implements userRepository {
   }
 
   @override
-  Future<Either<MyError, user>> updateUser(user u) {
-    // TODO: implement updateUser
-    throw UnimplementedError();
+  Future<Either<MyError, String>> updateUser(user u) async {
+    var body = jsonEncode({
+      "idUsuario": u.id,
+      "nombre": u.nombre,
+      "correo": u.correo,
+      "clave": u.clave,
+      "fechaNacimiento": u.fechaNacimiento.toString(),
+      "suscripcion": u.isSuscribed
+    });
+    print(body);
+    try {
+      final Response response = await put(
+          Uri.parse('http://$domain/usuario/modificate'),
+          body: body,
+          headers: {
+            "Accept": "application/json",
+            "content-type": "application/json"
+          });
+
+      if (response.statusCode == 200) {
+        return const Right('Cambios guardados exitosamente');
+      } else {
+        return Left(MyError(key: AppError.NotFound, message: response.body));
+      }
+    } catch (e) {
+      return Left(MyError(key: AppError.NotFound, message: '$e'));
+    }
   }
 
   @override
@@ -110,7 +134,7 @@ class httpUserRepository extends HTTPrepository implements userRepository {
     if (res.statusCode == 200) {
       var jsonData = json.decode(res.body);
       var u = user(
-      id: jsonData['id']['UUID'], isSuscribed: jsonData['suscripcion']);
+          id: jsonData['id']['UUID'], isSuscribed: jsonData['suscripcion']);
       u.nombre = jsonData['nombre']['nombre'];
       u.clave = jsonData['clave']['clave'];
       u.correo = jsonData['correo']['correo'];

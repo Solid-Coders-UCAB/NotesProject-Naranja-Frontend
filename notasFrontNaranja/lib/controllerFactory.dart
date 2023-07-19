@@ -13,8 +13,10 @@ import 'package:firstapp/application/iniciarSesionService.dart';
 import 'package:firstapp/application/offlineDecorator.dart';
 import 'package:firstapp/application/updateFolderInServerService.dart';
 import 'package:firstapp/application/updateNoteInServerService.dart';
+import 'package:firstapp/application/updateUserInServerService.dart';
 import 'package:firstapp/application/widgetToImageService.dart';
 import 'package:firstapp/infrastructure/controllers/drawingRoomController.dart';
+import 'package:firstapp/infrastructure/controllers/editarUsuarioWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/findUserByIdController.dart';
 import 'package:firstapp/infrastructure/controllers/homeController.dart';
 import 'package:firstapp/infrastructure/controllers/imageToTextWidgetController.dart';
@@ -246,6 +248,13 @@ class controllerFactory {
   static findUserByIdController createfindUserByIdController() {
     return findUserByIdController(
         getUserByIDService: getUserByIdInServerService(
+            userRepo: httpUserRepository(),
+            localUserRepo: localUserRepository()));
+  }
+
+  static editarUsuarioWidgetController createEditarUsuarioWidgetController() {
+    return editarUsuarioWidgetController(
+        updateUsuarioService: updateUserInServerService(
             userRepo: httpUserRepository(),
             localUserRepo: localUserRepository()));
   }
