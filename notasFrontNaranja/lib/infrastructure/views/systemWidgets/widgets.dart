@@ -130,6 +130,7 @@ void alerta(BuildContext context, bool isGood, String title, String content) {
   );
 }
 
+
 // Widget que despliega un menu con las opciones adicionales que se pueden realizar en la nota (imagen a texto, esbozar y voz a texto)
 Widget opcionesNota(NuevaNotaState state) {
   return PopupMenuButton(
@@ -199,3 +200,27 @@ Widget opcionesNota(NuevaNotaState state) {
             ))
           ]);
 }
+
+void cargando(BuildContext context, bool isGood, String title, String content) {
+  IconData icon = isGood ? Icons.add_task_rounded : Icons.cancel_outlined;
+  Color color = isGood ? Colors.green : Colors.red;
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        title: Row(
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(width: 10),
+            const Text("Cargando.."),
+          ],
+        ),
+        content: const SizedBox(
+                  width: 30, height: 30, child: CircularProgressIndicator()),
+      );
+    },
+  );
+}
+

@@ -37,6 +37,7 @@ import 'package:firstapp/infrastructure/implementations/repositories/localUserRe
 import 'package:firstapp/infrastructure/implementations/repositories/localnoteRepository.dart';
 import 'application/getAllEliminatedNotes.dart';
 import 'application/getAllNotEliminatedNotesFromServerService.dart';
+import 'application/sincronizacionService.dart';
 import 'infrastructure/controllers/homeFolderController.dart';
 import 'package:firstapp/application/createFolderInServerService.dart';
 import 'package:firstapp/infrastructure/controllers/carpetaNuevaWidgetController.dart';
@@ -68,6 +69,13 @@ class controllerFactory {
             getImageFromCamaraService(picker: imagePickerImp()),
             imageToTextService(ia: iaTextImp()));
     return imageToTextController;
+  }
+
+  static sincronizacionService createSincronizacionService(){
+    return sincronizacionService(localNoteRepo: localNoteRepository(), serverNoteRepo: httpNoteRepository(), 
+    localUserRepo: localUserRepository(),
+    localfolderrepo: localFolderRepository(), serverFolderRepo: HTTPfolderRepository(),
+    checker: connectionCheckerImp());
   }
 
   static createNoteInServerService createNoInServerService() {
