@@ -50,7 +50,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
           },
         ),
         title: const Text("Esbozado"),
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color.fromARGB(255, 30, 103, 240),
       ),
       backgroundColor: Colors.white,
       body: Stack(
