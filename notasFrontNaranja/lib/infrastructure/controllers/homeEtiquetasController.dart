@@ -18,10 +18,6 @@ class homeEtiquetasController {
       }else{
         etiquetasHome.showSystemMessage(serviceResponse.left.message);   
       }
-
-      if (serviceResponse.isLeft){
-        etiquetasHome.showSystemMessage(serviceResponse.left.message);
-      }
          
   }
   

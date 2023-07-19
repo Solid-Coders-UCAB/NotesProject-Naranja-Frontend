@@ -18,10 +18,6 @@ class homeFolderController {
       }else{
         folderHome.showSystemMessage(serviceResponse.left.message);   
       }
-
-      if (serviceResponse.isLeft){
-        folderHome.showSystemMessage(serviceResponse.left.message);
-      }
          
   }
   
