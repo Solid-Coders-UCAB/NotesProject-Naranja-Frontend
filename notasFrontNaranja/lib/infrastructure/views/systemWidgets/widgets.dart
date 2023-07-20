@@ -1,8 +1,7 @@
-import 'package:firstapp/infrastructure/views/noteWidgets/nota_nueva.dart';
-import 'package:flutter/foundation.dart';
+
+
 import 'package:flutter/material.dart';
-import 'package:firstapp/infrastructure/views/noteWidgets/drawing_room_screen.dart';
-import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
+
 
 // Widgets que se pueden reutilizar en varias interfaces
 
@@ -132,74 +131,7 @@ void alerta(BuildContext context, bool isGood, String title, String content) {
 
 
 // Widget que despliega un menu con las opciones adicionales que se pueden realizar en la nota (imagen a texto, esbozar y voz a texto)
-Widget opcionesNota(NuevaNotaState state) {
-  return PopupMenuButton(
-      color: Colors.blue,
-      icon: const Icon(Icons.add),
-      itemBuilder: (BuildContext context) => <PopupMenuItem>[
-            PopupMenuItem(
-                child: Container(
-              child: Wrap(
-                direction: Axis.horizontal,
-                children: <Widget>[
-                  // Opcion de imagen a texto
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: InkWell(
-                      child: const Icon(Icons.camera_alt),
-                      onTap: () {
-                        state.getTextFromIa();
-                      },
-                    ),
-                  ),
 
-                  // Opcion de esbozar una nota
-                  Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: InkWell(
-                        child: const Icon(Icons.draw),
-                        onTap: () async {
-                          Uint8List? imagen = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const DrawingRoomScreen()));
-                          state.getEsbozado(imagen);
-                        },
-                      )),
-
-                  // Opcion de voz a texto
-                  Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: InkWell(
-                        child: const Icon(Icons.mic),
-                        onTap: () async {
-                          String espacio = " ";
-                          String audio = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      SpeechScreen(text: '')));
-                          state.showAudioToText(
-                              contenido: state.getContenido() + audio + espacio,
-                              titulo: state.getTitulo());
-                        },
-                      )),
-
-                  // Opcion de elegir imagen de la galeria
-                  Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: InkWell(
-                        child: const Icon(Icons.photo),
-                        onTap: () {
-                          state.getFromGallery();
-                        },
-                      )),
-                ],
-              ),
-            ))
-          ]);
-}
 
 void cargando(BuildContext context, bool isGood, String title, String content) {
   IconData icon = isGood ? Icons.add_task_rounded : Icons.cancel_outlined;

@@ -7,14 +7,10 @@ import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/application/DTOS/imageToTextParams.dart';
 import 'package:firstapp/application/DTOS/updateNoteParams.dart';
-import 'package:firstapp/infrastructure/views/noteWidgets/editar_nota.dart';
-
 import '../../domain/etiqueta.dart';
 import '../../domain/folder.dart';
 import '../../domain/tarea.dart';
-import '../views/noteWidgets/editarNotaEditor.dart';
-import 'package:either_dart/either.dart';
-import 'package:firstapp/domain/errores.dart'; 
+import '../views/noteWidgets/editarNotaEditor.dart'; 
 import 'package:firstapp/domain/user.dart';
 
 class editarNotaWidgetController {
@@ -91,37 +87,6 @@ class editarNotaWidgetController {
     return Right(imagen);
    }
 
-   void eliminarNotaAction({ required EditarNotaState widget, required String id,
-    required String titulo, 
-    required String contenido,int? longitud,
-    int? latitud, List<Uint8List>? imagenes,required n_date,required String idCarpeta, required List<tarea> tareas}) async {
-      
-     widget.setState(() {
-       widget.loading = true;
-     }); 
-
-    var serviceResponse = await updateNotaService.execute(UpdateNoteParams(
-      estado: 'Eliminada',
-      idNota: id,
-      titulo: titulo, 
-      contenido: contenido,
-      imagenes: imagenes,
-      longitud: longitud,
-      latitud: latitud, 
-      n_date: n_date,
-      idCarpeta: idCarpeta,
-      tareas: tareas));
-
-      if (serviceResponse.isLeft){
-       widget.setState(() {
-         widget.loading = false;
-       });
-       widget.showSystemMessage(serviceResponse.left.message); 
-      }else{
-       widget.showSystemMessage("nota eliminada satisfactoriamente");
-       widget.regresarHome();
-      }      
-   }
   void eliminarNotaAction1({ required HtmlEditorEditExampleState widget, required String id,
     required String titulo, 
     required String contenido,int? longitud,
