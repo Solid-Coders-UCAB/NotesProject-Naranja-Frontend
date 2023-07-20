@@ -5,10 +5,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:firstapp/application/getUserCurrentLocation.dart';
 
 class GetLocationImp implements GetUserLocation {
+  
   GetLocationImp();
 
   @override
-  Future<Either<MyError, Location>> getCurrentLocation() async {
+  Future<Either<MyError, location>> getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
     if (!serviceEnabled) {
@@ -31,10 +32,10 @@ class GetLocationImp implements GetUserLocation {
     try {
       Position userPosition = await Geolocator.getCurrentPosition();
 
-      Location userLocation = Location();
+      location userLocation = location();
 
-      userLocation.latitude = userPosition.latitude.toString();
-      userLocation.longitude = userPosition.longitude.toString();
+      userLocation.latitude = userPosition.latitude;
+      userLocation.longitude = userPosition.longitude;
 
       return Right(userLocation);
     } catch (e) {

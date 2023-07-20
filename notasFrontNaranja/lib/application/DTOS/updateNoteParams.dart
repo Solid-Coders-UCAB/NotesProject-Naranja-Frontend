@@ -1,6 +1,8 @@
 // ignore_for_file: file_names, non_constant_identifier_names
 
 import 'dart:typed_data';
+import 'package:firstapp/domain/tarea.dart';
+import 'package:firstapp/domain/etiqueta.dart';
 
 class UpdateNoteParams {
   String idNota;
@@ -11,7 +13,10 @@ class UpdateNoteParams {
   List<Uint8List>? imagenes;
   DateTime n_date;
   String estado;
-  
+  String idCarpeta;
+  List<etiqueta>? etiquetas;
+  List<tarea> tareas;
+
   UpdateNoteParams({
     required this.estado,
     required this.idNota,
@@ -20,7 +25,10 @@ class UpdateNoteParams {
     this.longitud,
     this.latitud,
     this.imagenes,
-    required this.n_date
+    required this.n_date,
+    required this.idCarpeta,
+    this.etiquetas,
+    required this.tareas,
   });
 
   get getIdNota => idNota;
@@ -29,4 +37,5 @@ class UpdateNoteParams {
   get getLongitud => longitud;
   get getLatitud => latitud;
   get getDate => n_date;
+  get getTareas => tareas;
 }

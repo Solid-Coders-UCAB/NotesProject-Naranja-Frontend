@@ -5,16 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechScreen extends StatefulWidget {
-
   String text = 'Press the button and start speaking';
 
-  SpeechScreen({super.key,required this.text});
+  SpeechScreen({super.key, required this.text});
 
   @override
   // ignore: no_logic_in_create_state
   State<SpeechScreen> createState() => SpeechScreenState(text: text);
 
-  get getText => text; 
+  get getText => text;
 }
 
 class SpeechScreenState extends State<SpeechScreen> {
@@ -22,7 +21,7 @@ class SpeechScreenState extends State<SpeechScreen> {
   bool isListening = false;
   double confidence = 1.0;
   String text = "";
-  
+
   SpeechScreenState({required this.text});
 
   @override
@@ -34,44 +33,48 @@ class SpeechScreenState extends State<SpeechScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 30, 103, 240),
+          leading: BackButton(
             onPressed: () {
-                Navigator.pop(context, ''); // datos de vuelta a la primera pantalla},
+              Navigator.pop(
+                  context, ''); // datos de vuelta a la primera pantalla},
             },
-          ) ,
-        title: Text('Confidence: ${(confidence * 100.0).toStringAsFixed(1)}%'),        
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: AvatarGlow(
-          animate: isListening,
-          glowColor: Theme.of(context).primaryColor,
-          endRadius: 75.0,
-          duration: const Duration(milliseconds: 2000),
-          repeatPauseDuration: const Duration(milliseconds: 100),
-          repeat: true,
-          child: FloatingActionButton(
-              onPressed: _listen,
-              child: Icon(isListening ? Icons.mic : Icons.mic_none))),
-      body: Column(  
-           children: [
-      SingleChildScrollView(
-        reverse: true,
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
-          child: Text(text),         
+          ),
+          title:
+              Text('Confidence: ${(confidence * 100.0).toStringAsFixed(1)}%'),
         ),
-      )],
-    ),persistentFooterButtons: [
-        FloatingActionButton(
-            heroTag: 'salir',
-            onPressed: () {
-                Navigator.pop(context, text); // datos de vuelta a la primera pantalla},
-            },
-            child: const Icon(Icons.check)
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: AvatarGlow(
+            animate: isListening,
+            glowColor: Theme.of(context).primaryColor,
+            endRadius: 75.0,
+            duration: const Duration(milliseconds: 2000),
+            repeatPauseDuration: const Duration(milliseconds: 100),
+            repeat: true,
+            child: FloatingActionButton(
+                onPressed: _listen,
+                child: Icon(isListening ? Icons.mic : Icons.mic_none))),
+        body: Column(
+          children: [
+            SingleChildScrollView(
+              reverse: true,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 150.0),
+                child: Text(text),
+              ),
             )
-          ]
-    );
+          ],
+        ),
+        persistentFooterButtons: [
+          FloatingActionButton(
+              heroTag: 'salir',
+              onPressed: () {
+                Navigator.pop(
+                    context, text); // datos de vuelta a la primera pantalla},
+              },
+              child: const Icon(Icons.check))
+        ]);
   }
 
   void _listen() async {

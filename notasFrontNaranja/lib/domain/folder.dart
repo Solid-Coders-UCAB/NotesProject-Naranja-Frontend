@@ -8,16 +8,22 @@ class folder {
  String? id;
  String name;
  List<Nota>? notas;
-
- folder({this.id,required this.name});
+ bool predeterminada;
+ String idUsuario;
+ int savedInServer = 1;
+ folder({this.id,required this.predeterminada,required this.name, required this.idUsuario});
 
   static Either<MyError,folder> create({
     required String name,
-    String? id
+    String? id,
+    required predeterminada,
+    required idUsuario
   }){
     return Right( folder(
       name: name,
       id: id,
+      predeterminada: predeterminada,
+      idUsuario: idUsuario
     ) );
   }
  

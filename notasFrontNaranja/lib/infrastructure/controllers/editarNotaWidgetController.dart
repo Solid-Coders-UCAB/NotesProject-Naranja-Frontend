@@ -7,7 +7,11 @@ import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/application/DTOS/imageToTextParams.dart';
 import 'package:firstapp/application/DTOS/updateNoteParams.dart';
-import 'package:firstapp/infrastructure/views/noteWidgets/editar_nota.dart';
+import '../../domain/etiqueta.dart';
+import '../../domain/folder.dart';
+import '../../domain/tarea.dart';
+import '../views/noteWidgets/editarNotaEditor.dart'; 
+import 'package:firstapp/domain/user.dart';
 
 class editarNotaWidgetController {
 
@@ -15,10 +19,21 @@ class editarNotaWidgetController {
   service<void,File> imageService;
   service<void,File> galleryService;
   service<UpdateNoteParams,String> updateNotaService;
+  service<void,List<etiqueta>> getAllEtiquetasService;
+  service<void,List<folder>> getAllFoldersService;
+  service<void, user> getUserByIdService;
 
-  editarNotaWidgetController({required this.imageToText, required this.imageService, required this.galleryService, required this.updateNotaService });
+  editarNotaWidgetController(
+    {required this.imageToText, 
+    required this.imageService, required this.galleryService, 
+    required this.updateNotaService, required this.getAllEtiquetasService,
+    required this.getAllFoldersService,
+    required this.getUserByIdService });
 
-  Future<Either<MyError,String>> updateNota({required String titulo, required String contenido,int? longitud,int? latitud, List<Uint8List>? imagenes, required String idNota, required n_date} ) async {
+  Future<Either<MyError,String>> updateNota(
+    {required String titulo, 
+     required String contenido,int? longitud,int? latitud, List<Uint8List>? imagenes, 
+     required String idNota, required DateTime n_date, required String idCarpeta, List<etiqueta>? etiquetas, required List<tarea> tareas} ) async {
     longitud??=0;
     latitud??=0;
 
@@ -30,7 +45,10 @@ class editarNotaWidgetController {
       imagenes: imagenes,
       longitud: longitud,
       latitud: latitud, 
-      n_date: n_date));
+      n_date: n_date,
+      etiquetas: etiquetas,
+      idCarpeta: idCarpeta,
+      tareas: tareas));
 
       if (serviceResponse.isLeft){
         return Left(serviceResponse.left);
@@ -69,8 +87,11 @@ class editarNotaWidgetController {
     return Right(imagen);
    }
 
-   void eliminarNotaAction({ required EditarNotaState widget, required String id,
-    required String titulo, required String contenido,int? longitud,int? latitud, List<Uint8List>? imagenes,required n_date}) async {
+  void eliminarNotaAction1({ required HtmlEditorEditExampleState widget, required String id,
+    required String titulo, 
+    required String contenido,int? longitud,
+    int? latitud, List<Uint8List>? imagenes,required n_date,
+    required String idCarpeta, List<etiqueta>? etiquetas, required List<tarea> tareas }) async {
       
      widget.setState(() {
        widget.loading = true;
@@ -84,7 +105,10 @@ class editarNotaWidgetController {
       imagenes: imagenes,
       longitud: longitud,
       latitud: latitud, 
-      n_date: n_date));
+      n_date: n_date,
+      etiquetas: etiquetas,
+      idCarpeta: idCarpeta,
+      tareas: tareas));
 
       if (serviceResponse.isLeft){
        widget.setState(() {
@@ -94,8 +118,19 @@ class editarNotaWidgetController {
       }else{
        widget.showSystemMessage("nota eliminada satisfactoriamente");
        widget.regresarHome();
-      }
-
-      
+      }      
    }
+
+  Future<Either<MyError, List<etiqueta>>> getAllEtiquetas() async {
+    return await getAllEtiquetasService.execute(null); 
+  }
+
+  Future<Either<MyError, List<folder>>> getAllFolders() async {
+    return await getAllFoldersService.execute(null);
+  }
+
+  Future<Either<MyError, user>> getSuscripcionUsuario() async {
+    var serviceResponse = await getUserByIdService.execute(null);
+    return serviceResponse;
+  }
 }

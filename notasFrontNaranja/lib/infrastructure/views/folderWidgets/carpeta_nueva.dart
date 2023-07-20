@@ -4,44 +4,46 @@ import 'package:flutter/material.dart';
 import '../../controllers/carpetaNuevaWidgetController.dart';
 import '../systemWidgets/widgets.dart';
 
+// Ventana para crear una carpeta
+// ignore: must_be_immutable
 class CarpetaNueva extends StatelessWidget {
-  
-  const CarpetaNueva({super.key});
+  List<String> foldersNombre;
 
+  CarpetaNueva({super.key, required this.foldersNombre});
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Nueva Carpeta"),
-        backgroundColor: const Color.fromARGB(255, 99, 91, 250),
-        leading: 
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {Navigator.pop(context); }
-            ),
+        backgroundColor: const Color.fromARGB(255, 30, 103, 240),
+        leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
       ),
-      body: const Center(
-        child: NuevaCarpeta()
-      ),
+      body: Center(child: NuevaCarpeta(foldersNombre: foldersNombre,)),
     );
   }
 }
 
 // ignore: must_be_immutable
 class NuevaCarpeta extends StatefulWidget {
-
-  const NuevaCarpeta({super.key});
+  List<String> foldersNombre;
+  NuevaCarpeta({super.key, required this.foldersNombre});
 
   @override
-  State<NuevaCarpeta> createState() => NuevaCarpetaState();
+  // ignore: no_logic_in_create_state
+  State<NuevaCarpeta> createState() => NuevaCarpetaState(foldersNombre: foldersNombre);
 }
 
 class NuevaCarpetaState extends State<NuevaCarpeta> {
-
-
-  NuevaCarpetaState();
+  List<String> foldersNombre;
+  NuevaCarpetaState({required this.foldersNombre});
   bool loading = false;
 
+// Se crea el controlador con la logica de la ventana CarpetaNueva
   carpetaNuevaWidgetController controller =
       controllerFactory.createCarpetaNuevaWidgetController();
 
@@ -66,17 +68,18 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  genericTextFormField(_nombreCarpeta, "Nombre de la carpeta", false, 40),
-    
+                  genericTextFormField(
+                      _nombreCarpeta, "Nombre de la carpeta", false, 40),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      // Boton para crear una nueva carpeta
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25)),
                             backgroundColor:
-                                const Color.fromARGB(255, 99, 91, 250),
+                                const Color.fromARGB(255, 30, 103, 240),
                           ),
                           onPressed: () {
                             if (_nombreCarpeta.text != '') {
@@ -95,46 +98,56 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
                     ],
                   ),
                 ],
-              )
-              ),
+              )),
       ),
     );
   }
 
-void regresarHome(){
+  void regresarHome() {
     //home.showNotes();
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                 builder: (context) => folderHome()),(Route<dynamic> route) => false);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => folderHome()),
+        (Route<dynamic> route) => false);
   }
+
   showSystemMessage(String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
+// Funcion para crear una carpeta
   Future crearCarpeta(String nombreCarpeta) async {
-    setState(() {
-      loading = true;
-    });
-    var response = await controller.createCarpeta(nombreCarpeta: nombreCarpeta);
-
-    if (response.isLeft) {
-      setState(() {
-        loading = false;
-      });
-      String text = '';
-      text = response.left.message!;
-      showSystemMessage(text);
+    bool esRepetido = false;
+    for (var element in foldersNombre) {
+      if (element == nombreCarpeta) {
+        esRepetido = true;
+        print(element);
+      }
     }
 
-    if (response.isRight) {
-
-       loading = false;
-
-      regresarHome();
-    }
-    
-  }
-
+    if (!esRepetido) {
+  setState(() {
+    loading = true;
+  });
+  // Se llama a la funcion del controlador para crear una carpeta
+  var response = await controller.createCarpeta(nombreCarpeta: nombreCarpeta);
   
-
+  if (response.isLeft) {
+    setState(() {
+      loading = false;
+    });
+    String text = '';
+    text = response.left.message!;
+    showSystemMessage(text);
+  }
+  
+  if (response.isRight) {
+    loading = false;
+    // Regresa a la ventana principal
+    regresarHome();
+  }
+} else{
+  showSystemMessage("El nombre de la carpeta ya existe");
+}
+  }
 }

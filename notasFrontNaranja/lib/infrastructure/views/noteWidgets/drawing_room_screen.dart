@@ -2,13 +2,14 @@
 import 'dart:io';
 import 'package:firstapp/infrastructure/controllers/drawingRoomController.dart';
 import 'package:firstapp/infrastructure/theme/app_color.dart';
-import 'package:firstapp/infrastructure/views/noteWidgets/nota_nueva.dart';
+
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firstapp/infrastructure/implementations/drawingRoomImp/drawing_point.dart';
 import 'package:flutter/services.dart';
 import 'package:firstapp/controllerFactory.dart';
 
+// Ventana para esbozar una nota a mano
 class DrawingRoomScreen extends StatefulWidget {
   const DrawingRoomScreen({super.key});
 
@@ -17,6 +18,7 @@ class DrawingRoomScreen extends StatefulWidget {
 }
 
 class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
+  // Paleta de colores para dibujar
   var avaiableColor = [
     Colors.black,
     Colors.red,
@@ -26,13 +28,13 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
     Colors.white,
   ];
 
+  // Se crea un controlador con la logica de la ventana Drawing Room
   DrawingRoomController Drawingcontroller = controllerFactory.createDrawingRoomController();
+
   final GlobalKey genKey = GlobalKey();
   Uint8List? bytes;
-
   var historyDrawingPoints = <DrawingPoint>[];
   var drawingPoints = <DrawingPoint>[];
-
   var selectedColor = Colors.black;
   var selectedWidth = 2.0;
 
@@ -48,7 +50,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
           },
         ),
         title: const Text("Esbozado"),
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color.fromARGB(255, 30, 103, 240),
       ),
       backgroundColor: Colors.white,
       body: Stack(
@@ -217,28 +219,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
       //print("error guardando imagen ${e}");
     }
   }
-
-  // Funcion para cargar la imagen en la aplicacion 
-  Future<void> _loadEsbozar() async{
-    try {
-      final appStorage = await _localPath;
-      final file = File('$appStorage/image.png');
-
-      if (file.existsSync()) {
-        //final bytes = await file.readAsBytes();
-   
-        // ignore: use_build_ntext_synchronously, use_build_context_synchronously
-        Navigator.push(context,
-                              MaterialPageRoute(
-                              builder: (context) => NotaNueva(null)));
-      }
-
-    } catch (e) {
-      //
-    }
-  }
-
-  
+ 
 }
 
 // Clase para dibujar en el lienzo que proporciona el widget CustomPaint

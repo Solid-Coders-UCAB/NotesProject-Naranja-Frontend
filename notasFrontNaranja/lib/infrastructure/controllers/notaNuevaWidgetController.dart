@@ -1,42 +1,66 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:either_dart/either.dart';
 import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/application/DTOS/createNoteParams.dart';
 import 'package:firstapp/application/DTOS/imageToTextParams.dart';
 import 'package:firstapp/domain/location.dart';
+import 'package:firstapp/domain/tarea.dart';
+import '../../domain/etiqueta.dart';
+import '../../domain/folder.dart';
+import 'package:firstapp/domain/user.dart';
 
 class notaNuevaWidgetController {
   service<imageToTextParams, String> imageToText;
   service<void, File> imageService;
   service<void, File> galleryService;
   service<CreatenoteParams, String> createNotaService;
-  service<void, Location> locationService;
+  service<void, location> locationService;
+  service<void,List<etiqueta>> getAllEtiquetasService;
+  service<void,List<folder>> getAllFoldersService;
+  service<void, user> getUserByIdService;
 
   notaNuevaWidgetController(
       {required this.imageToText,
       required this.imageService,
       required this.galleryService,
       required this.createNotaService,
-      required this.locationService});
+      required this.locationService,
+      required this.getAllEtiquetasService,
+      required this.getAllFoldersService,
+      required this.getUserByIdService});
 
   Future<Either<MyError, String>> saveNota(
       {required String titulo,
-      required contenido,
-      int? longitud,
-      int? latitud,
-      List<Uint8List>? imagenes}) async {
+      required String contenido,
+      String? folderId,
+      double? longitud,
+      double? latitud,
+      List<etiqueta>? etiquetas,
+      List<Uint8List>? imagenes,
+      required List<tarea> tareas}) async {
+    
     longitud ??= 0;
     latitud ??= 0;
+    etiquetas ??= [];
 
-    var serviceResponse = await createNotaService.execute(CreatenoteParams(
+    var params = CreatenoteParams(
         titulo: titulo,
         contenido: contenido,
         imagenes: imagenes,
         longitud: longitud,
-        latitud: latitud));
+        latitud: latitud,
+        folderId: folderId,
+        etiquetas: etiquetas, tareas: tareas);
+
+        print(params.contenido);
+
+
+
+    var serviceResponse = await createNotaService.execute(params);
+
+   
 
     if (serviceResponse.isLeft) {
       return Left(serviceResponse.left);
@@ -73,13 +97,32 @@ class notaNuevaWidgetController {
     return Right(imagen);
   }
 
-  Future<Either<MyError, Location>> getUserLocation() async {
+  Future<Either<MyError, location>> getUserLocation() async {
+    print("EntraaVaDFKGILHLH;N;NK");
     var locationResponse = await locationService.execute(null);
 
     if (locationResponse.isLeft) {
       return Left(locationResponse.left);
     }
-    Location location = locationResponse.right;
-    return Right(location);
+    location loca = locationResponse.right;
+    return Right(loca);
   }
+
+  Future<Either<MyError, List<etiqueta>>> getAllEtiquetas() async {
+    var serviceResponse = await getAllEtiquetasService.execute(null); 
+      if (serviceResponse.isLeft){
+        return Left(serviceResponse.left);        
+      }
+     return Right(serviceResponse.right); 
+  }
+
+  Future<Either<MyError, List<folder>>> getAllFolders() async {
+    return await getAllFoldersService.execute(null);
+  }
+
+  Future<Either<MyError, user>> getSuscripcionUsuario() async {
+    var serviceResponse = await getUserByIdService.execute(null);
+    return serviceResponse;
+  }
+
 }

@@ -1,124 +1,181 @@
 // ignore_for_file: file_names, implementation_imports
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:path_provider/path_provider.dart';
+import 'package:either_dart/either.dart';
 import 'package:either_dart/src/either.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/domain/repositories/noteRepository.dart';
+import 'package:firstapp/infrastructure/implementations/repositories/HTTPrepository.dart';
 import 'package:http/http.dart';
-
-class httpNoteRepository implements noteRepository{
-
-  String domain = '192.168.1.2:3000';
-
+import '../../../domain/etiqueta.dart';
+import 'package:firstapp/domain/tarea.dart';
+class httpNoteRepository extends HTTPrepository implements noteRepository{
   
   @override
   Future<Either<MyError, String>> createNota(Nota note) async {
-
-    MultipartRequest request;
-    StreamedResponse response;
-
-    //Uint8List buffer = note.imagenes![0];
-    //final tempDir = await getTemporaryDirectory();
-    //File file = await File('${tempDir.path}/image.png').create(); 
-    //file.writeAsBytesSync(buffer);
     
+    var body = jsonEncode({
+      "titulo": note.getTitulo,
+      'cuerpo':note.getContenido,
+      'estado':note.getEstado,
+      'fechaModificacion': note.getEditDate.toString(),
+      'fechaCreacion': note.getDate.toString(),
+      'idCarpeta': note.idCarpeta,
+      'etiquetas': note.getEtiquetasIds(),
+      "tareas": note.tareas.map((t) => t.toJson()).toList(),
+      "latitud":  note.latitud,
+      "longitud": note.longitud
+    });
 
-    var uri = Uri.parse('http://$domain/nota/create');
+  try{
 
-
-    request = MultipartRequest('POST',uri)
-    ..fields['titulo'] = note.getTitulo
-    ..fields['estado'] = note.getEstado
-    ..fields['cuerpo'] = note.getContenido
-    ..fields['fechaCreacion'] = note.getDate.toString()
-    ..fields['fechaModificacion'] = note.getEditDate.toString()
-    ..fields['longitud'] = note.getLongitud.toString()
-    ..fields['latitud'] = note.getLatitud.toString()
-    ..fields['idCarpeta'] = 'fa378750-9763-4466-902f-26200a4fc603';
-
-    List<Uint8List>? imagenes = note.imagenes;
-
-    if (imagenes != null){
-      int cont = 0;
-      for (Uint8List buffer in imagenes){
-          final tempDir = await getTemporaryDirectory();
-          File file = await File('${tempDir.path}/${note.getid}Image$cont.png').create(); 
-          file.writeAsBytesSync(buffer);
-          request.files.add( MultipartFile(
-                              'imagen',file.readAsBytes().asStream(),
-                               file.lengthSync(),
-                               filename: file.path));
-         cont++;
+  final Response response = await post(Uri.parse('https://$domain/nota/create'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+  
+      if (response.statusCode == 200){
+        return const Right('nota guardada exitosamente');
+      }else{
+        return Left(MyError(key: AppError.NotFound,message: response.body));
       }
-    }
- 
 
-    response = await request.send();   
+  }catch(e){
+      return Left(MyError(key: AppError.NotFound,message: '$e'));
+  }                   
 
-    if (response.statusCode == 200){    
-      return Right(await response.stream.bytesToString());
-    }                   
-
-
-    String error = 'error al procesar la solicitud al servidor: ${response.stream.bytesToString()}';
-         return Left(MyError(key: AppError.NotFound,
-                                  message: error));
  }
+
  
   @override
-  Future<Either<MyError, List<Nota>>> getALLnotes() async {
+  Future<Either<MyError, List<Nota>>> getALLnotes(String userId) async {
 
     List<Nota> notas = [];
-    List<Uint8List> images = [];
+    List<etiqueta> etiquetas = [];
+    List<tarea> tareas = [];
     Response response;
-    Response response1;
+    var body = jsonEncode({
+      'idUsuario': userId
+    });
 
 
     try{ 
-      response = await get(Uri.parse('http://$domain/nota/findAll'));
-      response1 = response;
+     response = await post(Uri.parse('https://$domain/nota/findByUser'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
     }catch(e){
       return Left(MyError(key: AppError.NotFound,
                                   message: "$e"));
     }
 
-   
-   if (response1.statusCode == 200){
+   if (response.statusCode == 200){
 
-      var jsonData = json.decode(response1.body);
+      var jsonData = json.decode(response.body);
 
       for (var jsonNote in jsonData){
 
-       for (var jsonImage in jsonNote['cuerpo']['imagen']){
-        List<dynamic> bufferDynamic = jsonImage["data"];
-        Uint8List buffer = Uint8List.fromList(bufferDynamic.cast<int>());
-        images.add(buffer);
-       }
+          for (var eti in jsonNote['etiquetas']) {
+            etiquetas.add( etiqueta(nombre: '', idUsuario: '',id: eti['id']) );
+          }
+       // Obtener las tareas de la nota
+          for (var jsonTarea in jsonNote['tareas']) {
+            String nombreTarea = jsonTarea['nombre']['nombre'];
+            bool completada = jsonTarea['completada'];
+            tareas.add(tarea(nombreTarea: nombreTarea, completada: completada));
+          }
+
 
        Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
                      titulo: jsonNote['titulo']['titulo'],
                      contenido: jsonNote['cuerpo']['cuerpo'],
                      n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
                      n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
-                     estado: jsonNote['estado'],
-                     imagenes: images                                
+                     estado: jsonNote['estado'], 
+                     carpeta: jsonNote['idCarpeta']['UUID'],
+                     etiquetas: etiquetas,
+                     tareas: tareas                           
                ).right;
 
         var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
+        print("assigned:${jsonAssignedGeolocalitation}");
         if ( jsonAssignedGeolocalitation){
-            nota.latitud = jsonNote['geolocalizacion']['latitud'];
-            nota.longitud = jsonNote['geolocalizacion']['longitud'];
+            nota.latitud = double.parse( jsonNote['geolocalizacion']['value']['latitud'].toString());
+            nota.longitud = double.parse(jsonNote['geolocalizacion']['value']['longitud'].toString());
         }else{
             nota.latitud = null;
             nota.longitud = null;
         }
-
-
         notas.add(nota);
-        images = [];
+        etiquetas = [];
+        tareas = [];
+      } 
+      return Right(notas);
+    }
+          
+    return Left(MyError(key: AppError.NotFound,
+                message: response.body ));
+                
+}
+
+ Future<Either<MyError, List<Nota>>> getALLnotesPreview(String userId) async {
+    List<tarea> tareas = [];
+    List<Nota> notas = [];
+    Response response;
+    var body = jsonEncode({
+      'idUsuario': userId
+    });
+
+
+    try{ 
+     response = await post(Uri.parse('https://$domain/nota/findByUser'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+    }catch(e){
+      return Left(MyError(key: AppError.NotFound,
+                                  message: "$e"));
+    }
+
+   if (response.statusCode == 200){
+
+      var jsonData = json.decode(response.body);
+
+      for (var jsonNote in jsonData){
+
+    // Obtener las tareas de la nota
+          for (var jsonTarea in jsonNote['tareas']) {
+            String nombreTarea = jsonTarea['nombre']['nombre'];
+            bool completada = jsonTarea['completada'];
+            tareas.add(tarea(nombreTarea: nombreTarea, completada: completada));
+          }
+
+       Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
+                     titulo: jsonNote['titulo']['titulo'],
+                     n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
+                     n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
+                     estado: jsonNote['estado'], 
+                     carpeta: jsonNote['idCarpeta']['UUID'], 
+                     tareas: tareas                   
+               ).right;
+
+        var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
+        print("assigned:${jsonAssignedGeolocalitation}");
+        if ( jsonAssignedGeolocalitation){
+            nota.latitud = double.parse( jsonNote['geolocalizacion']['value']['latitud'].toString());
+            nota.longitud = double.parse(jsonNote['geolocalizacion']['value']['longitud'].toString());
+        }else{
+            nota.latitud = null;
+            nota.longitud = null;
+        }
+        notas.add(nota);
+        tareas = [];
       } 
       return Right(notas);
     }
@@ -130,63 +187,35 @@ class httpNoteRepository implements noteRepository{
 
 @override
 Future<Either<MyError, String>> updateNota(Nota note) async {
-
-    MultipartRequest request;
-    StreamedResponse response;
-
-    var uri = Uri.parse('http://$domain/nota/modificate');
-
-
-   request = MultipartRequest('PUT',uri)
-    ..fields['titulo'] = note.getTitulo
-    ..fields['estado'] = note.getEstado
-    ..fields['cuerpo'] = note.getContenido
-    ..fields['fechaCreacion'] = note.getDate.toString()
-    ..fields['fechaModificacion'] = note.getEditDate.toString()
-    //..fields['longitud'] = note.getLongitud.toString()
-    //..fields['latitud'] = note.getLatitud.toString()
-    ..fields['idCarpeta'] = 'fa378750-9763-4466-902f-26200a4fc603'
-    ..fields['idNota'] = note.getid;
-
-        if (note.latitud != null && note.longitud != null){
-            request.fields['longitud'] = note.getLatitud.toString();
-            request.fields['latitud'] = note.getLongitud.toString();
-         }
-
-    List<Uint8List>? imagenes = note.imagenes;
-
-    if (imagenes != null){
-      int cont = 0;
-      for (Uint8List buffer in imagenes){
-          final tempDir = await getTemporaryDirectory();
-          File file = await File('${tempDir.path}/${note.getid}Image$cont.png').create(); 
-          file.writeAsBytesSync(buffer);
-          request.files.add( MultipartFile(
-                              'imagen',file.readAsBytes().asStream(),
-                               file.lengthSync(),
-                               filename: file.path));
-         cont++;
+  
+    var body = jsonEncode({
+      "idNota": note.id,
+      "titulo": note.getTitulo,
+      'cuerpo':note.getContenido,
+      'estado':note.getEstado,
+      'fechaModificacion': note.getEditDate.toString(),
+      'fechaCreacion': note.getDate.toString(),
+      'idCarpeta': note.idCarpeta,
+      'latitud': note.latitud,
+      'longitud': note.longitud,
+      'etiquetas': note.getEtiquetasIds(),
+      "tareas": note.tareas.map((t) => t.toJson()).toList(),
+    });
+  try{
+  final Response response = await put(Uri.parse('https://$domain/nota/modificate'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+      if (response.statusCode == 200){
+        return const Right('Nota actualizada exitosamente');
+      }else{
+        return Left(MyError(key: AppError.NotFound,message: response.body));
       }
-    }
- 
-
-   try{
-    response = await request.send();  
-   }catch(e){
-    return Left(MyError(key: AppError.NotFound,
-                message: "$e" ));
-   }
-
-    if (response.statusCode == 200){    
-      return Right(await response.stream.bytesToString());
-    } 
-
-    var res = response.stream.bytesToString();                  
-
-
-    String error = 'error al procesar la solicitud al servidor: $res';
-         return Left(MyError(key: AppError.NotFound,
-                                  message: error));
+  }catch(e){
+      return Left(MyError(key: AppError.NotFound,message: '$e'));
+  } 
  }
  
 @override
@@ -196,7 +225,7 @@ Future<Either<MyError, String>> deleteNota(Nota note) async {
       });
   Response r1;
   try{
-   r1 = await post(Uri.parse('http://$domain/nota/delete'),
+   r1 = await delete(Uri.parse('https://$domain/nota/delete'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -213,4 +242,140 @@ Future<Either<MyError, String>> deleteNota(Nota note) async {
   return const Right('nota eliminada exitosamente');     
 }
 
+  @override
+  Future<Either<MyError, List<Nota>>> getAllEliminatedNotes(String userId) async {
+    List<Nota> notas = [];
+    List<tarea> tareas = [];
+    Response response;
+    var body = jsonEncode({
+      'idUsuario': userId
+    });
+    try{ 
+     response = await post(Uri.parse('https://$domain/nota/findDeleted'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+    }catch(e){
+      return Left(MyError(key: AppError.NotFound,
+                                  message: "$e"));
+    }
+   if (response.statusCode == 200){
+      var jsonData = json.decode(response.body);
+    for (var jsonNote in jsonData){
+      // Obtener las tareas de la nota
+          for (var jsonTarea in jsonNote['tareas']) {
+            String nombreTarea = jsonTarea['nombre']['nombre'];
+            bool completada = jsonTarea['completada'];
+            tareas.add(tarea(nombreTarea: nombreTarea, completada: completada));
+          }
+       Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
+                     titulo: jsonNote['titulo']['titulo'],
+                     contenido: jsonNote['cuerpo']['cuerpo'],
+                     n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
+                     n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
+                     estado: jsonNote['estado'], 
+                     carpeta: jsonNote['idCarpeta']['UUID'],
+                     tareas: tareas                            
+                    ).right;
+        var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
+        if ( jsonAssignedGeolocalitation){
+            nota.latitud = jsonNote['geolocalizacion']['latitud'];
+            nota.longitud = jsonNote['geolocalizacion']['longitud'];
+        }else{
+            nota.latitud = null;
+            nota.longitud = null;
+        }
+        notas.add(nota);
+        tareas = [];
+      } 
+      return Right(notas);
+    }
+          
+    return Left(MyError(key: AppError.NotFound,
+                message: response.body ));
+  }
+
+  @override
+Future<Either<MyError, List<Nota>>> getNotesByKeyword(String palabraClave, String idUsuario) async {
+
+    List<Nota> notas = [];
+    List<etiqueta> etiquetas = [];
+    List<tarea> tareas = [];
+    Response response;
+    var body = jsonEncode({
+      "palabraClave": palabraClave,
+      "idUsuario": idUsuario
+    });
+
+
+    try{ 
+     response = await post(Uri.parse('https://$domain/nota/findByKeyword'),
+      body: body,
+      headers: {
+        "Accept": "application/json",
+        "content-type": "application/json"
+      });
+    }catch(e){
+      return Left(MyError(key: AppError.NotFound,
+                                  message: "$e"));
+    }
+
+   if (response.statusCode == 200){
+
+      var jsonData = json.decode(response.body);
+
+      for (var jsonNote in jsonData){
+
+          for (var eti in jsonNote['etiquetas']) {
+            etiquetas.add( etiqueta(nombre: '', idUsuario: '',id: eti['id']) );
+          }
+       
+       // Obtener las tareas de la nota
+          for (var jsonTarea in jsonNote['tareas']) {
+            String nombreTarea = jsonTarea['nombre']['nombre'];
+            bool completada = jsonTarea['completada'];
+            tareas.add(tarea(nombreTarea: nombreTarea, completada: completada));
+          }
+       Nota nota =  Nota.create( id: jsonNote['id']['UUID'],
+                     titulo: jsonNote['titulo']['titulo'],
+                     contenido: jsonNote['cuerpo']['cuerpo'],
+                     n_edit_date: DateTime.tryParse(jsonNote['fechaModificacion']['fecha']),
+                     n_date: DateTime.tryParse(jsonNote['fechaCreacion']['fecha']) ,
+                     estado: jsonNote['estado'], 
+                     carpeta: jsonNote['idCarpeta']['UUID'],
+                     etiquetas: etiquetas,  
+                     tareas: tareas                          
+               ).right;
+
+        var jsonAssignedGeolocalitation = jsonNote['geolocalizacion']['assigned'];
+        if ( jsonAssignedGeolocalitation){
+            nota.latitud = jsonNote['geolocalizacion']['latitud'];
+            nota.longitud = jsonNote['geolocalizacion']['longitud'];
+        }else{
+            nota.latitud = null;
+            nota.longitud = null;
+        }
+        notas.add(nota);
+        etiquetas = [];
+        tareas = [];
+      } 
+      return Right(notas);
+    }
+          
+    return Left(MyError(key: AppError.NotFound,
+                message: response.body ));
+                
+}
+
+}
+void main() async {
+  var execute = await httpNoteRepository().getALLnotes('');
+    if (execute.isLeft){
+      print(execute.left.message);
+    }else{
+      print(execute.right.first.contenido);
+    }
+    
 }

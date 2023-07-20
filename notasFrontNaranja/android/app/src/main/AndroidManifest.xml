@@ -13,7 +13,7 @@
     </intent>
 </queries>
    <application
-        android:label="firstapp"
+        android:label="NoteApp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,55 +1,137 @@
+
+// ignore_for_file: no_logic_in_create_state
+
 import 'dart:typed_data';
+import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/domain/errores.dart';
+import 'package:firstapp/infrastructure/controllers/notePreviewController.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/editarNotaEditor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tags_x/flutter_tags_x.dart';
 
+import '../../../domain/etiqueta.dart';
 import '../../../domain/nota.dart';
-import 'package:firstapp/infrastructure/views/noteWidgets/editar_nota.dart';
-import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
+import 'package:firstapp/infrastructure/views/etiquetasWidgets/notasPorEtiqueta.dart';
 
-class notePreviewWidget extends StatelessWidget{
+class notePreviewWidget extends StatefulWidget{
 
   final Nota nota;
-  final homeState home;
-  const notePreviewWidget({super.key,required this.nota, required this.home});
+  const notePreviewWidget({super.key,required this.nota});
+
+    @override
+    State<notePreviewWidget> createState() => notePreviewWidgetState(nota: nota);
+
+}
+
+class notePreviewWidgetState extends State<notePreviewWidget> {
+
+  Nota nota;
+  notePreviewController controller = controllerFactory.createNotePreviewController();
+  notePreviewWidgetState({required this.nota});
+  List<etiqueta> tags = [];
+  List<String> etiquetasNombre = [];
+
+  bool loadingTags = false;
+  AppError? tagError;
+
+  @override
+  void initState() {
+    super.initState();
+     setState(() {
+       loadingTags = true;
+     });
+     init();
+  }
+
+  void init() async{
+   var controllerResponse =  await controller.getAllTagsNote(nota);
+    if (controllerResponse.isRight){
+      setState(() {
+        loadingTags = false;
+      });
+      tags = controllerResponse.right.etiquetas!;
+      for (var element in tags) {
+        etiquetasNombre.add(element.nombre);
+      }
+    }else{
+
+      tagError = controllerResponse.left.key;
+      setState(() {
+        loadingTags = false;
+      });
+    }
      
+  } 
+  
   @override
   Widget build(BuildContext context) {
-
-
     return(Card(
       child: 
       Material(
         child: ListTile(
           title: Text(nota.getTitulo),
-          subtitle: Text("ultima actualizacion: ${nota.getEditDate}"),
+          subtitle: subtituloNota(),
           leading: getImage(),
-          onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => 
-          EditarNota(
-            tituloNota: nota.titulo!, 
-            contenidoNota: nota.contenido!, 
-            imagenes: nota.imagenes,
-            note: nota,
-            h: home,
-          )))
+          onTap: () => 
+          Navigator.push(context,MaterialPageRoute(builder: (context) => 
+          HtmlEditorEditar(nota: nota)))
         ),      
       )
     ));   
-  } 
+  }
+
+  Widget subtituloNota(){
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text("última actualización: ${nota.getEditDate}"
+          ),
+          loadingTags == false ?
+          Tags(  
+            itemCount: tags.length, 
+            itemBuilder: (int index){ 
+              return Tooltip(
+                message: tags[index].nombre,
+                child: ItemTags(
+                  title: tags[index].nombre, index: index,
+                  pressEnabled: true,
+                  onPressed: (i) {
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                    builder: (context) => NotasPorEtiqueta(
+                          nombreEtiqueta: tags[index].nombre,
+                          idEtiqueta: tags[index].id.toString(), etiquetasNombre: etiquetasNombre,
+                        )));
+                  },
+               )   
+             );
+            } 
+          )
+          :
+          const Text('cargando etiquetas...')
+        ] 
+       );
+  }
+
 
 
   Widget getImage(){
-   if ( nota.imagenes!.isEmpty ) {
+   Uint8List? image = nota.getFirstImage(); 
+   if (image == null){ 
       return const CircleAvatar(
             radius: 35,
             backgroundColor: Colors.white38,
             child: Icon(Icons.note_rounded)
             );
    }
-    List<Uint8List> imagenes = nota.imagenes as List<Uint8List>;
     return CircleAvatar(
             radius: 35,
-            backgroundImage: Image.memory(imagenes[0]).image
+            backgroundImage: Image.memory(image).image
             );
   }
     
 }
+
+
 

@@ -24,10 +24,13 @@ class updateNoteInServerService implements service<UpdateNoteParams,String>{
       n_date: params.getDate,
       n_edit_date:  DateTime.now(),
       estado: params.estado,
-      longitud: params.getLongitud,
-      latitud: params.getLatitud,
+      longitud: (params.longitud != null) ? params.longitud!.toDouble(): null,
+      latitud: (params.longitud != null) ? params.longitud!.toDouble(): null,
       imagenes: params.imagenes,
-      id: params.idNota
+      id: params.idNota,
+      carpeta: params.idCarpeta,
+      etiquetas: params.etiquetas,
+      tareas: params.tareas
     );
 
   //error al crear la nota

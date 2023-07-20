@@ -4,15 +4,17 @@ import 'package:either_dart/either.dart';
 import 'package:firstapp/application/serviceDecorator.dart';
 
 import '../domain/errores.dart';
+import 'Iservice.dart';
 
 class connectionCheckerDecorator<params,result> extends serviceDecorator<params,result>{
   
   connectionChecker checker;
+  service<params, result> offlineService;
 
-  connectionCheckerDecorator({required this.checker, required super.servicio});
+  connectionCheckerDecorator({required this.checker, required super.servicio,required this.offlineService});
 
     @override
-    Future<Either<MyError,result>> execute(params params) async {    
+    Future<Either<MyError,result>> execute(params params) async {   
 
       bool hasConnection = await checker.checkConnection();
 

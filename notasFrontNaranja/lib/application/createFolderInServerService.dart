@@ -7,20 +7,28 @@ import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/folder.dart';
 import 'package:firstapp/domain/repositories/folderRepository.dart';
 import 'DTOS/createFolderDTO.dart';
+import 'package:firstapp/domain/repositories/userRepository.dart';
 
-// ignore: camel_case_types
 class createFolderInServerService implements service<createFolderDTO,String>{
 
   folderRepository folderRepo;
+  userRepository localUserRepo;
 
-  createFolderInServerService({required this.folderRepo});
+  createFolderInServerService({required this.folderRepo, required this.localUserRepo});
 
  
   @override
   Future<Either<MyError, String>> execute(params) async{
 
+    var localres = await localUserRepo.getUser();
+      if (localres.isLeft){
+        return Left(localres.left);
+      } 
+
     Either<MyError,folder> f = folder.create(
-      name: params.getName
+      name: params.getName,
+      predeterminada: false,
+      idUsuario: localres.right.id
     );
 
       if (f.isLeft){
