@@ -100,24 +100,37 @@ class controllerFactory {
         folderRepo: localFolderRepository(),
         localUserRepo: localUserRepository());
 
-    var offlineDeco = offlineDecorator(
+    var offlineDeco1 = offlineDecorator(
         servicio: servicio,
         offlineService: offlineService,
         checker: connectionCheckerImp());
+
+    var folderDeco = offlineDecorator(servicio: getAllFoldersFromServerService(
+                                                  folderRepo: HTTPfolderRepository(),
+                                                  localUserRepo: localUserRepository()),                           
+                                offlineService: getAllFoldersFromServerService(
+                                                  folderRepo: localFolderRepository(),
+                                                  localUserRepo: localUserRepository()),                          
+                                checker: connectionCheckerImp());
+  
+    var etiquetaDeco = offlineDecorator(servicio: getAllEtiquetasFromServerService(
+                                                  etiquetaRepo: HTTPetiquetasRepository(),
+                                                  localUserRepo: localUserRepository()), 
+                                        offlineService: getAllEtiquetasFromServerService(
+                                                    etiquetaRepo: localEtiquetaRepository(),
+                                                    localUserRepo: localUserRepository()), 
+    checker: connectionCheckerImp());
+        
 
     return notaNuevaWidgetController(
         imageToText: imageToTextService(ia: iaTextImp()),
         imageService: getImageFromCamaraService(picker: imagePickerImp()),
         galleryService:
             getImageFromGalleryService(picker: imagePickerGalleryImp()),
-        createNotaService: offlineDeco,
+        createNotaService: offlineDeco1,
         locationService: GetUserCurrentLocationService(loca: GetLocationImp()),
-        getAllEtiquetasService: getAllEtiquetasFromServerService(
-            etiquetaRepo: HTTPetiquetasRepository(),
-            localUserRepo: localUserRepository()),
-        getAllFoldersService: getAllFoldersFromServerService(
-            folderRepo: HTTPfolderRepository(),
-            localUserRepo: localUserRepository()));
+        getAllEtiquetasService: etiquetaDeco,
+        getAllFoldersService: folderDeco );
   }
 
 // Controlador para el widget de esbozado DrawingRoom

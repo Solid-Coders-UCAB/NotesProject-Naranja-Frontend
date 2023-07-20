@@ -29,6 +29,7 @@ class localNoteRepository implements noteRepository {
         if (note.etiquetas != null){
           if (note.etiquetas!.isNotEmpty){
             for (var etiqueta in note.etiquetas!) {
+            print(note.etiquetas!.first);
              await txn.rawInsert(''' INSERT INTO etiqueta(id,savedInServer,nombre) VALUES ("${etiqueta.id}",${etiqueta.savedInServer},"${etiqueta.nombre}")'''); 
              await txn.rawInsert(''' INSERT INTO nota_etiqueta(idEtiqueta,idNota) VALUES ("${etiqueta.id}", "${note.id}")'''); 
             }
