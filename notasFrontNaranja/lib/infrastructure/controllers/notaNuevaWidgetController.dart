@@ -9,7 +9,6 @@ import 'package:firstapp/domain/location.dart';
 import 'package:firstapp/domain/tarea.dart';
 import '../../domain/etiqueta.dart';
 import '../../domain/folder.dart';
-import 'package:firstapp/application/getUserByIdServide.dart';
 import 'package:firstapp/domain/user.dart';
 
 class notaNuevaWidgetController {

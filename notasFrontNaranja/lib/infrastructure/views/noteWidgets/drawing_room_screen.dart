@@ -2,7 +2,7 @@
 import 'dart:io';
 import 'package:firstapp/infrastructure/controllers/drawingRoomController.dart';
 import 'package:firstapp/infrastructure/theme/app_color.dart';
-import 'package:firstapp/infrastructure/views/noteWidgets/nota_nueva.dart';
+
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firstapp/infrastructure/implementations/drawingRoomImp/drawing_point.dart';
@@ -219,28 +219,7 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
       //print("error guardando imagen ${e}");
     }
   }
-
-  // Funcion para cargar la imagen en la aplicacion 
-  Future<void> _loadEsbozar() async{
-    try {
-      final appStorage = await _localPath;
-      final file = File('$appStorage/image.png');
-
-      if (file.existsSync()) {
-        //final bytes = await file.readAsBytes();
-   
-        // ignore: use_build_ntext_synchronously, use_build_context_synchronously
-        Navigator.push(context,
-                              MaterialPageRoute(
-                              builder: (context) => NotaNueva(null)));
-      }
-
-    } catch (e) {
-      //
-    }
-  }
-
-  
+ 
 }
 
 // Clase para dibujar en el lienzo que proporciona el widget CustomPaint

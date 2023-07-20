@@ -217,10 +217,11 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
 
   void imageToText() async {
     var controllerResponse = await controller.showTextFromIA();
-    String text = controllerResponse.right;
+    
     if (controllerResponse.isLeft) {
       showSystemMessage(controllerResponse.left.message);
     } else {
+      String text = controllerResponse.right;
       editorC.setText(await editorC.getText() + text);
     }
   }
