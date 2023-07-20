@@ -71,6 +71,7 @@ Actividades:
 - Implementación de las notificaciones push con Firebase
 - Implementación de la librería Geolocator para la geolocalización
 - Desarrollo de la vista de perfil de usuario
+- Desarrollo de la vista de esitar perfil de usuario
 
 ## Librerías usadas:
 - [flutter_image_compress 2.0.3](https://pub.dev/packages/flutter_image_compress)
