@@ -157,9 +157,16 @@ class controllerFactory {
   }
 
   static editarNotaWidgetController editarNotaWidController() {
+    var suscripcionOCRDeco = suscripcionDecorator(
+      servicio: getImageFromCamaraService(picker: imagePickerImp()), 
+      getUserByIdService: getUserByIdInServerService(
+            userRepo: httpUserRepository(),
+            localUserRepo: localUserRepository()) 
+      );
+
     return editarNotaWidgetController(
         imageToText: imageToTextService(ia: iaTextImp()),
-        imageService: getImageFromCamaraService(picker: imagePickerImp()),
+        imageService: suscripcionOCRDeco,
         galleryService:
             getImageFromGalleryService(picker: imagePickerGalleryImp()),
         updateNotaService:
