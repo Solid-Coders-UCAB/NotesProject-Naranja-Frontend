@@ -37,12 +37,13 @@ class EditarPerfilState extends State<EditarPerfil> {
       required this.nombre,
       required this.suscripcion});
   DateTime date = DateTime(2023, 01, 01);
+  String clave = "";
   editarUsuarioWidgetController controller =
       controllerFactory.createEditarUsuarioWidgetController();
   @override
   Widget build(BuildContext context) {
     TextEditingController userCorreo = TextEditingController(text: correo);
-    TextEditingController userPass = TextEditingController(text: "");
+    TextEditingController userPass = TextEditingController(text: clave);
     TextEditingController userName = TextEditingController(text: nombre);
     return Scaffold(
       appBar: AppBar(
@@ -61,40 +62,6 @@ class EditarPerfilState extends State<EditarPerfil> {
             children: [
               Center(child: iconApp(120)),
               genericSizedBox(80),
-              Text(
-                'Fecha de nacimiento: ${date.year}-${date.month}-${date.day}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Color.fromARGB(255, 90, 184, 255),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25)),
-                      foregroundColor: Colors.black,
-                      backgroundColor: const Color.fromARGB(255, 30, 103, 240),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10)),
-                  onPressed: () async {
-                    DateTime? newDate = await showDatePicker(
-                        context: context,
-                        initialDate: date,
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime(2023));
-                    //Si selecciona 'CANCEL'
-                    if (newDate == null) return;
-                    //Si selecciona 'OK'
-                    setState(() {
-                      date = newDate;
-                    });
-                  },
-                  child: const Text(
-                    'Seleccionar fecha de nacimiento',
-                    style: TextStyle(color: Colors.white),
-                  )),
-              genericSizedBox(5),
               genericTextFormField(userName, "Nombre", false, 40),
               genericTextFormField(userCorreo, "Correo", false, 50),
               genericTextFormField(userPass, "Contraseña", true, 20),
@@ -105,6 +72,43 @@ class EditarPerfilState extends State<EditarPerfil> {
                     const SizedBox(
                       width: 20,
                     ),
+                    Text(
+                      'Fecha de nacimiento: ${date.year}-${date.month}-${date.day}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 90, 184, 255),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25)),
+                            foregroundColor: Colors.black,
+                            backgroundColor:
+                                const Color.fromARGB(255, 30, 103, 240),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10)),
+                        onPressed: () async {
+                          DateTime? newDate = await showDatePicker(
+                              context: context,
+                              initialDate: date,
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime(2023));
+                          //Si selecciona 'CANCEL'
+                          if (newDate == null) return;
+                          //Si selecciona 'OK'
+                          setState(() {
+                            date = newDate;
+                            nombre = userName.text;
+                            correo = userCorreo.text;
+                            clave = userPass.text;
+                          });
+                        },
+                        child: const Text(
+                          'Seleccionar fecha de nacimiento',
+                          style: TextStyle(color: Colors.white),
+                        )),
                     genericSizedBox(50),
                     ElevatedButton(
                         onPressed: () {
