@@ -1,3 +1,5 @@
+import 'package:either_dart/either.dart';
+import 'package:firstapp/domain/errores.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart';
@@ -57,9 +59,37 @@ static Future<Database> getDatabase() async {
             )
       ''');
       await db.execute('''
-            INSERT INTO carpeta(id,savedInServer,predeterminada,nombre) VALUES ("1",0,1,"carpeta predeterminada local")
+            INSERT INTO carpeta(id,savedInServer,predeterminada,nombre) VALUES ("1",1,1,"carpeta predeterminada local")
       ''');        
       }      
     );
-  } 
+  }
+
+  static Future<Either<MyError,dynamic>> deleteNoteTable()async {
+    var bd = await getDatabase();
+    try {
+      await bd.transaction((txn) async {
+        await txn.execute('DELETE FROM nota');
+      });
+    } catch (e) {
+      await bd.close();
+      return Left(MyError(key: AppError.NotFound, message: e.toString()));
+    }
+    await bd.close();
+    return const Right("");
+  }
+    static Future<Either<MyError,dynamic>> deleteCarpetaTable()async {
+    var bd = await getDatabase();
+    try {
+      await bd.transaction((txn) async {
+        await txn.execute('DELETE FROM carpeta');
+      });
+    } catch (e) {
+      await bd.close();
+      return Left(MyError(key: AppError.NotFound, message: e.toString()));
+    }
+    await bd.close();
+    return const Right("");
+  }
+   
 }

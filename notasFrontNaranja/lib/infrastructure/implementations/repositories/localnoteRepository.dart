@@ -7,22 +7,24 @@ import 'package:firstapp/domain/repositories/noteRepository.dart';
 
 import 'package:uuid/uuid.dart';
 
+import '../connectionCheckerImp.dart';
+
 class localNoteRepository implements noteRepository {
   
   @override
   Future<Either<MyError, String>> createNota(Nota note) async {
     var bd = await database.getDatabase();
-     var uuid = const Uuid();
-    // Generate a v1 (time-based) id
-    var v1 = uuid.v1();  
-
-    print("paso por crear nota local");
+    var uuid = const Uuid();
+    var v1 = uuid.v1();
+    var hasConneccion = await connectionCheckerImp().checkConnection();
+    (hasConneccion) ? note.savedInServer = 1 : note.savedInServer = 0;
+    print("savedInserver: ${note.savedInServer}");
 
    try{   
     await bd.transaction((txn) async {
       await txn.rawInsert('''INSERT INTO nota(id,savedInServer,fechaModificacion,fechaCreacion,estado,titulo,cuerpo,longitud,latitud,idCarpeta) 
       VALUES("$v1",${note.savedInServer},"${note.n_edit_date}","${note.n_date}", "${note.estado}","${note.titulo}", 
-      "${note.contenido}",${note.longitud}, ${note.latitud},"${note.idCarpeta}")''');
+      '${note.contenido}',${note.longitud}, ${note.latitud},"${note.idCarpeta}")''');
         
         if (note.etiquetas != null){
           if (note.etiquetas!.isNotEmpty){
@@ -72,6 +74,8 @@ class localNoteRepository implements noteRepository {
                 note.etiquetas!.add(etiqueta(id: eti['id'],nombre: '', idUsuario: ''));
               }
             }
+            note.savedInServer = nota['savedInServer'];
+            print("carpetaid:${note.idCarpeta}");
             notes.add(note);  
           }
         }

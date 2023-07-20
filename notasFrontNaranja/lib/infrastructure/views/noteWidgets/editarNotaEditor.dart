@@ -46,6 +46,7 @@ class HtmlEditorEditar extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class HtmlEditorExample extends StatefulWidget {
   Nota nota;
 
@@ -176,6 +177,7 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
   }
 
   void editarNota() async {
+    if(tituloC.text != ""){
     String text = await editorC.getText();
     setState(() {
       loading = true;
@@ -194,6 +196,9 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
     } else {
       showSystemMessage('Nota guardada satisfactoriamente');
       regresarHome();
+    }
+    } else{
+      showSystemMessage('El titulo de la nota no debe estar vacio');
     }
   }
 

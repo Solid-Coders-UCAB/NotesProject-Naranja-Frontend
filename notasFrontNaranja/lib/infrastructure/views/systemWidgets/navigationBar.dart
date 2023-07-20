@@ -1,4 +1,6 @@
 import 'package:firstapp/application/cerrarSesionService.dart';
+import 'package:firstapp/controllerFactory.dart';
+
 import 'package:firstapp/infrastructure/implementations/repositories/localUserRepository.dart';
 import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 import 'package:firstapp/infrastructure/views/etiquetasWidgets/etiquetasHome.dart';
@@ -136,6 +138,24 @@ class NavBar extends StatelessWidget {
                     Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => const Inicio()),
                     (Route<dynamic> route) => false);
+                  }
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.work_history,
+                color: Color.fromARGB(255, 30, 103, 240),
+              ),
+              title: const Text('Sincronizar'),
+              onTap: () async {
+                  cargando(context, true, '', '');              
+                  var response = await controllerFactory.createSincronizacionService().execute(null);
+                    if (response.isLeft){
+                      Navigator.pop(context);
+                      alerta(context, false, 'error al sincronizar', response.left.message!);
+                  }else{
+                    Navigator.pop(context);
+                    alerta(context, true, 'sincronizacion Exitosa', response.right!);
                   }
               },
             )
