@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:either_dart/either.dart';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
@@ -220,10 +221,10 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
 // Funcion para insertar la imagen a texto en el cuerpo de la nota
   void imageToText() async {
     var controllerResponse = await controller.showTextFromIA();
-    String text = controllerResponse.right;
     if (controllerResponse.isLeft) {
       showSystemMessage(controllerResponse.left.message);
     } else {
+      String text = controllerResponse.right;
       editorC.setText(await editorC.getText() + text);
     }
   }
@@ -250,6 +251,39 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
     });
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message!)));
+  }
+
+  void accesoGeolocalizacion() async{
+    var usuario = await controller.getSuscripcionUsuario();
+    
+    if (usuario.isRight) {
+
+      if (usuario.right.isSuscribed) {
+        Navigator.pop(context);
+            noteLocation = await Navigator.push(
+            context,
+            MaterialPageRoute(
+            builder: (context) => MyMapScreen())); 
+      }else{
+        ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("No posee suscripcion")));
+      }
+    }
+  }
+
+    void accesoVozATexto() async{
+    var usuario = await controller.getSuscripcionUsuario();
+    
+    if (usuario.isRight) {
+
+      if (usuario.right.isSuscribed) {
+        Navigator.pop(context);
+        voiceToText();
+      }else{
+        ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("No posee suscripcion")));
+      }
+    }
   }
 
 //
@@ -309,19 +343,14 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
             leading: const Icon(Icons.map),
             title: Text('Agregar ubicación'),
             onTap: ()  async {
-              Navigator.pop(context);
-              noteLocation = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                builder: (context) => MyMapScreen()));       
+              accesoGeolocalizacion();
             },
           ),
           ListTile(
             leading: const Icon(Icons.record_voice_over_rounded),
             title: Text('Voz a texto'),
             onTap: () {
-              Navigator.pop(context);
-              voiceToText();
+              accesoVozATexto();
             },
           ),
           ListTile(

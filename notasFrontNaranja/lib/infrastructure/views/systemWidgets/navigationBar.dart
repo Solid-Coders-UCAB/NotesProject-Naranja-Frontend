@@ -35,6 +35,22 @@ class NavBar extends StatelessWidget {
     );
   }
 
+void accesoMapa(BuildContext context) async{
+    var usuario = await controllerFactory.creategetUserByIdInServerService().execute(null);
+    
+    if (usuario.isRight) {
+
+      if (usuario.right.isSuscribed) {
+        Navigator.pop(context);
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MyHomeMapScreen()));
+      }else{
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("No posee suscripcion")));
+      }
+    }
+  }
   Widget buildHeader(BuildContext context) => Container(
         padding: EdgeInsets.only(
           top: MediaQuery.of(context).padding.top,
@@ -92,9 +108,7 @@ class NavBar extends StatelessWidget {
               ),
               title: const Text('Mapa'),
               onTap: () {
-                Navigator.pop(context);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MyHomeMapScreen()));
+                accesoMapa(context);
               },
             ),
             ListTile(

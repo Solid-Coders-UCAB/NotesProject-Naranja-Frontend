@@ -254,6 +254,22 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
         .showSnackBar(SnackBar(content: Text(message!)));
   }
 
+
+    void accesoVozATexto() async{
+    var usuario = await controller.getSuscripcionUsuario();
+    
+    if (usuario.isRight) {
+
+      if (usuario.right.isSuscribed) {
+        Navigator.pop(context);
+        voiceToText();
+      }else{
+        ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("No posee suscripcion")));
+      }
+    }
+  }
+
   Widget menuOpciones() {
     return ListView(
       scrollDirection: Axis.vertical,
@@ -311,18 +327,10 @@ class HtmlEditorEditExampleState extends State<HtmlEditorExample> {
             },
           ),
         ListTile(
-          leading: const Icon(Icons.map),
-          title: Text('Agregar ubicación'),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-        ListTile(
           leading: const Icon(Icons.record_voice_over_rounded),
           title: Text('Voz a texto'),
           onTap: () {
-            Navigator.pop(context);
-            voiceToText();
+            accesoVozATexto();
           },
         ),
         ListTile(

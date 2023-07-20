@@ -57,7 +57,7 @@ import 'package:firstapp/application/getNotesByEtiquetaService.dart';
 import 'package:firstapp/infrastructure/controllers/notasPorEtiquetaController.dart';
 import 'package:firstapp/application/getNotesByKeywordService.dart';
 import 'package:firstapp/infrastructure/controllers/notasPorPalabraClaveController.dart';
-
+import 'package:firstapp/application/suscripcionDecorator.dart';
 import 'infrastructure/controllers/iniciarSesionController.dart';
 
 //fabrica de controladores
@@ -122,15 +122,33 @@ class controllerFactory {
     checker: connectionCheckerImp());
         
 
+    var suscripcionLocationDeco = suscripcionDecorator(
+      servicio: GetUserCurrentLocationService(loca: GetLocationImp()), 
+      getUserByIdService: getUserByIdInServerService(
+            userRepo: httpUserRepository(),
+            localUserRepo: localUserRepository()) 
+      );
+
+      var suscripcionOCRDeco = suscripcionDecorator(
+      servicio: getImageFromCamaraService(picker: imagePickerImp()), 
+      getUserByIdService: getUserByIdInServerService(
+            userRepo: httpUserRepository(),
+            localUserRepo: localUserRepository()) 
+      );
+
     return notaNuevaWidgetController(
         imageToText: imageToTextService(ia: iaTextImp()),
-        imageService: getImageFromCamaraService(picker: imagePickerImp()),
+        imageService: suscripcionOCRDeco,//getImageFromCamaraService(picker: imagePickerImp()),
         galleryService:
             getImageFromGalleryService(picker: imagePickerGalleryImp()),
-        createNotaService: offlineDeco1,
+        createNotaService: offlineDeco,
         locationService: GetUserCurrentLocationService(loca: GetLocationImp()),
-        getAllEtiquetasService: etiquetaDeco,
-        getAllFoldersService: folderDeco );
+        getAllEtiquetasService: getAllEtiquetasFromServerService(
+            etiquetaRepo: HTTPetiquetasRepository(),
+            localUserRepo: localUserRepository()),
+        getAllFoldersService: getAllFoldersFromServerService(
+            folderRepo: HTTPfolderRepository(),
+            localUserRepo: localUserRepository()));
   }
 
 // Controlador para el widget de esbozado DrawingRoom
@@ -165,7 +183,10 @@ class controllerFactory {
             localUserRepo: localUserRepository()),
         getAllFoldersService: getAllFoldersFromServerService(
             folderRepo: HTTPfolderRepository(),
-            localUserRepo: localUserRepository()));
+            localUserRepo: localUserRepository()), 
+            getUserByIdService: getUserByIdInServerService(
+              userRepo: httpUserRepository(),
+              localUserRepo: localUserRepository()));
   }
 
   static homeFolderController homefolderController() {
@@ -310,4 +331,11 @@ class controllerFactory {
             userRepo: httpUserRepository(),
             localUserRepo: localUserRepository()));
   }
+
+  static getUserByIdInServerService creategetUserByIdInServerService() {
+    return getUserByIdInServerService(
+            userRepo: httpUserRepository(),
+            localUserRepo: localUserRepository());
+  }
+
 }

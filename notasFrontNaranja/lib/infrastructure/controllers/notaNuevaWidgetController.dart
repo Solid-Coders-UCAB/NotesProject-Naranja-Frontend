@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:either_dart/either.dart';
 import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/domain/errores.dart';
@@ -10,6 +9,8 @@ import 'package:firstapp/domain/location.dart';
 import 'package:firstapp/domain/tarea.dart';
 import '../../domain/etiqueta.dart';
 import '../../domain/folder.dart';
+import 'package:firstapp/application/getUserByIdServide.dart';
+import 'package:firstapp/domain/user.dart';
 
 class notaNuevaWidgetController {
   service<imageToTextParams, String> imageToText;
@@ -19,6 +20,7 @@ class notaNuevaWidgetController {
   service<void, location> locationService;
   service<void,List<etiqueta>> getAllEtiquetasService;
   service<void,List<folder>> getAllFoldersService;
+  service<void, user> getUserByIdService;
 
   notaNuevaWidgetController(
       {required this.imageToText,
@@ -27,7 +29,8 @@ class notaNuevaWidgetController {
       required this.createNotaService,
       required this.locationService,
       required this.getAllEtiquetasService,
-      required this.getAllFoldersService});
+      required this.getAllFoldersService,
+      required this.getUserByIdService});
 
   Future<Either<MyError, String>> saveNota(
       {required String titulo,
@@ -96,6 +99,7 @@ class notaNuevaWidgetController {
   }
 
   Future<Either<MyError, location>> getUserLocation() async {
+    print("EntraaVaDFKGILHLH;N;NK");
     var locationResponse = await locationService.execute(null);
 
     if (locationResponse.isLeft) {
@@ -115,6 +119,11 @@ class notaNuevaWidgetController {
 
   Future<Either<MyError, List<folder>>> getAllFolders() async {
     return await getAllFoldersService.execute(null);
+  }
+
+  Future<Either<MyError, user>> getSuscripcionUsuario() async {
+    var serviceResponse = await getUserByIdService.execute(null);
+    return serviceResponse;
   }
 
 }
