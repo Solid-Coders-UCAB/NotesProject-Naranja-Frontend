@@ -32,7 +32,7 @@ class httpUserRepository extends HTTPrepository implements userRepository {
       "suscripcion": u.isSuscribed
     });
     try {
-      res = await post(Uri.parse('http://$domain/usuario/create'),
+      res = await post(Uri.parse('https://$domain/usuario/create'),
           body: body,
           headers: {
             "Accept": "application/json",
@@ -64,7 +64,7 @@ class httpUserRepository extends HTTPrepository implements userRepository {
     };
 
     try {
-      res = await post(Uri.parse('http://$domain/usuario/findByEmailPassword'),
+      res = await post(Uri.parse('https://$domain/usuario/findByEmailPassword'),
           headers: headers, body: body);
     } catch (e) {
       return Left(MyError(key: AppError.NotFound, message: '$e'));
@@ -97,7 +97,7 @@ class httpUserRepository extends HTTPrepository implements userRepository {
     print(body);
     try {
       final Response response = await put(
-          Uri.parse('http://$domain/usuario/modificate'),
+          Uri.parse('https://$domain/usuario/modificate'),
           body: body,
           headers: {
             "Accept": "application/json",
@@ -125,7 +125,7 @@ class httpUserRepository extends HTTPrepository implements userRepository {
     };
 
     try {
-      res = await post(Uri.parse('http://$domain/usuario/findById'),
+      res = await post(Uri.parse('https://$domain/usuario/findById'),
           headers: headers, body: body);
     } catch (e) {
       return Left(MyError(key: AppError.NotFound, message: '$e'));
@@ -152,7 +152,7 @@ class httpUserRepository extends HTTPrepository implements userRepository {
       "idUsuario": idUsuario,
     });
     try {
-      res = await post(Uri.parse('http://$domain/suscripcion/create'),
+      res = await post(Uri.parse('https://$domain/suscripcion/create'),
           body: body,
           headers: {
             "Accept": "application/json",
