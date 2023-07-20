@@ -131,7 +131,7 @@ class HtmlEditorExampleState extends State<HtmlEditorExample> {
               toolbarPosition: ToolbarPosition.belowEditor, //by default
               toolbarType: ToolbarType.nativeScrollable, // .nativeGrid,
               renderBorder: false,
-              customToolbarButtons: [
+              customToolbarButtons: [ 
                 // Boton para las opciones extra en la nota (voz a texto, esbozar, imagen a texto)
                 ElevatedButton(onPressed: () {
                  showBottomSheet(context: context, builder: (context) => menuOpciones());

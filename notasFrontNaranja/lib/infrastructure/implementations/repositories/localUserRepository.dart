@@ -1,5 +1,4 @@
 import 'package:firstapp/database.dart';
-import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:either_dart/src/either.dart';
 

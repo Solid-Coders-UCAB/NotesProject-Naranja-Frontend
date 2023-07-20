@@ -5,8 +5,10 @@ import '../../controllers/etiquetaNuevaWidgetController.dart';
 import '../systemWidgets/widgets.dart';
 
 // Ventana para crear una etiqueta
+// ignore: must_be_immutable
 class EtiquetaNueva extends StatelessWidget {
-  const EtiquetaNueva({super.key});
+  List<String> etiquetasNombre;
+  EtiquetaNueva({super.key, required this.etiquetasNombre});
 
   @override
   Widget build(BuildContext context) {
@@ -20,21 +22,24 @@ class EtiquetaNueva extends StatelessWidget {
               Navigator.pop(context);
             }),
       ),
-      body: const Center(child: NuevaEtiqueta()),
+      body: Center(child: NuevaEtiqueta(etiquetasNombre: etiquetasNombre)),
     );
   }
 }
 
 // ignore: must_be_immutable
 class NuevaEtiqueta extends StatefulWidget {
-  const NuevaEtiqueta({super.key});
+  List<String> etiquetasNombre;
+  NuevaEtiqueta({super.key, required this.etiquetasNombre});
 
   @override
-  State<NuevaEtiqueta> createState() => NuevaEtiquetaState();
+  // ignore: no_logic_in_create_state
+  State<NuevaEtiqueta> createState() => NuevaEtiquetaState(etiquetasNombre: etiquetasNombre);
 }
 
 class NuevaEtiquetaState extends State<NuevaEtiqueta> {
-  NuevaEtiquetaState();
+  List<String> etiquetasNombre;
+  NuevaEtiquetaState({required this.etiquetasNombre});
   bool loading = false;
 
 // Se crea el controlador con la logica de la ventana EtiquetaNueva
@@ -77,7 +82,7 @@ class NuevaEtiquetaState extends State<NuevaEtiqueta> {
                           ),
                           onPressed: () {
                             if (_nombreEtiqueta.text != '') {
-                              crearCarpeta(_nombreEtiqueta.text);
+                              crearEtiqueta(_nombreEtiqueta.text);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -110,27 +115,40 @@ class NuevaEtiquetaState extends State<NuevaEtiqueta> {
   }
 
 // Funcion para crear una etiqueta
-  Future crearCarpeta(String nombreEtiqueta) async {
-    setState(() {
+  Future crearEtiqueta(String nombreEtiqueta) async {
+    bool esRepetido = false;
+    for (var element in etiquetasNombre) {
+      if (element == nombreEtiqueta) {
+        esRepetido = true;
+        
+      }
+    }
+
+    // Se llama a la funcion del controlador para crear una etiqueta
+    if (!esRepetido) {
+          setState(() {
       loading = true;
     });
-    // Se llama a la funcion del controlador para crear una etiqueta
-    var response =
-        await controller.createEtiqueta(nombreEtiqueta: nombreEtiqueta);
-
-    if (response.isLeft) {
-      setState(() {
-        loading = false;
-      });
-      String text = '';
-      text = response.left.message!;
-      showSystemMessage(text);
-    }
-
-    if (response.isRight) {
+  var response =
+      await controller.createEtiqueta(nombreEtiqueta: nombreEtiqueta);
+  
+  if (response.isLeft) {
+    setState(() {
       loading = false;
-      // Regresa a la ventana principal
-      regresarHome();
-    }
+    });
+    String text = '';
+    text = response.left.message!;
+    showSystemMessage(text);
+  }
+  
+  if (response.isRight) {
+    loading = false;
+    // Regresa a la ventana principal
+    regresarHome();
+  }
+}else{
+  showSystemMessage("El nombre de la etiqueta ya existe");
+}
+
   }
 }

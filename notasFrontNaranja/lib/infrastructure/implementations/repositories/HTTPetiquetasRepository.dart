@@ -90,8 +90,7 @@ class HTTPetiquetasRepository extends HTTPrepository implements etiquetaReposito
     "nombreEtiqueta": etiqueta.nombre,
     "idUsuario": etiqueta.idUsuario
   });
-  print(etiqueta.id);
-  print(etiqueta.idUsuario);
+
   try{
 
   final Response response = await put(Uri.parse('http://$domain/etiqueta/modificate'),

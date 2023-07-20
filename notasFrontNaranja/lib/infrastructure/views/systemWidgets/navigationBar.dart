@@ -13,6 +13,7 @@ import 'package:firstapp/infrastructure/views/systemWidgets/user_profile.dart';
 import 'package:flutter/material.dart';
 
 // Ventana que contiene el menu lateral de opciones en la aplicacion
+// ignore: must_be_immutable
 class NavBar extends StatelessWidget {
 
   cerrarSesionService logOutService = cerrarSesionService(localRepo: localUserRepository());

@@ -29,6 +29,8 @@ class notePreviewWidgetState extends State<notePreviewWidget> {
   notePreviewController controller = controllerFactory.createNotePreviewController();
   notePreviewWidgetState({required this.nota});
   List<etiqueta> tags = [];
+  List<String> etiquetasNombre = [];
+
   bool loadingTags = false;
   AppError? tagError;
 
@@ -48,8 +50,11 @@ class notePreviewWidgetState extends State<notePreviewWidget> {
         loadingTags = false;
       });
       tags = controllerResponse.right.etiquetas!;
+      for (var element in tags) {
+        etiquetasNombre.add(element.nombre);
+      }
     }else{
-      print(controllerResponse.left.message);
+
       tagError = controllerResponse.left.key;
       setState(() {
         loadingTags = false;
@@ -96,7 +101,7 @@ class notePreviewWidgetState extends State<notePreviewWidget> {
                     MaterialPageRoute(
                     builder: (context) => NotasPorEtiqueta(
                           nombreEtiqueta: tags[index].nombre,
-                          idEtiqueta: tags[index].id.toString(),
+                          idEtiqueta: tags[index].id.toString(), etiquetasNombre: etiquetasNombre,
                         )));
                   },
                )   
