@@ -10,8 +10,10 @@ import 'package:firstapp/infrastructure/views/etiquetasWidgets/etiquetasHome.dar
 class EditarEtiqueta extends StatelessWidget {
   String nombreEtiqueta;
   String idEtiqueta;
+  List<String> etiquetasNombre;
+
   EditarEtiqueta(
-      {super.key, required this.nombreEtiqueta, required this.idEtiqueta});
+      {super.key, required this.nombreEtiqueta, required this.idEtiqueta, required this.etiquetasNombre});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class EditarEtiqueta extends StatelessWidget {
           child: EtiquetaEditar(
         nombreEtiqueta: nombreEtiqueta,
         idEtiqueta: idEtiqueta,
+        etiquetasNombre: etiquetasNombre,
       )),
     );
   }
@@ -38,19 +41,21 @@ class EditarEtiqueta extends StatelessWidget {
 class EtiquetaEditar extends StatefulWidget {
   String nombreEtiqueta;
   String idEtiqueta;
+  List<String> etiquetasNombre;
   EtiquetaEditar(
-      {super.key, required this.nombreEtiqueta, required this.idEtiqueta});
+      {super.key, required this.nombreEtiqueta, required this.idEtiqueta, required this.etiquetasNombre});
 
   @override
   // ignore: no_logic_in_create_state
   State<EtiquetaEditar> createState() => EtiquetaEditarState(
-      nombreEtiqueta: nombreEtiqueta, idEtiqueta: idEtiqueta);
+      nombreEtiqueta: nombreEtiqueta, idEtiqueta: idEtiqueta, etiquetasNombre: etiquetasNombre);
 }
 
 class EtiquetaEditarState extends State<EtiquetaEditar> {
+  List<String> etiquetasNombre;
   String nombreEtiqueta;
   String idEtiqueta;
-  EtiquetaEditarState({required this.nombreEtiqueta, required this.idEtiqueta});
+  EtiquetaEditarState({required this.nombreEtiqueta, required this.idEtiqueta, required this.etiquetasNombre});
   String carpetaTitle = '';
   bool loading = false;
 
@@ -136,6 +141,17 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
 
 // Funcion para editar una carpeta
   updateEtiqueta(String nombreEtiqueta, String idEtiqueta) async {
+
+        bool esRepetido = false;
+    for (var element in etiquetasNombre) {
+      if (element == nombreEtiqueta) {
+        esRepetido = true;
+        
+      }
+    }
+
+    // Se llama a la funcion del controlador para crear una etiqueta
+    if (!esRepetido) {
     setState(() {
       loading = true;
     });
@@ -158,6 +174,10 @@ class EtiquetaEditarState extends State<EtiquetaEditar> {
           MaterialPageRoute(builder: (context) => etiquetasHome()),
           (Route<dynamic> route) => false);
     }
+
+    }else{
+  showSystemMessage("El nombre de la etiqueta ya existe");
+}
   }
 
   deleteEtiqueta(String idEtiqueta) async {

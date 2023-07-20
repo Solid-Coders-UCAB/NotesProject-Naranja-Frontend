@@ -1,4 +1,3 @@
-import 'package:firstapp/application/connectionCheckerDecorator.dart';
 import 'package:firstapp/application/createNoteInServerService.dart';
 import 'package:firstapp/application/createUserService.dart';
 import 'package:firstapp/application/deleteNoteFromServerService.dart';

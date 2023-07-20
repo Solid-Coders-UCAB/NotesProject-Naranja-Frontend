@@ -20,6 +20,7 @@ class etiquetasHomeState extends State<etiquetasHome> {
 
   bool loading = false;
   List<etiqueta> etiquetas = <etiqueta>[];
+  List<String> etiquetasNombre = [];
   final TextEditingController buscarNota = TextEditingController(text: '');
 
   // Se crea un controlador con la logica de la ventana HomeEtiquetasController
@@ -30,6 +31,10 @@ class etiquetasHomeState extends State<etiquetasHome> {
     setState(() {
       loading = false;
       etiquetas = f;
+      for (var element in f) {
+        etiquetasNombre.add(element.nombre);
+      }
+
     });
   }
 
@@ -102,7 +107,7 @@ class etiquetasHomeState extends State<etiquetasHome> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const EtiquetaNueva()));
+                      builder: (context) => EtiquetaNueva(etiquetasNombre: etiquetasNombre,)));
             },
             child: const Card(
                 child: Material(
@@ -120,6 +125,7 @@ class etiquetasHomeState extends State<etiquetasHome> {
                     builder: (context) => NotasPorEtiqueta(
                           nombreEtiqueta: etiquetas[index].nombre,
                           idEtiqueta: etiquetas[index].id.toString(),
+                          etiquetasNombre: etiquetasNombre,
                         )));
           },
           child: (Card(

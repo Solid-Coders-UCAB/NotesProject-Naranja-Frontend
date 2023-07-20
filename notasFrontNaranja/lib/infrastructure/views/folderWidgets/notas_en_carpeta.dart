@@ -16,8 +16,9 @@ import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
 class NotasEnCarpeta extends StatelessWidget {
   String nombreCarpeta;
   String idCarpeta;
+  List<String> foldersNombre;
   NotasEnCarpeta(
-      {super.key, required this.nombreCarpeta, required this.idCarpeta});
+      {super.key, required this.nombreCarpeta, required this.idCarpeta, required this.foldersNombre});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class NotasEnCarpeta extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => EditarCarpeta(
                             nombreCarpeta: nombreCarpeta,
-                            idCarpeta: idCarpeta)));
+                            idCarpeta: idCarpeta, foldersNombre: foldersNombre,)));
               },
               child: const Text("Editar")),
         ],
