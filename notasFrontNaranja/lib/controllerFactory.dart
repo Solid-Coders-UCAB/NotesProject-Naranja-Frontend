@@ -100,7 +100,7 @@ class controllerFactory {
         folderRepo: localFolderRepository(),
         localUserRepo: localUserRepository());
 
-    var offlineDeco1 = offlineDecorator(
+    var offlineDeco = offlineDecorator(
         servicio: servicio,
         offlineService: offlineService,
         checker: connectionCheckerImp());
@@ -121,14 +121,6 @@ class controllerFactory {
                                                     localUserRepo: localUserRepository()), 
     checker: connectionCheckerImp());
         
-
-    var suscripcionLocationDeco = suscripcionDecorator(
-      servicio: GetUserCurrentLocationService(loca: GetLocationImp()), 
-      getUserByIdService: getUserByIdInServerService(
-            userRepo: httpUserRepository(),
-            localUserRepo: localUserRepository()) 
-      );
-
       var suscripcionOCRDeco = suscripcionDecorator(
       servicio: getImageFromCamaraService(picker: imagePickerImp()), 
       getUserByIdService: getUserByIdInServerService(
@@ -148,7 +140,10 @@ class controllerFactory {
             localUserRepo: localUserRepository()),
         getAllFoldersService: getAllFoldersFromServerService(
             folderRepo: HTTPfolderRepository(),
-            localUserRepo: localUserRepository()));
+            localUserRepo: localUserRepository()), 
+            getUserByIdService: getUserByIdInServerService(
+              userRepo: httpUserRepository(), 
+              localUserRepo: localUserRepository()));
   }
 
 // Controlador para el widget de esbozado DrawingRoom
@@ -165,7 +160,7 @@ class controllerFactory {
     var offlineDeco = offlineDecorator(
         servicio: onlineService,
         offlineService: localService,
-        checker: connectionCheckerImp());
+        checker: connectionCheckerImp());   
 
     return homeController(getAllNotesFromServerService: offlineDeco);
   }
@@ -285,6 +280,11 @@ class controllerFactory {
   }
 
   static notePreviewController createNotePreviewController() {
+
+    var getAllTagsDeco = offlineDecorator(servicio: getAllTagsFromNoteService(tagRepo: HTTPetiquetasRepository()), 
+                                        offlineService: getAllTagsFromNoteService(tagRepo: localEtiquetaRepository()), 
+    checker: connectionCheckerImp());
+
     return notePreviewController(
         getAllTagsFromNote:
             getAllTagsFromNoteService(tagRepo: HTTPetiquetasRepository()));
