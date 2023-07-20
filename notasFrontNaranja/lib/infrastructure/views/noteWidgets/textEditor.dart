@@ -131,7 +131,6 @@ class HtmlEditorExampleState extends State<HtmlEditorExample> {
               toolbarPosition: ToolbarPosition.belowEditor, //by default
               toolbarType: ToolbarType.nativeScrollable, // .nativeGrid,
               renderBorder: false,
-              onButtonPressed: (p0, p1, p2) { editorC.setFocus(); return true;} ,
               customToolbarButtons: [ 
                 // Boton para las opciones extra en la nota (voz a texto, esbozar, imagen a texto)
                 ElevatedButton(onPressed: () {
