@@ -97,7 +97,7 @@ class httpUserRepository extends HTTPrepository implements userRepository {
     print(body);
     try {
       final Response response = await put(
-          Uri.parse('http://$domain/usuario/modificate'),
+          Uri.parse('https://$domain/usuario/modificate'),
           body: body,
           headers: {
             "Accept": "application/json",
