@@ -11,4 +11,5 @@ abstract class userRepository {
   Future<Either<MyError, user>> getUserByEmailAndPass(
       String email, String pass);
   Future<Either<MyError, user>> getUserById(String idUsuario);
+  Future<Either<MyError, String>> createSuscription(String idUsuario);
 }

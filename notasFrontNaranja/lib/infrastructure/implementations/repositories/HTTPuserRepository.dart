@@ -144,6 +144,30 @@ class httpUserRepository extends HTTPrepository implements userRepository {
       return Left(MyError(key: AppError.NotFound, message: res.body));
     }
   }
+
+  @override
+  Future<Either<MyError, String>> createSuscription(String idUsuario) async {
+    Response res;
+    var body = jsonEncode({
+      "idUsuario": idUsuario,
+    });
+    try {
+      res = await post(Uri.parse('http://$domain/suscripcion/create'),
+          body: body,
+          headers: {
+            "Accept": "application/json",
+            "content-type": "application/json"
+          });
+    } catch (e) {
+      return Left(MyError(key: AppError.NotFound, message: '$e'));
+    }
+
+    if (res.statusCode == 200) {
+      return const Right('Se ha suscrito correctamente');
+    } else {
+      return Left(MyError(key: AppError.NotFound, message: res.body));
+    }
+  }
 }
 
 void main() async {

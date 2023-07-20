@@ -75,6 +75,12 @@ class localUserRepository implements userRepository {
     // TODO: implement getUserById
     throw UnimplementedError();
   }
+
+  @override
+  Future<Either<MyError, String>> createSuscription(String idUsuario) {
+    // TODO: implement createSuscription
+    throw UnimplementedError();
+  }
 }
 
 Future<void> main() async {

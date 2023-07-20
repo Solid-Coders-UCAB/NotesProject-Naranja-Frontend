@@ -151,7 +151,7 @@ class EditarPerfilState extends State<EditarPerfil> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-// Funcion para editar una carpeta
+// Funcion para editar usuario
   updateUsuario(String idUsuario, String nombre, String correo, String clave,
       DateTime fechaNacimiento, bool suscripcion) async {
     // Se llama a la funcion del controlador para editar la etiqueta

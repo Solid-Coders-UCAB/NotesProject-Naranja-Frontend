@@ -1,4 +1,5 @@
 import 'package:firstapp/application/createNoteInServerService.dart';
+import 'package:firstapp/application/createSuscriptionService.dart';
 import 'package:firstapp/application/createUserService.dart';
 import 'package:firstapp/application/deleteNoteFromServerService.dart';
 import 'package:firstapp/application/getAllFoldersFromServerService.dart';
@@ -23,6 +24,7 @@ import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.da
 import 'package:firstapp/infrastructure/controllers/editarNotaWidgetController.dart';
 import 'package:firstapp/infrastructure/controllers/notePreviewController.dart';
 import 'package:firstapp/infrastructure/controllers/registroController.dart';
+import 'package:firstapp/infrastructure/controllers/suscripcionNuevaController.dart';
 import 'package:firstapp/infrastructure/implementations/getLocationImp.dart';
 import 'package:firstapp/infrastructure/controllers/recycleBinHomeController.dart';
 import 'package:firstapp/infrastructure/implementations/repositories/HTTPfolderRepository.dart';
@@ -73,13 +75,16 @@ class controllerFactory {
     return imageToTextController;
   }
 
-  static sincronizacionService createSincronizacionService(){
+  static sincronizacionService createSincronizacionService() {
     return sincronizacionService(
-    localNoteRepo: localNoteRepository(), serverNoteRepo: httpNoteRepository(), 
-    localUserRepo: localUserRepository(),
-    localfolderrepo: localFolderRepository(), serverFolderRepo: HTTPfolderRepository(),
-    localEtiquetaRepo: localEtiquetaRepository(),serverEtiquetaRepo: HTTPetiquetasRepository(),
-    checker: connectionCheckerImp());
+        localNoteRepo: localNoteRepository(),
+        serverNoteRepo: httpNoteRepository(),
+        localUserRepo: localUserRepository(),
+        localfolderrepo: localFolderRepository(),
+        serverFolderRepo: HTTPfolderRepository(),
+        localEtiquetaRepo: localEtiquetaRepository(),
+        serverEtiquetaRepo: HTTPetiquetasRepository(),
+        checker: connectionCheckerImp());
   }
 
   static createNoteInServerService createNoInServerService() {
@@ -159,26 +164,26 @@ class controllerFactory {
 
   static homeFolderController homefolderController() {
     var onlineService = getAllFoldersFromServerService(
-            folderRepo: HTTPfolderRepository(),
-            localUserRepo: localUserRepository());
+        folderRepo: HTTPfolderRepository(),
+        localUserRepo: localUserRepository());
 
     var localService = getAllFoldersFromServerService(
-        folderRepo: localFolderRepository(), localUserRepo: localUserRepository());
+        folderRepo: localFolderRepository(),
+        localUserRepo: localUserRepository());
 
     var offlineDeco = offlineDecorator(
         servicio: onlineService,
         offlineService: localService,
         checker: connectionCheckerImp());
 
-    return homeFolderController(
-        getAllFoldersService: offlineDeco);
+    return homeFolderController(getAllFoldersService: offlineDeco);
   }
 
 // Controlador de la ventana crear carpeta
   static carpetaNuevaWidgetController createCarpetaNuevaWidgetController() {
     var servicio = createFolderInServerService(
-            folderRepo: HTTPfolderRepository(),
-            localUserRepo: localUserRepository());
+        folderRepo: HTTPfolderRepository(),
+        localUserRepo: localUserRepository());
 
     var offlineService = createFolderInServerService(
         folderRepo: localFolderRepository(),
@@ -189,9 +194,7 @@ class controllerFactory {
         offlineService: offlineService,
         checker: connectionCheckerImp());
 
-    return carpetaNuevaWidgetController(
-        createCarpetaService: offlineDeco
-        );
+    return carpetaNuevaWidgetController(createCarpetaService: offlineDeco);
   }
 
   static editarCarpetaWidgetController createEditarCarpetaWidgetController() {
@@ -217,29 +220,33 @@ class controllerFactory {
   }
 
   static homeEtiquetasController createHomeEtiquetasController() {
-
     var onlineService = getAllEtiquetasFromServerService(
-            etiquetaRepo: HTTPetiquetasRepository(),
-            localUserRepo: localUserRepository());
+        etiquetaRepo: HTTPetiquetasRepository(),
+        localUserRepo: localUserRepository());
     var offlineService = getAllEtiquetasFromServerService(
-            etiquetaRepo: localEtiquetaRepository(),
-            localUserRepo: localUserRepository());
-    var offlineDeco = offlineDecorator(servicio: onlineService, offlineService: offlineService, checker: connectionCheckerImp());                      
+        etiquetaRepo: localEtiquetaRepository(),
+        localUserRepo: localUserRepository());
+    var offlineDeco = offlineDecorator(
+        servicio: onlineService,
+        offlineService: offlineService,
+        checker: connectionCheckerImp());
 
-    return homeEtiquetasController(
-        getAllEtiquetasService: offlineDeco);
+    return homeEtiquetasController(getAllEtiquetasService: offlineDeco);
   }
 
   static etiquetaNuevaWidgetController createEtiquetaNuevaWidgetController() {
-
     var onlineService = createEtiquetaInServerService(
-            etiquetaRepo: HTTPetiquetasRepository(),
-            localUserRepo: localUserRepository());
-    var offlineService = createEtiquetaInServerService(etiquetaRepo: localEtiquetaRepository(), localUserRepo: localUserRepository());
-    var offlineDeco = offlineDecorator(servicio: onlineService, offlineService: offlineService, checker: connectionCheckerImp());
+        etiquetaRepo: HTTPetiquetasRepository(),
+        localUserRepo: localUserRepository());
+    var offlineService = createEtiquetaInServerService(
+        etiquetaRepo: localEtiquetaRepository(),
+        localUserRepo: localUserRepository());
+    var offlineDeco = offlineDecorator(
+        servicio: onlineService,
+        offlineService: offlineService,
+        checker: connectionCheckerImp());
 
-    return etiquetaNuevaWidgetController(
-        createEtiquetaService: offlineDeco  );
+    return etiquetaNuevaWidgetController(createEtiquetaService: offlineDeco);
   }
 
   static editarEtiquetaWidgetController createEditarEtiquetaWidgetController() {
@@ -303,6 +310,13 @@ class controllerFactory {
   static editarUsuarioWidgetController createEditarUsuarioWidgetController() {
     return editarUsuarioWidgetController(
         updateUsuarioService: updateUserInServerService(
+            userRepo: httpUserRepository(),
+            localUserRepo: localUserRepository()));
+  }
+
+  static crearSuscripcionController createdSuscripcionController() {
+    return crearSuscripcionController(
+        createSuscription: createSuscriptionService(
             userRepo: httpUserRepository(),
             localUserRepo: localUserRepository()));
   }

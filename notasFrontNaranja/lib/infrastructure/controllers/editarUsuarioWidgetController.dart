@@ -12,7 +12,6 @@ class editarUsuarioWidgetController {
   Future<Either<MyError, String>> updateUser(
       {required String idUsuario,
       required String nombre,
-      required,
       required String correo,
       required String clave,
       required DateTime fechaNacimiento,
