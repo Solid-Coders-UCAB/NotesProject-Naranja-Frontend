@@ -13,6 +13,9 @@ import '../../domain/etiqueta.dart';
 import '../../domain/folder.dart';
 import '../../domain/tarea.dart';
 import '../views/noteWidgets/editarNotaEditor.dart';
+import 'package:either_dart/either.dart';
+import 'package:firstapp/domain/errores.dart'; 
+import 'package:firstapp/domain/user.dart';
 
 class editarNotaWidgetController {
 
@@ -22,12 +25,14 @@ class editarNotaWidgetController {
   service<UpdateNoteParams,String> updateNotaService;
   service<void,List<etiqueta>> getAllEtiquetasService;
   service<void,List<folder>> getAllFoldersService;
+  service<void, user> getUserByIdService;
 
   editarNotaWidgetController(
     {required this.imageToText, 
     required this.imageService, required this.galleryService, 
     required this.updateNotaService, required this.getAllEtiquetasService,
-    required this.getAllFoldersService });
+    required this.getAllFoldersService,
+    required this.getUserByIdService });
 
   Future<Either<MyError,String>> updateNota(
     {required String titulo, 
@@ -157,5 +162,10 @@ class editarNotaWidgetController {
 
   Future<Either<MyError, List<folder>>> getAllFolders() async {
     return await getAllFoldersService.execute(null);
+  }
+
+  Future<Either<MyError, user>> getSuscripcionUsuario() async {
+    var serviceResponse = await getUserByIdService.execute(null);
+    return serviceResponse;
   }
 }
