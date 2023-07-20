@@ -3,13 +3,41 @@ import 'package:firstapp/infrastructure/views/systemWidgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class Suscripcion extends StatefulWidget {
-  const Suscripcion({super.key});
+  String idUsuario;
+  String nombre;
+  String correo;
+  String clave;
+  DateTime fechaNacimiento;
+  Suscripcion(
+      {super.key,
+      required this.idUsuario,
+      required this.nombre,
+      required this.correo,
+      required this.clave,
+      required this.fechaNacimiento});
 
   @override
-  State<Suscripcion> createState() => _SuscripcionState();
+  // ignore: no_logic_in_create_state
+  State<Suscripcion> createState() => SuscripcionState(
+      idUsuario: idUsuario,
+      nombre: nombre,
+      correo: correo,
+      clave: clave,
+      fechaNacimiento: fechaNacimiento);
 }
 
-class _SuscripcionState extends State<Suscripcion> {
+class SuscripcionState extends State<Suscripcion> {
+  String idUsuario;
+  String nombre;
+  String correo;
+  String clave;
+  DateTime fechaNacimiento;
+  SuscripcionState(
+      {required this.idUsuario,
+      required this.nombre,
+      required this.correo,
+      required this.clave,
+      required this.fechaNacimiento});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +92,13 @@ class _SuscripcionState extends State<Suscripcion> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => PagoSuscripcion()));
+                              builder: (context) => PagoSuscripcion(
+                                    idUsuario: idUsuario,
+                                    nombre: nombre,
+                                    correo: correo,
+                                    clave: clave,
+                                    fechaNacimiento: fechaNacimiento,
+                                  )));
                     },
                     style: ButtonStyle(
                         foregroundColor: MaterialStateProperty.all(

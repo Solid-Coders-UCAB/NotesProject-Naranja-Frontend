@@ -22,23 +22,30 @@ class UserProfileState extends State<UserProfile> {
   String correo = "";
   String fechaNacimiento = "";
   String suscripcion = "";
+  String idUsuario = "";
+  String clave = "";
+  DateTime fechaNacimientoDate = DateTime.now();
 
   void changeState(user u) {
     setState(() {
       loading = false;
+      idUsuario = u.id;
       nombre = u.getNombre.toString();
       correo = u.getCorreo.toString();
+      fechaNacimientoDate = u.getDate;
+      clave = u.clave!;
       int dia = DateTime.parse(u.getDate.toString()).day;
       int mes = DateTime.parse(u.getDate.toString()).month;
       int year = DateTime.parse(u.getDate.toString()).year;
       fechaNacimiento = '$dia/ $mes / $year';
-    if (u.getSuscripcion) {
-      suscripcion = "Suscripción Premium";
-    } else {
-      suscripcion = "Suscripción Básica";
-    }
+      if (u.getSuscripcion) {
+        suscripcion = "Suscripción Premium";
+      } else {
+        suscripcion = "Suscripción Básica";
+      }
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -98,7 +105,13 @@ class UserProfileState extends State<UserProfile> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Suscripcion()));
+                          builder: (context) => Suscripcion(
+                                idUsuario: idUsuario,
+                                nombre: nombre,
+                                correo: correo,
+                                clave: clave,
+                                fechaNacimiento: fechaNacimientoDate,
+                              )));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 0, 119, 255),
@@ -115,7 +128,12 @@ class UserProfileState extends State<UserProfile> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const EditarPerfil()));
+                          builder: (context) => EditarPerfil(
+                                idUsuario: idUsuario,
+                                correo: correo,
+                                nombre: nombre,
+                                suscripcion: suscripcion,
+                              )));
                 },
                 child: const Text(
                   "Editar Perfil",

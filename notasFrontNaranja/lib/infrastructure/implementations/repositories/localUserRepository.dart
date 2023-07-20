@@ -46,7 +46,7 @@ class localUserRepository implements userRepository {
   }
 
   @override
-  Future<Either<MyError, user>> updateUser(user u) {
+  Future<Either<MyError, String>> updateUser(user u) {
     // TODO: implement updateUser
     throw UnimplementedError();
   }
@@ -73,6 +73,12 @@ class localUserRepository implements userRepository {
   @override
   Future<Either<MyError, user>> getUserById(String idUsuario) {
     // TODO: implement getUserById
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<MyError, String>> createSuscription(String idUsuario) {
+    // TODO: implement createSuscription
     throw UnimplementedError();
   }
 }

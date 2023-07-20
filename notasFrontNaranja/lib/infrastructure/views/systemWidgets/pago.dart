@@ -1,14 +1,47 @@
+import 'package:firstapp/controllerFactory.dart';
+import 'package:firstapp/infrastructure/controllers/suscripcionNuevaController.dart';
+import 'package:firstapp/infrastructure/views/systemWidgets/user_profile.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class PagoSuscripcion extends StatefulWidget {
-  const PagoSuscripcion({super.key});
+  String idUsuario;
+  String nombre;
+  String correo;
+  String clave;
+  DateTime fechaNacimiento;
+  PagoSuscripcion(
+      {super.key,
+      required this.idUsuario,
+      required this.nombre,
+      required this.correo,
+      required this.clave,
+      required this.fechaNacimiento});
 
   @override
-  State<PagoSuscripcion> createState() => _PagoSuscripcionState();
+  State<PagoSuscripcion> createState() => PagoSuscripcionState(
+      idUsuario: idUsuario,
+      nombre: nombre,
+      correo: correo,
+      clave: clave,
+      fechaNacimiento: fechaNacimiento);
 }
 
-class _PagoSuscripcionState extends State<PagoSuscripcion> {
+class PagoSuscripcionState extends State<PagoSuscripcion> {
+  String idUsuario;
+  String nombre;
+  String correo;
+  String clave;
+  DateTime fechaNacimiento;
+  PagoSuscripcionState(
+      {required this.idUsuario,
+      required this.nombre,
+      required this.correo,
+      required this.clave,
+      required this.fechaNacimiento});
+
+  crearSuscripcionController controller =
+      controllerFactory.createdSuscripcionController();
   TextEditingController numeroTarjeta = TextEditingController(text: "");
   TextEditingController numeroCVC = TextEditingController(text: "");
   TextEditingController mesAnio = TextEditingController(text: "");
@@ -36,7 +69,19 @@ class _PagoSuscripcionState extends State<PagoSuscripcion> {
                 mesAnio, "Fecha de vencimiento MM/AA", false, 5),
             genericSizedBox(50),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  controller.updateUser(
+                      idUsuario: idUsuario,
+                      nombre: nombre,
+                      correo: correo,
+                      clave: clave,
+                      fechaNacimiento: fechaNacimiento,
+                      suscripcion: true);
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const UserProfile()),
+                      (Route<dynamic> route) => false);
+                },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 0, 119, 255),
                     shape: const StadiumBorder(),
