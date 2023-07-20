@@ -7,7 +7,6 @@ import 'package:firstapp/application/Iservice.dart';
 import 'package:firstapp/domain/errores.dart';
 import 'package:firstapp/domain/etiqueta.dart';
 import 'package:firstapp/domain/repositories/etiquetaRepository.dart';
-import 'DTOS/createFolderDTO.dart';
 import 'package:firstapp/domain/repositories/userRepository.dart';
 
 class createEtiquetaInServerService implements service<createEtiquetaDTO,String>{

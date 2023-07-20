@@ -5,9 +5,12 @@ import '../../controllers/carpetaNuevaWidgetController.dart';
 import '../systemWidgets/widgets.dart';
 
 // Ventana para crear una carpeta
+// ignore: must_be_immutable
 class CarpetaNueva extends StatelessWidget {
-  const CarpetaNueva({super.key});
+  List<String> foldersNombre;
 
+  CarpetaNueva({super.key, required this.foldersNombre});
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,21 +23,24 @@ class CarpetaNueva extends StatelessWidget {
               Navigator.pop(context);
             }),
       ),
-      body: const Center(child: NuevaCarpeta()),
+      body: Center(child: NuevaCarpeta(foldersNombre: foldersNombre,)),
     );
   }
 }
 
 // ignore: must_be_immutable
 class NuevaCarpeta extends StatefulWidget {
-  const NuevaCarpeta({super.key});
+  List<String> foldersNombre;
+  NuevaCarpeta({super.key, required this.foldersNombre});
 
   @override
-  State<NuevaCarpeta> createState() => NuevaCarpetaState();
+  // ignore: no_logic_in_create_state
+  State<NuevaCarpeta> createState() => NuevaCarpetaState(foldersNombre: foldersNombre);
 }
 
 class NuevaCarpetaState extends State<NuevaCarpeta> {
-  NuevaCarpetaState();
+  List<String> foldersNombre;
+  NuevaCarpetaState({required this.foldersNombre});
   bool loading = false;
 
 // Se crea el controlador con la logica de la ventana CarpetaNueva
@@ -111,25 +117,37 @@ class NuevaCarpetaState extends State<NuevaCarpeta> {
 
 // Funcion para crear una carpeta
   Future crearCarpeta(String nombreCarpeta) async {
+    bool esRepetido = false;
+    for (var element in foldersNombre) {
+      if (element == nombreCarpeta) {
+        esRepetido = true;
+        print(element);
+      }
+    }
+
+    if (!esRepetido) {
+  setState(() {
+    loading = true;
+  });
+  // Se llama a la funcion del controlador para crear una carpeta
+  var response = await controller.createCarpeta(nombreCarpeta: nombreCarpeta);
+  
+  if (response.isLeft) {
     setState(() {
-      loading = true;
-    });
-    // Se llama a la funcion del controlador para crear una carpeta
-    var response = await controller.createCarpeta(nombreCarpeta: nombreCarpeta);
-
-    if (response.isLeft) {
-      setState(() {
-        loading = false;
-      });
-      String text = '';
-      text = response.left.message!;
-      showSystemMessage(text);
-    }
-
-    if (response.isRight) {
       loading = false;
-      // Regresa a la ventana principal
-      regresarHome();
-    }
+    });
+    String text = '';
+    text = response.left.message!;
+    showSystemMessage(text);
+  }
+  
+  if (response.isRight) {
+    loading = false;
+    // Regresa a la ventana principal
+    regresarHome();
+  }
+} else{
+  showSystemMessage("El nombre de la carpeta ya existe");
+}
   }
 }

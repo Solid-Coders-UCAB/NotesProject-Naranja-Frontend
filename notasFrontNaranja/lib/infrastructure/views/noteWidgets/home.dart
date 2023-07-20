@@ -1,7 +1,6 @@
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/domain/nota.dart';
 import 'package:firstapp/infrastructure/controllers/homeController.dart';
-import 'package:firstapp/infrastructure/views/noteWidgets/map%20copy.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
 import 'package:flutter/material.dart';
 import 'notePreview.dart';

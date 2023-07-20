@@ -15,8 +15,10 @@ import 'package:firstapp/infrastructure/views/noteWidgets/textEditor.dart';
 class NotasPorEtiqueta extends StatelessWidget {
   String nombreEtiqueta;
   String idEtiqueta;
+  List<String> etiquetasNombre = [];
+
   NotasPorEtiqueta(
-      {super.key, required this.nombreEtiqueta, required this.idEtiqueta});
+      {super.key, required this.nombreEtiqueta, required this.idEtiqueta, required this.etiquetasNombre});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,8 @@ class NotasPorEtiqueta extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => EditarEtiqueta(
                             nombreEtiqueta: nombreEtiqueta,
-                            idEtiqueta: idEtiqueta)));
+                            idEtiqueta: idEtiqueta,
+                            etiquetasNombre: etiquetasNombre,)));
               },
               child: const Text("Editar")),
         ],

@@ -10,8 +10,9 @@ import 'package:firstapp/infrastructure/views/folderWidgets/folderHome.dart';
 class EditarCarpeta extends StatelessWidget {
   String nombreCarpeta;
   String idCarpeta;
+  List<String> foldersNombre;
   EditarCarpeta(
-      {super.key, required this.nombreCarpeta, required this.idCarpeta});
+      {super.key, required this.nombreCarpeta, required this.idCarpeta, required this.foldersNombre});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class EditarCarpeta extends StatelessWidget {
       body: Center(
           child: CarpetaEditar(
         nombreCarpeta: nombreCarpeta,
-        idCarpeta: idCarpeta,
+        idCarpeta: idCarpeta, foldersNombre: foldersNombre,
       )),
     );
   }
@@ -38,19 +39,22 @@ class EditarCarpeta extends StatelessWidget {
 class CarpetaEditar extends StatefulWidget {
   String nombreCarpeta;
   String idCarpeta;
+  List<String> foldersNombre;
   CarpetaEditar(
-      {super.key, required this.nombreCarpeta, required this.idCarpeta});
+      {super.key, required this.nombreCarpeta, required this.idCarpeta, required this.foldersNombre});
 
   @override
   // ignore: no_logic_in_create_state
   State<CarpetaEditar> createState() =>
-      CarpetaEditarState(nombreCarpeta: nombreCarpeta, idCarpeta: idCarpeta);
+      // ignore: no_logic_in_create_state
+      CarpetaEditarState(nombreCarpeta: nombreCarpeta, idCarpeta: idCarpeta, foldersNombre: foldersNombre);
 }
 
 class CarpetaEditarState extends State<CarpetaEditar> {
   String nombreCarpeta;
   String idCarpeta;
-  CarpetaEditarState({required this.nombreCarpeta, required this.idCarpeta});
+  List<String> foldersNombre;
+  CarpetaEditarState({required this.nombreCarpeta, required this.idCarpeta, required this.foldersNombre});
   String carpetaTitle = '';
   bool loading = false;
 
@@ -137,28 +141,41 @@ class CarpetaEditarState extends State<CarpetaEditar> {
 
 // Funcion para editar una carpeta
   updateCarpeta(String nombreCarpeta, String idCarpeta) async {
-    setState(() {
-      loading = true;
-    });
-
-    // Se llama a la funcion del controlador para evitar la carpeta
-    var response = await controller.updateCarpeta(
-        nombreCarpeta: nombreCarpeta, idCarpeta: idCarpeta);
-
-    if (response.isLeft) {
-      String text = '';
-      text = response.left.message!;
-      loading = false;
-      showSystemMessage(text);
+    bool esRepetido = false;
+    for (var element in foldersNombre) {
+      if (element == nombreCarpeta) {
+        esRepetido = true;
+        print(element);
+      }
     }
-    if (response.isRight) {
-      showSystemMessage('carpeta actualizada correctamente');
 
-      // Se regresa a la ventana de HomeCarpeta
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => folderHome()),
-          (Route<dynamic> route) => false);
-    }
+
+    if (!esRepetido) {
+  setState(() {
+    loading = true;
+  });
+  
+  // Se llama a la funcion del controlador para evitar la carpeta
+  var response = await controller.updateCarpeta(
+      nombreCarpeta: nombreCarpeta, idCarpeta: idCarpeta);
+  
+  if (response.isLeft) {
+    String text = '';
+    text = response.left.message!;
+    loading = false;
+    showSystemMessage(text);
+  }
+  if (response.isRight) {
+    showSystemMessage('carpeta actualizada correctamente');
+  
+    // Se regresa a la ventana de HomeCarpeta
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => folderHome()),
+        (Route<dynamic> route) => false);
+  }
+}else{
+  showSystemMessage("El nombre de la carpeta ya existe");
+}
   }
 
   deleteCarpeta(String idCarpeta) async {

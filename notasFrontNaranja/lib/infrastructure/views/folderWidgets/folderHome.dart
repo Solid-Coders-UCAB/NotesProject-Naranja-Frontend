@@ -20,6 +20,7 @@ class folderHomeState extends State<folderHome> {
 
   bool loading = false;
   List<folder> folders = <folder>[];
+  List<String> foldersNombre = [];
   final TextEditingController buscarNota = TextEditingController(text: '');
 
   // Se crea un controlador con la logica de la ventana HomeFolderController
@@ -29,6 +30,9 @@ class folderHomeState extends State<folderHome> {
     setState(() {
       loading = false;
       folders = f;
+      for (var element in f) {
+        foldersNombre.add(element.name);
+      }
     });
   }
 
@@ -101,7 +105,7 @@ class folderHomeState extends State<folderHome> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CarpetaNueva()));
+                      builder: (context) => CarpetaNueva(foldersNombre: foldersNombre,)));
             },
             child: const Card(
                 child: Material(
@@ -119,6 +123,7 @@ class folderHomeState extends State<folderHome> {
                     builder: (context) => NotasEnCarpeta(
                           nombreCarpeta: folders[index].name,
                           idCarpeta: folders[index].id.toString(),
+                          foldersNombre: foldersNombre,
                         )));
           },
           child: (Card(
