@@ -2,6 +2,7 @@ import 'package:firstapp/infrastructure/views/systemWidgets/pago.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/widgets.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class Suscripcion extends StatefulWidget {
   String idUsuario;
   String nombre;

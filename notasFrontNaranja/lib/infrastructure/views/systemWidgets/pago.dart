@@ -1,9 +1,10 @@
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/suscripcionNuevaController.dart';
-import 'package:firstapp/infrastructure/views/systemWidgets/user_profile.dart';
+import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/systemWidgets/widgets.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class PagoSuscripcion extends StatefulWidget {
   String idUsuario;
   String nombre;
@@ -79,7 +80,7 @@ class PagoSuscripcionState extends State<PagoSuscripcion> {
                       suscripcion: true);
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                          builder: (context) => const UserProfile()),
+                          builder: (context) => const PaginaPrincipal()),
                       (Route<dynamic> route) => false);
                 },
                 style: ElevatedButton.styleFrom(
