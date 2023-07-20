@@ -82,6 +82,11 @@ class recycleBinHomeState extends State<recycleBinHome> {
     );
   }
 
+  void refresh(){
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const recycleBinHome()));
+  }
+
   Widget notePreview(int index) {
     return Card(
         child: Material(
