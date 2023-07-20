@@ -64,9 +64,26 @@ class localEtiquetaRepository implements etiquetaRepository {
   }
 
   @override
-  Future<Either<MyError, etiqueta>> getEtiquetaById(String idEtiqueta) {
-    // TODO: implement getEtiquetaById
-    throw UnimplementedError();
+  Future<Either<MyError, etiqueta>> getEtiquetaById(String idEtiqueta) async {
+    var bd = await database.getDatabase();
+    List<Map> etiquetasMap = [];
+    etiqueta? eti ;
+    try{
+      etiquetasMap = await bd.rawQuery('SELECT * FROM etiqueta WHERE (id = "$idEtiqueta")');
+      print("cantidad de etiqueta en etiquetas:${etiquetasMap.length}");
+        if (etiquetasMap.isNotEmpty){
+                    eti = etiqueta(id: etiquetasMap.first['id'],
+                     nombre: etiquetasMap.first['nombre'],
+                     idUsuario: '',
+                    );         
+            eti.savedInServer = etiquetasMap.first['savedInServer'];
+        }
+        bd.close();
+        print('etiqueta: ${eti!.nombre}');
+       return Right(eti!);
+    }catch(e){
+      return Left(MyError(key: AppError.NotFound,message: e.toString()));
+    }
   }
 
   @override

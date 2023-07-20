@@ -105,13 +105,22 @@ class controllerFactory {
         offlineService: offlineService,
         checker: connectionCheckerImp());
 
-    var suscripcionLocationDeco = suscripcionDecorator(
-      servicio: GetUserCurrentLocationService(loca: GetLocationImp()), 
-      getUserByIdService: getUserByIdInServerService(
-            userRepo: httpUserRepository(),
-            localUserRepo: localUserRepository()) 
-      );
-
+    var folderDeco = offlineDecorator(servicio: getAllFoldersFromServerService(
+                                                  folderRepo: HTTPfolderRepository(),
+                                                  localUserRepo: localUserRepository()),                           
+                                offlineService: getAllFoldersFromServerService(
+                                                  folderRepo: localFolderRepository(),
+                                                  localUserRepo: localUserRepository()),                          
+                                checker: connectionCheckerImp());
+  
+    var etiquetaDeco = offlineDecorator(servicio: getAllEtiquetasFromServerService(
+                                                  etiquetaRepo: HTTPetiquetasRepository(),
+                                                  localUserRepo: localUserRepository()), 
+                                        offlineService: getAllEtiquetasFromServerService(
+                                                    etiquetaRepo: localEtiquetaRepository(),
+                                                    localUserRepo: localUserRepository()), 
+    checker: connectionCheckerImp());
+        
       var suscripcionOCRDeco = suscripcionDecorator(
       servicio: getImageFromCamaraService(picker: imagePickerImp()), 
       getUserByIdService: getUserByIdInServerService(
@@ -125,7 +134,7 @@ class controllerFactory {
         galleryService:
             getImageFromGalleryService(picker: imagePickerGalleryImp()),
         createNotaService: offlineDeco,
-        locationService: suscripcionLocationDeco, //GetUserCurrentLocationService(loca: GetLocationImp()),
+        locationService: GetUserCurrentLocationService(loca: GetLocationImp()),
         getAllEtiquetasService: getAllEtiquetasFromServerService(
             etiquetaRepo: HTTPetiquetasRepository(),
             localUserRepo: localUserRepository()),
@@ -133,7 +142,7 @@ class controllerFactory {
             folderRepo: HTTPfolderRepository(),
             localUserRepo: localUserRepository()), 
             getUserByIdService: getUserByIdInServerService(
-              userRepo: httpUserRepository(),
+              userRepo: httpUserRepository(), 
               localUserRepo: localUserRepository()));
   }
 
@@ -151,7 +160,7 @@ class controllerFactory {
     var offlineDeco = offlineDecorator(
         servicio: onlineService,
         offlineService: localService,
-        checker: connectionCheckerImp());
+        checker: connectionCheckerImp());   
 
     return homeController(getAllNotesFromServerService: offlineDeco);
   }
@@ -278,6 +287,11 @@ class controllerFactory {
   }
 
   static notePreviewController createNotePreviewController() {
+
+    var getAllTagsDeco = offlineDecorator(servicio: getAllTagsFromNoteService(tagRepo: HTTPetiquetasRepository()), 
+                                        offlineService: getAllTagsFromNoteService(tagRepo: localEtiquetaRepository()), 
+    checker: connectionCheckerImp());
+
     return notePreviewController(
         getAllTagsFromNote:
             getAllTagsFromNoteService(tagRepo: HTTPetiquetasRepository()));
