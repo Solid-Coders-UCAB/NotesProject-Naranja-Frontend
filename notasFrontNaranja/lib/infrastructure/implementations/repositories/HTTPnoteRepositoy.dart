@@ -29,7 +29,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
 
   try{
 
-  final Response response = await post(Uri.parse('http://$domain/nota/create'),
+  final Response response = await post(Uri.parse('https://$domain/nota/create'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -62,7 +62,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
 
 
     try{ 
-     response = await post(Uri.parse('http://$domain/nota/findByUser'),
+     response = await post(Uri.parse('https://$domain/nota/findByUser'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -132,7 +132,7 @@ class httpNoteRepository extends HTTPrepository implements noteRepository{
 
 
     try{ 
-     response = await post(Uri.parse('http://$domain/nota/findByUser'),
+     response = await post(Uri.parse('https://$domain/nota/findByUser'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -202,7 +202,7 @@ Future<Either<MyError, String>> updateNota(Nota note) async {
       "tareas": note.tareas.map((t) => t.toJson()).toList(),
     });
   try{
-  final Response response = await put(Uri.parse('http://$domain/nota/modificate'),
+  final Response response = await put(Uri.parse('https://$domain/nota/modificate'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -225,7 +225,7 @@ Future<Either<MyError, String>> deleteNota(Nota note) async {
       });
   Response r1;
   try{
-   r1 = await delete(Uri.parse('http://$domain/nota/delete'),
+   r1 = await delete(Uri.parse('https://$domain/nota/delete'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -251,7 +251,7 @@ Future<Either<MyError, String>> deleteNota(Nota note) async {
       'idUsuario': userId
     });
     try{ 
-     response = await post(Uri.parse('http://$domain/nota/findDeleted'),
+     response = await post(Uri.parse('https://$domain/nota/findDeleted'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -311,7 +311,7 @@ Future<Either<MyError, List<Nota>>> getNotesByKeyword(String palabraClave, Strin
 
 
     try{ 
-     response = await post(Uri.parse('http://$domain/nota/findByKeyword'),
+     response = await post(Uri.parse('https://$domain/nota/findByKeyword'),
       body: body,
       headers: {
         "Accept": "application/json",

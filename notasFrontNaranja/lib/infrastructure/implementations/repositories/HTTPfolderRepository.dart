@@ -22,7 +22,7 @@ class HTTPfolderRepository extends HTTPrepository implements folderRepository {
 
   try{
 
-  final Response response = await post(Uri.parse('http://$domain/carpeta/create'),
+  final Response response = await post(Uri.parse('https://$domain/carpeta/create'),
 
       body: body,
       headers: {
@@ -52,7 +52,7 @@ class HTTPfolderRepository extends HTTPrepository implements folderRepository {
   });
 
   try{
-      response1 = await post(Uri.parse('http://$domain/carpeta/findByUser'),
+      response1 = await post(Uri.parse('https://$domain/carpeta/findByUser'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -96,7 +96,7 @@ class HTTPfolderRepository extends HTTPrepository implements folderRepository {
 
   try{
 
-  final Response response = await put(Uri.parse('http://$domain/carpeta/modificate'),
+  final Response response = await put(Uri.parse('https://$domain/carpeta/modificate'),
 
       body: body,
       headers: {
@@ -137,7 +137,7 @@ Future<Either<MyError, String>> deleteCarpeta(String idCarpeta) async {
       });
   Response r1;
   try{
-   r1 = await delete(Uri.parse('http://$domain/carpeta/delete'),
+   r1 = await delete(Uri.parse('https://$domain/carpeta/delete'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -167,7 +167,7 @@ Future<Either<MyError, List<Nota>>> getNotesByFolder(String idCarpeta) async {
 
 
     try{ 
-     response = await post(Uri.parse('http://$domain/nota/findByFolder'),
+     response = await post(Uri.parse('https://$domain/nota/findByFolder'),
       body: body,
       headers: {
         "Accept": "application/json",

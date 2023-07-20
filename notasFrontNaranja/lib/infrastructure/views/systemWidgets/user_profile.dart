@@ -33,6 +33,7 @@ class UserProfileState extends State<UserProfile> {
       nombre = u.getNombre.toString();
       correo = u.getCorreo.toString();
       fechaNacimientoDate = u.getDate;
+      print("nombre");
       clave = u.clave!;
       int dia = DateTime.parse(u.getDate.toString()).day;
       int mes = DateTime.parse(u.getDate.toString()).month;
@@ -72,7 +73,11 @@ class UserProfileState extends State<UserProfile> {
       ),
       //Side Menu-------------------------------------
       drawer: NavBar(),
-      body: SingleChildScrollView(
+      body: loading == true
+          ? const Center(
+              child: SizedBox(
+                  width: 30, height: 30, child: CircularProgressIndicator()))
+          :SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(15),
           child: Column(

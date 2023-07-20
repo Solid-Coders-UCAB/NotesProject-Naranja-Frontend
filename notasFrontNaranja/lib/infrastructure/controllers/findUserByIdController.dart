@@ -13,11 +13,18 @@ class findUserByIdController {
     var serviceResponse = await getUserByIDService.execute(null);
 
     if (serviceResponse.isLeft) {
+      print(serviceResponse.left.message);
+      // ignore: invalid_use_of_protected_member
+      widget.setState(() {
+          widget.loading = false;
+        });
       //return Left(serviceResponse.left);
     }
 
-    widget.changeState(serviceResponse.right);
-
+    if (serviceResponse.isRight) {
+      widget.changeState(serviceResponse.right);
+    }
+    
     //return Right(serviceResponse.right);
   }
 }

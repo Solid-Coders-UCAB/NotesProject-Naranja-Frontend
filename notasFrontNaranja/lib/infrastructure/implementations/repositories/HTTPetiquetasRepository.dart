@@ -21,7 +21,7 @@ class HTTPetiquetasRepository extends HTTPrepository implements etiquetaReposito
 
   try{
 
-  final Response response = await post(Uri.parse('http://$domain/etiqueta/create'),
+  final Response response = await post(Uri.parse('https://$domain/etiqueta/create'),
 
       body: body,
       headers: {
@@ -51,7 +51,7 @@ class HTTPetiquetasRepository extends HTTPrepository implements etiquetaReposito
   });
 
   try{
-      response1 = await post(Uri.parse('http://$domain/etiqueta/findByUser'),
+      response1 = await post(Uri.parse('https://$domain/etiqueta/findByUser'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -93,7 +93,7 @@ class HTTPetiquetasRepository extends HTTPrepository implements etiquetaReposito
 
   try{
 
-  final Response response = await put(Uri.parse('http://$domain/etiqueta/modificate'),
+  final Response response = await put(Uri.parse('https://$domain/etiqueta/modificate'),
 
       body: body,
       headers: {
@@ -120,7 +120,7 @@ Future<Either<MyError, String>> deleteEtiqueta(String idEtiqueta) async {
       });
   Response r1;
   try{
-   r1 = await delete(Uri.parse('http://$domain/etiqueta/delete'),
+   r1 = await delete(Uri.parse('https://$domain/etiqueta/delete'),
       body: body,
       headers: {
         "Accept": "application/json",
@@ -145,7 +145,7 @@ Future<Either<MyError, String>> deleteEtiqueta(String idEtiqueta) async {
 
   try{
 
-    final Response response = await post(Uri.parse('http://$domain/etiqueta/findById'),
+    final Response response = await post(Uri.parse('https://$domain/etiqueta/findById'),
 
       body: body,
       headers: {
@@ -183,7 +183,7 @@ Future<Either<MyError, List<Nota>>> getNotesByEtiqueta(String idEtiqueta, String
 
 
     try{ 
-     response = await post(Uri.parse('http://$domain/nota/findByTag'),
+     response = await post(Uri.parse('https://$domain/nota/findByTag'),
       body: body,
       headers: {
         "Accept": "application/json",
