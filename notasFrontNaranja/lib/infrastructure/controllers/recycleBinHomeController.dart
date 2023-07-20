@@ -52,7 +52,7 @@ class recycleBinHomeController {
       if (serviceResponse.isLeft){
         widget.showSystemMessage(serviceResponse.left.message);
       }else {
-        getAllNotesFromServer(widget);
+        widget.refresh();
       }   
 
     }
@@ -73,7 +73,7 @@ class recycleBinHomeController {
       if (serviceResponse.isLeft){
         widget.showSystemMessage(serviceResponse.left.message);
       }else {
-        getAllNotesFromServer(widget);
+        widget.refresh();
       }   
 
     }

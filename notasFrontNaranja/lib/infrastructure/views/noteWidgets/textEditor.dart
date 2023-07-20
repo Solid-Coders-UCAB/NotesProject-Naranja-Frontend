@@ -6,6 +6,8 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:firstapp/controllerFactory.dart';
 import 'package:firstapp/infrastructure/controllers/notaNuevaWidgetController.dart';
+import 'package:firstapp/infrastructure/implementations/imagePickerGalleryImp.dart';
+import 'package:firstapp/infrastructure/implementations/imagePickerImp.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/home.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/map.dart';
 import 'package:firstapp/infrastructure/views/noteWidgets/speech_to_text_prueba.dart';
@@ -384,6 +386,14 @@ Future<PlatformFile> CompressFile(PlatformFile file) async {
           },
         ),
         ListTile(
+          leading: const Icon(Icons.camera_alt_rounded),
+          title: Text('Tomar foto'),
+          onTap: () {
+            Navigator.pop(context);
+            pickImageFromGallery();
+          },
+        ),
+        ListTile(
           leading: const Icon(Icons.image),
           title: Text('Imagen a texto'),
           onTap: () {
@@ -458,6 +468,43 @@ Widget folderList(){
                    }        
               
           ); 
-    }  
+    }
+
+void pickImageFromGallery() async {
+  var fileRes = await imagePickerImp().getImage();
+    if (fileRes.isLeft){
+     showSystemMessage(fileRes.left.message);
+    }
+                File file = fileRes.right;
+                PlatformFile file2 = await compressFile2(file);
+                String base64Data = base64.encode(file2.bytes!);
+                String base64Image =
+                """<img src="data:image/${file2.extension};base64,$base64Data" data-filename="${file2.name}" width="300" height="300"/>""";
+                editorC.insertHtml(base64Image);
+    editorC.insertHtml('<br>');        
+ } 
+
+ Future<PlatformFile> compressFile2(File file) async {
+    var result = await FlutterImageCompress.compressWithFile(
+      file.path,
+      minWidth: 300,
+      minHeight: 300,
+      quality: 100,
+      //rotate: 90,
+    );
+    final appStorage = await _localPath;
+                  int randomNumber = Random().nextInt(10000);
+                  String imageName = 'image$randomNumber';
+                  final archivo = File('$appStorage/$imageName.png');
+                  archivo.writeAsBytes(result!.cast<int>()); 
+
+                  PlatformFile newFile = PlatformFile(
+                    name: imageName,
+                    bytes: result,
+                    path: archivo.path, 
+                    size: 0,
+                  );
+    return newFile;
+}   
       
 }
